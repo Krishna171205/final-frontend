@@ -1,0 +1,170 @@
+
+@import url('https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;500;600;700&family=Inter:wght@300;400;500;600;700&display=swap');
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  :root {
+    --luxury-navy: #1B2951;
+    --luxury-navy-light: #2C3E68;
+    --luxury-navy-dark: #0F1B3C;
+    --luxury-cream: #F8F5F0;
+    --charcoal-gray: #4A4A4A;
+    --deep-navy: #1A1B3A;
+    --luxury-black: #0D0D0D;
+    --pearl-white: #FEFEFE;
+  }
+  
+  body {
+    font-family: 'Inter', sans-serif;
+    background-color: var(--pearl-white);
+    color: var(--charcoal-gray);
+  }
+  
+  .font-serif {
+    font-family: 'Playfair Display', serif;
+  }
+  
+  .font-sans {
+    font-family: 'Inter', sans-serif;
+  }
+}
+
+@layer components {
+  .luxury-gradient {
+    background: linear-gradient(135deg, rgba(27, 41, 81, 0.08) 0%, rgba(248, 245, 240, 0.15) 100%);
+  }
+  
+  .luxury-gradient-overlay {
+    background: linear-gradient(135deg, rgba(27, 41, 81, 0.05) 0%, rgba(248, 245, 240, 0.08) 50%, rgba(15, 27, 60, 0.12) 100%);
+  }
+  
+  .glass-effect {
+    background: rgba(254, 254, 254, 0.95);
+    backdrop-filter: blur(20px);
+    border: 1px solid rgba(27, 41, 81, 0.08);
+  }
+  
+  .glass-effect-enhanced {
+    background: rgba(254, 254, 254, 0.98);
+    backdrop-filter: blur(25px);
+    border: 1px solid rgba(27, 41, 81, 0.12);
+    box-shadow: 0 25px 50px -12px rgba(27, 41, 81, 0.15);
+  }
+  
+  .premium-shadow {
+    box-shadow: 0 25px 50px -12px rgba(27, 41, 81, 0.20);
+  }
+  
+  .luxury-button {
+    background: linear-gradient(135deg, #1B2951 0%, #0F1B3C 100%);
+    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  }
+  
+  .luxury-button:hover {
+    background: linear-gradient(135deg, #0F1B3C 0%, #0A1529 100%);
+    transform: translateY(-2px);
+    box-shadow: 0 20px 40px -12px rgba(27, 41, 81, 0.4);
+  }
+  
+  .luxury-button-primary {
+    background: linear-gradient(135deg, #1B2951 0%, #2C3E68 100%);
+    transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+    box-shadow: 0 10px 25px -8px rgba(27, 41, 81, 0.25);
+  }
+  
+  .luxury-button-primary:hover {
+    background: linear-gradient(135deg, #2C3E68 0%, #1B2951 100%);
+    transform: translateY(-3px);
+    box-shadow: 0 25px 50px -12px rgba(27, 41, 81, 0.35);
+  }
+  
+  .premium-card {
+    background: rgba(254, 254, 254, 0.95);
+    backdrop-filter: blur(20px);
+    border: 1px solid rgba(27, 41, 81, 0.08);
+    transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+    box-shadow: 0 10px 25px -8px rgba(27, 41, 81, 0.12);
+  }
+  
+  .premium-card:hover {
+    transform: translateY(-8px);
+    box-shadow: 0 32px 64px -12px rgba(27, 41, 81, 0.20);
+    border-color: rgba(27, 41, 81, 0.15);
+    background: rgba(254, 254, 254, 0.98);
+  }
+  
+  .premium-card-enhanced {
+    background: rgba(254, 254, 254, 0.98);
+    backdrop-filter: blur(25px);
+    border: 1px solid rgba(27, 41, 81, 0.10);
+    transition: all 0.5s cubic-bezier(0.4, 0, 0.2, 1);
+    box-shadow: 0 15px 35px -10px rgba(27, 41, 81, 0.15);
+  }
+  
+  .premium-card-enhanced:hover {
+    transform: translateY(-10px);
+    box-shadow: 0 40px 80px -15px rgba(27, 41, 81, 0.25);
+    border-color: rgba(27, 41, 81, 0.18);
+    background: rgba(254, 254, 254, 1);
+  }
+
+  .animate-fade-in {
+    animation: fadeIn 0.8s ease-out forwards;
+  }
+  
+  .animate-slide-up {
+    animation: slideUp 0.8s ease-out forwards;
+  }
+  
+  .animate-scale-in {
+    animation: scaleIn 1s ease-out forwards;
+  }
+  
+  .animate-float {
+    animation: float 6s ease-in-out infinite;
+  }
+}
+
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes slideUp {
+  from {
+    opacity: 0;
+    transform: translateY(40px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes scaleIn {
+  from {
+    opacity: 0;
+    transform: scale(0.9);
+  }
+  to {
+    opacity: 1;
+    transform: scale(1);
+  }
+}
+
+@keyframes float {
+  0%, 100% {
+    transform: translateY(0px);
+  }
+  50% {
+    transform: translateY(-10px);
+  }
+}
