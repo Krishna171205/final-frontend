@@ -213,7 +213,7 @@ const Home = () => {
               <div className="absolute -inset-4 bg-gradient-to-br from-luxury-navy/20 to-luxury-cream/50 rounded-3xl blur-xl"></div>
               <div className="relative premium-card-enhanced rounded-3xl overflow-hidden">
                 <img 
-                  alt="Sarah Mitchell Luxury Office" 
+                  alt="Rajeev Mittal Luxury Office" 
                   className="w-full h-[700px] object-cover object-center" 
                   src="https://image2url.com/images/1758081839443-f1caa703-d629-4030-be4d-15dc4509a6cd.jpg"
                 />
@@ -558,7 +558,7 @@ const Home = () => {
                     value={consultationData.name}
                     onChange={handleConsultationChange}
                     className="w-full px-6 py-4 border border-charcoal-gray/20 rounded-2xl focus:ring-2 focus:ring-luxury-navy focus:border-luxury-navy text-sm font-light bg-pearl-white" 
-                    placeholder="Sarah Johnson"
+                    placeholder="Rajeev Mittal"
                     required
                   />
                 </div>
