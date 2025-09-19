@@ -21,6 +21,7 @@ interface Property {
   image_url: string;
   area?: string;
   created_at: string;
+  custom_image?: File | string | null;
 }
 
 interface Consultation {
@@ -38,7 +39,7 @@ interface Consultation {
 
 const AdminDashboard = () => {
   const navigate = useNavigate();
-  const [user, setUser] = useState<any>(null);
+  const [_user, setUser] = useState<any>(null);
   const [loading, setLoading] = useState(true);
   const [activeTab, setActiveTab] = useState('properties');
   const [showAddProperty, setShowAddProperty] = useState(false);
