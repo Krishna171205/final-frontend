@@ -4,7 +4,7 @@ import { AppRoutes } from './router'
 
 function App() {
   return (
-    <BrowserRouter basename={import.meta.env.BASE_URL}>
+    <BrowserRouter basename={__BASE_PATH__}>
       <AppRoutes />
     </BrowserRouter>
   )

@@ -21,7 +21,6 @@ interface Property {
   image_url: string;
   area?: string;
   created_at: string;
-  custom_image?: File | string | null;
 }
 
 interface Consultation {
@@ -39,7 +38,7 @@ interface Consultation {
 
 const AdminDashboard = () => {
   const navigate = useNavigate();
-  const [_user, setUser] = useState<any>(null);
+  const [user, setUser] = useState<any>(null);
   const [loading, setLoading] = useState(true);
   const [activeTab, setActiveTab] = useState('properties');
   const [showAddProperty, setShowAddProperty] = useState(false);
@@ -509,7 +508,7 @@ const AdminDashboard = () => {
           <div className="flex justify-between items-center h-16">
             <div className="flex items-center space-x-4">
               <h1 className="text-2xl font-bold text-gray-900">Admin Dashboard</h1>
-              <div className="text-sm text-gray-500">Sarah Mitchell Real Estate</div>
+              <div className="text-sm text-gray-500">Rajeev Mittal Real Estate</div>
             </div>
             <div className="flex items-center space-x-4">
               <button 
