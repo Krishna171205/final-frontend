@@ -891,7 +891,7 @@ const Home = () => {
               <img
                 alt="Rajeev Mittal"
                 className="rounded-2xl shadow-2xl w-full h-[600px] object-cover object-top border border-gray-200"
-                src="https://check2-flame-two.vercel.app/image2url.com/images/1758081839443-f1caa703-d629-4030-be4d-15dc4509a6cd.jpg"
+                src="https://image2url.com/images/1758081839443-f1caa703-d629-4030-be4d-15dc4509a6cd.jpg"
               />
             </div>
           </div>
