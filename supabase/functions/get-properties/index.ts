@@ -1,78 +1,60 @@
-import { createClient } from 'https://esm.sh/@supabase/supabase-js@2'
+import { serve } from "https://deno.land/std@0.168.0/http/server.ts"
+import { createClient } from "https://esm.sh/@supabase/supabase-js@2"
 
+// ✅ CORS headers
 const corsHeaders = {
-  'Access-Control-Allow-Origin': '*',
-  'Access-Control-Allow-Headers': 'authorization, x-client-info, apikey, content-type',
+  "Access-Control-Allow-Origin": "*",
+  "Access-Control-Allow-Headers": "authorization, x-client-info, apikey, content-type",
+  "Access-Control-Allow-Methods": "GET, OPTIONS"
 }
 
-Deno.serve(async (req) => {
-  if (req.method === 'OPTIONS') {
-    return new Response('ok', { headers: corsHeaders })
-  }
+// ✅ JSON response helper
+const jsonResponse = (data: any, status = 200) =>
+  new Response(JSON.stringify(data), {
+    status,
+    headers: { ...corsHeaders, "Content-Type": "application/json" }
+  })
+
+// ✅ Reuse Supabase client
+const supabase = createClient(
+  Deno.env.get("SUPABASE_URL") ?? "",
+  Deno.env.get("SUPABASE_ANON_KEY") ?? ""
+)
+
+serve(async (req) => {
+  if (req.method === "OPTIONS") return new Response("ok", { headers: corsHeaders })
 
   try {
-    // Use service role key for reliable data access and to bypass RLS
-    const supabaseClient = createClient(
-      Deno.env.get('SUPABASE_URL') ?? '',
-      Deno.env.get('SUPABASE_SERVICE_ROLE_KEY') ?? ''
-    )
+    if (req.method === "GET") {
+      const url = new URL(req.url)
+      const page = parseInt(url.searchParams.get("page") || "1")
+      const limit = parseInt(url.searchParams.get("limit") || "12") // default 12 items
+      const from = (page - 1) * limit
+      const to = from + limit - 1
 
-    console.log('Public: Fetching all properties from database...')
-    
-    const { data: properties, error } = await supabaseClient
-      .from('properties')
-      .select('*')
-      .order('created_at', { ascending: false })
+      const { data: properties, error } = await supabase
+        .from("properties")
+        .select("id, title, location, full_address, type, status, description, bhk, baths, sqft, area, image_url, image_url_2, image_url_3, created_at")
+        .order("created_at", { ascending: false })
+        .range(from, to)
 
-    if (error) {
-      console.error('Public: Error fetching properties:', error)
-      return new Response(JSON.stringify({ 
-        error: 'Failed to fetch properties',
-        details: error.message 
-      }), {
-        status: 500,
-        headers: { ...corsHeaders, 'Content-Type': 'application/json' }
+      if (error) {
+        console.error("GET properties error:", error)
+        return jsonResponse({ error: "Failed to fetch properties" }, 500)
+      }
+
+      return jsonResponse({
+        success: true,
+        page,
+        limit,
+        count: properties?.length ?? 0,
+        properties: properties ?? []
       })
     }
 
-    console.log(`Public: Successfully fetched ${properties?.length || 0} properties`)
-
-    // Ensure all properties have required fields including area
-    const validatedProperties = properties?.map(property => ({
-      id: property.id,
-      title: property.title || 'Untitled Property',
-      location: property.location || 'Location TBD',
-      full_address: property.full_address || property.location || 'Address TBD',
-      price: property.price || 0,
-      type: property.type || 'House',
-      status: property.status || 'For Sale',
-      beds: property.beds || 1,
-      baths: property.baths || 1,
-      sqft: property.sqft || 1000,
-      garage: property.garage || 1,
-      description: property.description || 'No description available',
-      is_rental: Boolean(property.is_rental),
-      area: property.area || '',
-      image_url: property.image_url || property.image || '',
-      created_at: property.created_at
-    })) || []
-
-    return new Response(JSON.stringify({ 
-      success: true,
-      properties: validatedProperties,
-      count: validatedProperties.length
-    }), {
-      headers: { ...corsHeaders, 'Content-Type': 'application/json' }
-    })
-
-  } catch (error) {
-    console.error('Public get properties function error:', error)
-    return new Response(JSON.stringify({ 
-      error: 'Internal server error',
-      details: error.message
-    }), {
-      status: 500,
-      headers: { ...corsHeaders, 'Content-Type': 'application/json' }
-    })
+    return jsonResponse({ error: "Method not allowed", allowed: ["GET", "OPTIONS"] }, 405)
+  } catch (err) {
+    console.error("Server error:", err)
+    return jsonResponse({ error: "Internal server error" }, 500)
   }
 })
