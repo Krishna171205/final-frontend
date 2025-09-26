@@ -413,15 +413,15 @@ const Home = () => {
     return () => window.removeEventListener('scroll', handleScroll);
   }, []);
 
-  const handleTestimonialsClick = (e: React.MouseEvent) => {
-    e.preventDefault();
-    window.location.href = '/#testimonials';
-  };
+  // const handleTestimonialsClick = (e: React.MouseEvent) => {
+  //   e.preventDefault();
+  //   window.location.href = '/#testimonials';
+  // };
 
-  const handleBlogClick = (e: React.MouseEvent) => {
-    e.preventDefault();
-    window.location.href = '/#blog';
-  };
+  // const handleBlogClick = (e: React.MouseEvent) => {
+  //   e.preventDefault();
+  //   window.location.href = '/#blog';
+  // };
 
   return (
     <div className="min-h-screen bg-white">

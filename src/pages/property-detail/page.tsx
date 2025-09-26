@@ -204,7 +204,14 @@ const PropertyDetail = () => {
               <img 
                 alt={property.title}
                 className="w-full h-96 lg:h-[500px] object-cover rounded-lg" 
-                src={images[selectedImageIndex] || property.custom_image}
+                src={
+                // Check if selected image index exists
+                images[selectedImageIndex] instanceof File
+                  ? URL.createObjectURL(images[selectedImageIndex])  // Convert File to URL
+                  : images[selectedImageIndex] || (property.custom_image instanceof File
+                      ? URL.createObjectURL(property.custom_image)  // Convert File to URL if custom_image is a File
+                      : property.custom_image || '')  // Use custom_image or fallback to empty string
+              }
               />
             </div>
             
@@ -217,7 +224,7 @@ const PropertyDetail = () => {
                   className={`w-full h-24 lg:h-32 object-cover rounded-lg cursor-pointer transition-all border-2 ${
                     selectedImageIndex === index ? 'border-navy-500' : 'border-transparent hover:border-gray-300'
                   }`}
-                  src={image}
+                  src={image instanceof File ? URL.createObjectURL(image) : image || ''}
                   onClick={() => setSelectedImageIndex(index)}
                 />
               ))}

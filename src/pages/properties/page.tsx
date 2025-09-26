@@ -324,8 +324,11 @@ const Properties = () => {
                   <img
                     alt={property.title}
                     className="w-full h-64 object-cover object-top"
-                    src={property.custom_image}
+                    src={property.custom_image instanceof File 
+                      ? URL.createObjectURL(property.custom_image) // Create a URL from the file
+                      : property.custom_image || ''} // Fallback to an empty string if null or undefined
                   />
+
                   <div className="absolute top-4 left-4">
                     <span className={`${getStatusColor(property.status)} text-white px-4 py-2 rounded-full text-sm font-semibold`}>
                       {property.status}

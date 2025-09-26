@@ -21,9 +21,9 @@ interface Property {
   sqft: number;
   area?: string;
   created_at: string;
-  custom_image?: File | string | null;
-  custom_image_2?: File | string | null;
-  custom_image_3?: File | string | null;
+  custom_image: File | string | null;
+  custom_image_2: File | string | null;
+  custom_image_3: File | string | null;
 }
 
 interface Consultation {
@@ -83,9 +83,9 @@ const AdminDashboard = () => {
     baths: 1,
     sqft: 1000,
     area: '',
-    custom_image: null,
-    custom_image_2: null,
-    custom_image_3: null,
+    custom_image: null as File | null,  // explicitly defining the type as `File | null`
+    custom_image_2: null as File | null,
+    custom_image_3: null as File | null,
   });
 
   const [_editingProperty, _setEditingProperty] = useState<Property | null>(null);
@@ -259,7 +259,7 @@ const AdminDashboard = () => {
       // Handle adding images for new property
       if (imageIndex === 1) {
         setImagePreview(result);
-        setNewProperty({ ...newProperty, custom_image: file });
+        {setNewProperty({ ...newProperty, custom_image: file});}
       } else if (imageIndex === 2) {
         setImagePreview2(result);
         setNewProperty({ ...newProperty, custom_image_2: file });
@@ -1617,11 +1617,18 @@ const handleDeleteProperty = async (id: number) => {
                       onChange={(e) => handleImageUpload(e, 1, true)}
                       className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-5 text-sm mb-2"
                     />
-                    {(editImagePreview || selectedProperty.custom_image) && (<img 
-                      src={editImagePreview } 
-                      alt="Current 1" 
-                      className="w-full h-24 object-cover object-top rounded border"
-                    />)}
+                    {(editImagePreview || selectedProperty.custom_image) && (
+                      <img
+                        // Ensure both are strings (or create a URL from the file if it's a File)
+                        src={editImagePreview 
+                          ? editImagePreview 
+                          : selectedProperty.custom_image instanceof File 
+                          ? URL.createObjectURL(selectedProperty.custom_image) 
+                          : selectedProperty.custom_image || ''} // Fallback to an empty string if null
+                        alt="Current 1"
+                        className="w-full h-24 object-cover object-top rounded border"
+                      />
+                    )}
                   </div>
                   
                   {/* Image 2 */}
@@ -1635,7 +1642,11 @@ const handleDeleteProperty = async (id: number) => {
                     />
                     {(editImagePreview2 || selectedProperty.custom_image_2) && (
                       <img 
-                        src={editImagePreview2 || selectedProperty.custom_image_2} 
+                        src={editImagePreview2
+                          ? editImagePreview2
+                          : selectedProperty.custom_image_2 instanceof File 
+                          ? URL.createObjectURL(selectedProperty.custom_image_2) 
+                          : selectedProperty.custom_image_2 || ''} // Fallback to an empty string if null
                         alt="Current 2" 
                         className="w-full h-24 object-cover object-top rounded border"
                       />
@@ -1653,7 +1664,11 @@ const handleDeleteProperty = async (id: number) => {
                     />
                     {(editImagePreview3 || selectedProperty.custom_image_3) && (
                       <img 
-                        src={editImagePreview3 || selectedProperty.custom_image_3} 
+                        src={editImagePreview3 
+                          ? editImagePreview3
+                          : selectedProperty.custom_image_3 instanceof File 
+                          ? URL.createObjectURL(selectedProperty.custom_image_3) 
+                          : selectedProperty.custom_image_3 || ''} // Fallback to an empty string if null
                         alt="Current 3" 
                         className="w-full h-24 object-cover object-top rounded border"
                       />
