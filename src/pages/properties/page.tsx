@@ -6,10 +6,18 @@ interface Property {
   id: number;
   title: string;
   location: string;
+  full_address: string;
   type: string;
   status: string;
-  image_url: string;
+  description: string;
+  bhk: number;
+  baths: number;
+  sqft: number;
   area?: string;
+  created_at: string;
+  custom_image?: File | string | null;
+  custom_image_2?: File | string | null;
+  custom_image_3?: File | string | null;
 }
 
 const Properties = () => {
@@ -316,7 +324,7 @@ const Properties = () => {
                   <img
                     alt={property.title}
                     className="w-full h-64 object-cover object-top"
-                    src={property.image_url}
+                    src={property.custom_image}
                   />
                   <div className="absolute top-4 left-4">
                     <span className={`${getStatusColor(property.status)} text-white px-4 py-2 rounded-full text-sm font-semibold`}>

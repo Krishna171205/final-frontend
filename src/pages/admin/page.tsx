@@ -20,13 +20,10 @@ interface Property {
   baths: number;
   sqft: number;
   area?: string;
-  image_url: string;
-  image_url_2?: string;
-  image_url_3?: string;
-  created_at?: string;
+  created_at: string;
   custom_image?: File | string | null;
-  custom_image_2: File | string | null;
-  custom_image_3: File | string | null;
+  custom_image_2?: File | string | null;
+  custom_image_3?: File | string | null;
 }
 
 interface Consultation {
@@ -68,6 +65,7 @@ const AdminDashboard = () => {
   const [showAddProperty, setShowAddProperty] = useState(false);
   const [showEditProperty, setShowEditProperty] = useState(false);
   const [selectedProperty, setSelectedProperty] = useState<Property | null>(null);
+  
   const [isSubmitting, setIsSubmitting] = useState(false);
 
   const [properties, setProperties] = useState<Property[]>([]);
@@ -85,9 +83,6 @@ const AdminDashboard = () => {
     baths: 1,
     sqft: 1000,
     area: '',
-    image_url: '',
-    image_url_2: '',
-    image_url_3: '',
     custom_image: null,
     custom_image_2: null,
     custom_image_3: null,
@@ -227,30 +222,29 @@ const AdminDashboard = () => {
 
   const handleImageUpload = (
   e: React.ChangeEvent<HTMLInputElement>,
-  imageIndex: number = 1,
+  imageIndex: number,
   isEdit: boolean = false
 ) => {
-  const file = e.target.files?.[0];
-  if (!file) return;
-
-  // ✅ Validate file type
-  if (!file.type.startsWith("image/")) {
-    alert("Please select a valid image file");
+  const file = e.target.files?.[0];  // Ensure we're getting the first file
+  if (!file) {
+    alert("No file selected");
     return;
   }
-
-  // ✅ Validate file size (max 5MB)
-  if (file.size > 5 * 1024 * 1024) {
-    alert("Image size must be less than 5MB");
+  if (!file.type.startsWith('image/')) {
+    alert('Please select a valid image file');
+    return;
+  }
+  if (file.size > 5 * 1024 * 1024) { // 5MB size limit
+    alert('Image size must be less than 5MB');
     return;
   }
 
   const reader = new FileReader();
   reader.onload = (event) => {
     const result = event.target?.result as string;
-
+    
     if (isEdit && selectedProperty) {
-      // 🔹 Editing existing property
+      // Handle editing of images for existing property
       if (imageIndex === 1) {
         setEditImagePreview(result);
         setSelectedProperty({ ...selectedProperty, custom_image: file });
@@ -261,10 +255,25 @@ const AdminDashboard = () => {
         setEditImagePreview3(result);
         setSelectedProperty({ ...selectedProperty, custom_image_3: file });
       }
-    } 
+    } else {
+      // Handle adding images for new property
+      if (imageIndex === 1) {
+        setImagePreview(result);
+        setNewProperty({ ...newProperty, custom_image: file });
+      } else if (imageIndex === 2) {
+        setImagePreview2(result);
+        setNewProperty({ ...newProperty, custom_image_2: file });
+      } else if (imageIndex === 3) {
+        setImagePreview3(result);
+        setNewProperty({ ...newProperty, custom_image_3: file });
+      }
+    }
   };
+
+  // Ensure we are reading a valid Blob type
   reader.readAsDataURL(file);
 };
+
 
   const handleBlogImageUpload = (e: React.ChangeEvent<HTMLInputElement>, isEdit: boolean = false) => {
     const file = e.target.files?.[0];
@@ -296,97 +305,106 @@ const AdminDashboard = () => {
 
 // ✅ Add Property
   const handleAddProperty = async () => {
-    if (!newProperty.title || !newProperty.location || !newProperty.description) {
-      alert('Please fill in all required fields');
-      return;
-    }
+  if (!newProperty.title || !newProperty.location || !newProperty.description) {
+    alert('Please fill in all required fields');
+    return;
+  }
+  if (!newProperty.bhk || !newProperty.baths || !newProperty.sqft) {
+    alert('Please fill in all property specifications');
+    return;
+  }
+  
 
-    setIsSubmitting(true);
-    try {
-      console.log('Adding new property:', newProperty);
-      
-      // Convert image to base64 if uploaded
-      const toBase64 = (file?: File | null): Promise<string | null> => {
-  return new Promise((resolve) => {
-    if (!file) return resolve(null);
+  setIsSubmitting(true);
+  try {
+    console.log('Adding new property:', newProperty);
+    const bhk = isNaN(Number(newProperty.bhk)) ? 1 : Number(newProperty.bhk);
+    const baths = isNaN(Number(newProperty.baths)) ? 1 : Number(newProperty.baths);
+    const sqft = isNaN(Number(newProperty.sqft)) ? 1000 : Number(newProperty.sqft);
+    
+    // Convert images to base64 using FileReader and await their results
+    const toBase64 = (file?: File | null): Promise<string | null> => {
+      return new Promise((resolve) => {
+        if (!file) return resolve(null);
+        
+        const reader = new FileReader();
+        reader.onload = (e) => resolve(e.target?.result as string);
+        reader.readAsDataURL(file);
+      });
+    };
 
-    const reader = new FileReader();
-    reader.onload = (e) => resolve(e.target?.result as string);
-    reader.readAsDataURL(file);
-  });
-};
-
-const [imageData, imageData2, imageData3] = await Promise.all([
-  toBase64(newProperty.custom_image),
-  toBase64(newProperty.custom_image_2),
-  toBase64(newProperty.custom_image_3),
-]);
-
-      
-      const response = await fetch(`${import.meta.env.VITE_PUBLIC_SUPABASE_URL}/functions/v1/manage-properties`, {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify({
+    // Wait for all images to be converted to Base64
+    const [imageData, imageData2, imageData3] = await Promise.all([
+      toBase64(newProperty.custom_image),
+      toBase64(newProperty.custom_image_2),
+      toBase64(newProperty.custom_image_3),
+    ]);
+    
+    const session = await supabase.auth.getSession();
+    const response = await fetch(`${import.meta.env.VITE_PUBLIC_SUPABASE_URL}/functions/v1/manage-properties`, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+        'Authorization': `Bearer ${session.data.session?.access_token}`,
+      },
+      body: JSON.stringify({
         title: newProperty.title,
         location: newProperty.location,
         full_address: newProperty.full_address || newProperty.location, // ✅ snake_case
         type: newProperty.type || 'House',
         status: newProperty.status || 'For Sale',
         description: newProperty.description,
-        area: newProperty.area || '',
-        bhk: newProperty.bhk,
-        baths: newProperty.baths,
-        sqft: newProperty.sqft,
+        area: (newProperty.area) || '',
+        bhk,
+        baths,
+        sqft,
         custom_image: imageData,   // ✅ match backend
         custom_image_2: imageData2, // ✅ match backend
         custom_image_3: imageData3  // ✅ match backend
       }),
+    });
 
+    if (response.ok) {
+      const result = await response.json();
+      console.log('Property added successfully:', result);
+      
+      // Reload properties to get fresh data
+      await loadProperties();
+      
+      // Reset form
+      setNewProperty({
+        title: '',
+        location: '',
+        full_address: '',
+        type: 'House',
+        status: 'For Sale',
+        description: '',
+        bhk: 1,
+        baths: 1,
+        sqft: 1000,
+        area: '',
+        custom_image: null,
+        custom_image_2: null,
+        custom_image_3: null,
       });
-
-      if (response.ok) {
-        const result = await response.json();
-        console.log('Property added successfully:', result);
-        
-        // Reload properties to get fresh data
-        await loadProperties();
-        
-        // Reset form
-        setNewProperty({
-              title: '',
-    location: '',
-    full_address: '',
-    type: 'House',
-    status: 'For Sale',
-    description: '',
-    bhk: 1,
-    baths: 1,
-    sqft: 1000,
-    area: '',
-    image_url: '',
-    image_url_2: '',
-    image_url_3: '',
-    custom_image: null,
-    custom_image_2: null,
-    custom_image_3: null,
-        });
-        setImagePreview(null);
-        setShowAddProperty(false);
-        alert('Property added successfully!');
-      } else {
-        const errorData = await response.json();
-        console.error('Error adding property:', errorData);
-        alert(`Error adding property: ${errorData.error || 'Please try again'}`);
-      }
-    } catch (error) {
-      console.error('Error adding property:', error);
-      alert('Error adding property. Please check your connection and try again.');
-    } finally {
-      setIsSubmitting(false);
+      
+      setImagePreview(null);
+      setImagePreview2(null);
+      setImagePreview3(null);
+      setShowAddProperty(false);
+      alert('Property added successfully!');
+    } else {
+      const errorData = await response.json();
+      console.error('Error adding property:', errorData);
+      alert(`Error adding property: ${errorData.error || 'Please try again'}`);
     }
-  };
+  } catch (error) {
+    console.error('Error adding property:', error);
+    alert('Error adding property. Please check your connection and try again.');
+  } finally {
+    setIsSubmitting(false);
+  }
+};
 
 // ✅ Edit Property
 const handleEditProperty = async () => {
@@ -395,6 +413,31 @@ const handleEditProperty = async () => {
   setIsSubmitting(true);
   try {
     console.log('Updating property:', selectedProperty);
+
+    // let imageData = null;
+    //   if (selectedProperty.custom_image instanceof File) {
+    //     const reader = new FileReader();
+    //     imageData = await new Promise((resolve) => {
+    //       reader.onload = (e) => resolve(e.target?.result);
+    //       reader.readAsDataURL(selectedProperty.custom_image as File);
+    //     });
+    //   }
+    // let imageData2 = null;
+    //   if (selectedProperty.custom_image instanceof File) {
+    //     const reader = new FileReader();
+    //     imageData = await new Promise((resolve) => {
+    //       reader.onload = (e) => resolve(e.target?.result);
+    //       reader.readAsDataURL(selectedProperty.custom_image_2 as File);
+    //     });
+    //   }
+    // let imageData3 = null;
+    //   if (selectedProperty.custom_image instanceof File) {
+    //     const reader = new FileReader();
+    //     imageData = await new Promise((resolve) => {
+    //       reader.onload = (e) => resolve(e.target?.result);
+    //       reader.readAsDataURL(selectedProperty.custom_image_3 as File);
+    //     });
+    //   }
 
     const toBase64 = (file: File | null | undefined) =>
       file
@@ -411,28 +454,30 @@ const handleEditProperty = async () => {
       toBase64(selectedProperty.custom_image_3 as File),
     ]);
 
-    const { data: session } = await supabase.auth.getSession();
+    // const { data: session } = await supabase.auth.getSession();
+    const session = await supabase.auth.getSession();
+    
 
     const response = await fetch(
-      `https://csfthyboqusrxjcyaxqd.supabase.co/functions/v1/manage-properties`,
+      `${import.meta.env.VITE_PUBLIC_SUPABASE_URL}/functions/v1/manage-properties`,
       {
         method: 'PUT',
         headers: {
           'Content-Type': 'application/json',
-          Authorization: `Bearer ${session.session?.access_token}`,
+          'Authorization': `Bearer ${session.data.session?.access_token}`,
         },
             body: JSON.stringify({
         id: selectedProperty.id,
-        title: selectedProperty.title || "",
-        location: selectedProperty.location || "",
-        full_address: selectedProperty.full_address || "", // ✅ snake_case
-        type: selectedProperty.type || "House",
-        status: selectedProperty.status || "For Sale",
+        title: selectedProperty.title,
+        location: selectedProperty.location,
+        full_address: selectedProperty.full_address, // ✅ snake_case
+        type: selectedProperty.type,
+        status: selectedProperty.status,
         bhk: Number(selectedProperty.bhk) || 1,
         baths: Number(selectedProperty.baths) || 1,
         sqft: Number(selectedProperty.sqft) || 1000,
-        description: selectedProperty.description || "",
-        area: selectedProperty.area || "",
+        description: selectedProperty.description,
+        area: selectedProperty.area,
         custom_image: imageData,   // ✅
         custom_image_2: imageData2, // ✅
         custom_image_3: imageData3  // ✅
@@ -440,30 +485,22 @@ const handleEditProperty = async () => {
 
       }
     );
-
     if (!response.ok) {
       const errorData = await response.json();
-      throw new Error(errorData.error || 'Failed to update property');
+        console.error('Error updating property:', errorData);
+        alert(`Error updating property: ${errorData.error || 'Please try again'}`);
     }
 
     const result = await response.json();
     console.log('Property updated successfully:', result);
-
-    await loadProperties();
-
-    setShowEditProperty(false);
-    setSelectedProperty(null);
-    setEditImagePreview(null);
-    setEditImagePreview2(null);
-    setEditImagePreview3(null);
-    alert('Property updated successfully!');
-  } catch (error: any) {
-    console.error('Error updating property:', error);
-    alert(error.message || 'Error updating property. Please try again.');
-  } finally {
+    } catch (error: any) {
+      console.error('Error updating property:', error);
+      alert('Error updating property. Please check your connection and try again.');
+      
+    } finally {
     setIsSubmitting(false);
-  }
-};
+  } 
+  };
 
 // ✅ Delete Property
 const handleDeleteProperty = async (id: number) => {
@@ -1206,7 +1243,7 @@ const handleDeleteProperty = async (id: number) => {
               </button>
             </div>
             
-            <form onSubmit={handleAddProperty} className="space-y-6">
+            <form onSubmit={handleAddProperty}  className="space-y-6">
               <div className="grid grid-cols-2 gap-6">
                 <div>
                   <label className="block text-sm font-medium text-gray-700 mb-2">Property Title</label>
@@ -1410,6 +1447,7 @@ const handleDeleteProperty = async (id: number) => {
                 <button 
                   type="submit"
                   disabled={isSubmitting}
+                  onClick={handleAddProperty}
                   className="px-4 py-2 bg-blue-600 hover:bg-blue-700 text-white rounded-lg cursor-pointer whitespace-nowrap disabled:opacity-50 disabled:cursor-not-allowed"
                 >
                   {isSubmitting ? 'Adding...' : 'Add Property'}
@@ -1579,11 +1617,11 @@ const handleDeleteProperty = async (id: number) => {
                       onChange={(e) => handleImageUpload(e, 1, true)}
                       className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-5 text-sm mb-2"
                     />
-                    <img 
-                      src={editImagePreview || selectedProperty.image_url} 
+                    {(editImagePreview || selectedProperty.custom_image) && (<img 
+                      src={editImagePreview } 
                       alt="Current 1" 
                       className="w-full h-24 object-cover object-top rounded border"
-                    />
+                    />)}
                   </div>
                   
                   {/* Image 2 */}
@@ -1595,9 +1633,9 @@ const handleDeleteProperty = async (id: number) => {
                       onChange={(e) => handleImageUpload(e, 2, true)}
                       className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-5 text-sm mb-2"
                     />
-                    {(editImagePreview2 || selectedProperty.image_url_2) && (
+                    {(editImagePreview2 || selectedProperty.custom_image_2) && (
                       <img 
-                        src={editImagePreview2 || selectedProperty.image_url_2} 
+                        src={editImagePreview2 || selectedProperty.custom_image_2} 
                         alt="Current 2" 
                         className="w-full h-24 object-cover object-top rounded border"
                       />
@@ -1613,9 +1651,9 @@ const handleDeleteProperty = async (id: number) => {
                       onChange={(e) => handleImageUpload(e, 3, true)}
                       className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-5 text-sm mb-2"
                     />
-                    {(editImagePreview3 || selectedProperty.image_url_3) && (
+                    {(editImagePreview3 || selectedProperty.custom_image_3) && (
                       <img 
-                        src={editImagePreview3 || selectedProperty.image_url_3} 
+                        src={editImagePreview3 || selectedProperty.custom_image_3} 
                         alt="Current 3" 
                         className="w-full h-24 object-cover object-top rounded border"
                       />

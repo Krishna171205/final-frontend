@@ -14,9 +14,10 @@ interface Property {
   baths: number;
   sqft: number;
   area?: string;
-  image_url: string;
-  image_url_2?: string;
-  image_url_3?: string;
+  created_at: string;
+  custom_image?: File | string | null;
+  custom_image_2?: File | string | null;
+  custom_image_3?: File | string | null;
 }
 
 const PropertyDetail = () => {
@@ -63,9 +64,9 @@ const PropertyDetail = () => {
   };
 
   const getPropertyImages = () => {
-    const images = [property?.image_url];
-    if (property?.image_url_2) images.push(property.image_url_2);
-    if (property?.image_url_3) images.push(property.image_url_3);
+    const images = [property?.custom_image];
+    if (property?.custom_image_2) images.push(property.custom_image_2);
+    if (property?.custom_image_3) images.push(property.custom_image_3);
     return images.filter(Boolean);
   };
 
@@ -203,7 +204,7 @@ const PropertyDetail = () => {
               <img 
                 alt={property.title}
                 className="w-full h-96 lg:h-[500px] object-cover rounded-lg" 
-                src={images[selectedImageIndex] || property.image_url}
+                src={images[selectedImageIndex] || property.custom_image}
               />
             </div>
             

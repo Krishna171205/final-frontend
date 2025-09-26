@@ -34,7 +34,7 @@ serve(async (req) => {
 
       const { data: properties, error } = await supabase
         .from("properties")
-        .select("id, title, location, full_address, type, status, description, bhk, baths, sqft, area, image_url, image_url_2, image_url_3, created_at")
+        .select("id, title, location, full_address, type, status, description, bhk, baths, sqft, area, custom_image, custom_image_2, custom_image_3, created_at")
         .order("created_at", { ascending: false })
         .range(from, to)
 

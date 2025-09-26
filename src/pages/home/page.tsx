@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react';
+import React, { useState, useEffect } from 'react';
 import { useNavigate, Link } from 'react-router-dom';
 
 interface Property {
@@ -9,7 +9,7 @@ interface Property {
   type: string;
   status: string;
   is_rental?: boolean;
-  image_url: string;
+  custom_image: string;
   area?: string;
 }
 
@@ -58,6 +58,33 @@ const Home = () => {
   const [loadingBlogs, setLoadingBlogs] = useState(true);
   const [stats, setStats] = useState({ projects: 0, clients: 0, experience: 0 });
   const [statsAnimated, setStatsAnimated] = useState(false);
+  const [isScrolled, setIsScrolled] = useState(false); // To track scroll state
+  const [currentPage, setCurrentPage] = useState('home'); // Track the current page
+
+
+  useEffect(() => {
+    const handleScroll = () => {
+      // Detect scroll position to toggle styles
+      setIsScrolled(window.scrollY > 50);
+    };
+
+    window.addEventListener('scroll', handleScroll);
+
+    return () => {
+      window.removeEventListener('scroll', handleScroll);
+    };
+  }, []);
+
+  // Dynamically update the header link styling based on scroll position
+  const getHomeLinkStyle = () => {
+    if (currentPage === 'home') {
+      return isScrolled
+        ? 'bg-navy-600 hover:bg-navy-700 text-white px-6 py-2 rounded-full text-sm font-semibold transition-all duration-300 transform hover:scale-105 whitespace-nowrap cursor-pointer'
+        : 'text-navy-800 hover:text-amber-400 px-3 py-2 text-sm font-medium transition-colors'; // Default home link style when on homepage
+    } else {
+      return 'text-navy-800 hover:text-amber-400 px-3 py-2 text-sm font-medium transition-colors';
+    }
+  };
 
   // ✅ Moved Navigation as inner component
   // const Navigation = () => {
@@ -376,8 +403,6 @@ const Home = () => {
   //   window.addEventListener('scroll', handleScroll);
   //   return () => window.removeEventListener('scroll', handleScroll);
   // }, []);
-
-  const [isScrolled, setIsScrolled] = useState(false);
   // const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
 
   useEffect(() => {
@@ -401,18 +426,15 @@ const Home = () => {
   return (
     <div className="min-h-screen bg-white">
       {/* Navigation */}
-      <nav className={`fixed top-0 w-full z-50 transition-all duration-300  ${
-      isScrolled ? 'bg-off-white-500/95 backdrop-blur-sm shadow-lg' : 'bg-transparent'
-    }`}>
+      <nav className={`fixed top-0 w-full z-50 transition-all duration-300 ${isScrolled ? 'bg-off-white-500/95 backdrop-blur-sm shadow-lg' : 'bg-transparent'}`}>
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="flex justify-between items-center h-20">
           <div className="flex-shrink-0">
-            <Link to="/" className="flex items-center">
-            <img 
+            <Link to="/" onClick={() => { setCurrentPage('home'); navigate('/'); }} className="flex items-center">
+              <img
                 src="/image.png"
-                alt="Rajeev Mittal Logo" 
+                alt="Rajeev Mittal Logo"
                 className="h-16 w-auto cursor-pointer"
-                onClick={() => navigate('/')}
               />
               <span className="text-2xl font-serif text-navy-800 font-bold tracking-wide">
                 Rajeev Mittal
@@ -422,7 +444,7 @@ const Home = () => {
 
           <div className="hidden md:block">
             <div className="ml-10 flex items-baseline space-x-8">
-              <Link to="/" className="text-navy-800 hover:text-amber-400 px-3 py-2 text-sm font-medium transition-colors">
+              <Link to="/" onClick={() => { setCurrentPage('home'); }} className={getHomeLinkStyle()}>
                 Home
               </Link>
               <Link to="/properties" className="text-navy-800 hover:text-amber-400 px-3 py-2 text-sm font-medium transition-colors">
@@ -431,10 +453,10 @@ const Home = () => {
               <Link to="/about" className="text-navy-800 hover:text-amber-400 px-3 py-2 text-sm font-medium transition-colors">
                 About
               </Link>
-              <a href="#blog" onClick={handleBlogClick} className="text-navy-800 hover:text-amber-400 px-3 py-2 text-sm font-medium transition-colors cursor-pointer">
+              <a href="#blog" onClick={() => navigate('#blog')} className="text-navy-800 hover:text-amber-400 px-3 py-2 text-sm font-medium transition-colors cursor-pointer">
                 Blog
               </a>
-              <a href="#testimonials" onClick={handleTestimonialsClick} className="text-navy-800 hover:text-amber-400 px-3 py-2 text-sm font-medium transition-colors cursor-pointer">
+              <a href="#testimonials" onClick={() => navigate('#testimonials')} className="text-navy-800 hover:text-amber-400 px-3 py-2 text-sm font-medium transition-colors cursor-pointer">
                 Testimonials
               </a>
               <Link to="/contact" className="text-navy-800 hover:text-amber-400 px-3 py-2 text-sm font-medium transition-colors">
@@ -443,6 +465,7 @@ const Home = () => {
             </div>
           </div>
 
+          {/* Consultation button */}
           <div className="hidden md:block">
             <a 
               href="https://wa.me/919999999999?text=Hi%2C%20I%27m%20interested%20in%20a%20private%20consultation" 
@@ -454,6 +477,7 @@ const Home = () => {
             </a>
           </div>
 
+          {/* Mobile menu toggle button */}
           <div className="md:hidden">
             <button
               onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
@@ -467,10 +491,11 @@ const Home = () => {
         </div>
       </div>
 
+      {/* Mobile Menu */}
       {isMobileMenuOpen && (
         <div className="md:hidden bg-blue-900/95 backdrop-blur-sm">
           <div className="px-2 pt-2 pb-3 space-y-1 sm:px-3">
-            <Link to="/" className="text-white hover:text-amber-400 block px-3 py-2 text-base font-medium">
+            <Link to="/" onClick={() => setCurrentPage('home')} className="text-white hover:text-amber-400 block px-3 py-2 text-base font-medium">
               Home
             </Link>
             <Link to="/properties" className="text-white hover:text-amber-400 block px-3 py-2 text-base font-medium">
@@ -479,10 +504,10 @@ const Home = () => {
             <Link to="/about" className="text-white hover:text-amber-400 block px-3 py-2 text-base font-medium">
               About
             </Link>
-            <a href="#blog" onClick={handleBlogClick} className="text-white hover:text-amber-400 block px-3 py-2 text-base font-medium cursor-pointer">
+            <a href="#blog" onClick={() => navigate('#blog')} className="text-white hover:text-amber-400 block px-3 py-2 text-base font-medium cursor-pointer">
               Blog
             </a>
-            <a href="#testimonials" onClick={handleTestimonialsClick} className="text-white hover:text-amber-400 block px-3 py-2 text-base font-medium cursor-pointer">
+            <a href="#testimonials" onClick={() => navigate('#testimonials')} className="text-white hover:text-amber-400 block px-3 py-2 text-base font-medium cursor-pointer">
               Testimonials
             </a>
             <Link to="/contact" className="text-white hover:text-amber-400 block px-3 py-2 text-base font-medium">
@@ -615,7 +640,7 @@ const Home = () => {
                       <img
                         alt={property.title}
                         className="w-full h-64 object-cover object-top"
-                        src={property.image_url}
+                        src={property.custom_image}
                       />
                       <div className="absolute top-4 left-4">
                         <span className={`${getStatusColor(property.status)} text-white px-4 py-2 rounded-full text-sm font-semibold`}>
@@ -678,11 +703,11 @@ const Home = () => {
       </section>
 
       {/* Areas Section */}
-      <section className="py-32 bg-off-white-50">
+      <section className="py-32 bg-navy-800">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="text-center mb-20">
-            <h2 className="text-5xl font-bold text-navy-900 mb-6 font-serif">Premium Locations</h2>
-            <p className="text-xl text-gray-600 max-w-3xl mx-auto leading-relaxed">
+            <h2 className="text-5xl font-bold text-off-white-500 mb-6 font-serif">Premium Locations</h2>
+            <p className="text-xl text-off-white-600 max-w-3xl mx-auto leading-relaxed">
               Explore luxury properties across NCR's most sought-after areas
             </p>
           </div>
@@ -898,64 +923,6 @@ const Home = () => {
         </div>
       </section>
 
-      {/* Testimonials Carousel */}
-      <section className="py-32 bg-gray-50">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="text-center mb-20">
-            <h2 className="text-5xl font-bold text-navy-900 mb-6 font-serif gold-accent">Client Testimonials</h2>
-            <p className="text-xl text-gray-600">What my clients say about working with me</p>
-          </div>
-
-          <div className="relative max-w-4xl mx-auto">
-            <div className="testimonial-slider overflow-hidden">
-              {testimonials.map((testimonial, index) => (
-                <div
-                  key={index}
-                  className={`transition-all duration-500 ${
-                    index === currentTestimonial ? 'opacity-100 transform translate-x-0' : 'opacity-0 absolute inset-0'
-                  }`}
-                >
-                  <div className="bg-white p-12 rounded-2xl text-center border border-gray-200 shadow-card">
-                    <div className="flex justify-center mb-6">
-                      {[...Array(testimonial.rating)].map((_, i) => (
-                        <i key={i} className="ri-star-fill text-gold-400 text-2xl w-6 h-6 flex items-center justify-center"></i>
-                      ))}
-                    </div>
-                    <p className="text-xl text-gray-700 mb-8 italic leading-relaxed font-light">
-                      "{testimonial.text}"
-                    </p>
-                    <div className="flex items-center justify-center">
-                      <img
-                        alt={testimonial.name}
-                        className="w-16 h-16 rounded-full object-cover mr-6 object-top border border-gray-200"
-                        src={testimonial.image}
-                      />
-                      <div className="text-left">
-                        <h4 className="text-xl font-semibold text-navy-900">{testimonial.name}</h4>
-                        <p className="text-gold-500">{testimonial.role}</p>
-                      </div>
-                    </div>
-                  </div>
-                </div>
-              ))}
-            </div>
-
-            {/* Testimonial Navigation */}
-            <div className="flex justify-center mt-12 space-x-3">
-              {testimonials.map((_, index) => (
-                <button
-                  key={index}
-                  onClick={() => setCurrentTestimonial(index)}
-                  className={`w-3 h-3 rounded-full transition-all cursor-pointer ${
-                    index === currentTestimonial ? 'bg-gold-400 w-8' : 'bg-gray-300'
-                  }`}
-                />
-              ))}
-            </div>
-          </div>
-        </div>
-      </section>
-
       {/* Blog Section - Replaced Latest Insights */}
       <section className="py-32 bg-navy-900">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
@@ -1024,6 +991,66 @@ const Home = () => {
         </div>
       </section>
 
+      {/* Testimonials Carousel */}
+      <section className="py-32 bg-gray-50">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+          <div className="text-center mb-20">
+            <h2 className="text-5xl font-bold text-navy-900 mb-6 font-serif gold-accent">Client Testimonials</h2>
+            <p className="text-xl text-gray-600">What my clients say about working with me</p>
+          </div>
+
+          <div className="relative max-w-4xl mx-auto">
+            <div className="testimonial-slider overflow-hidden">
+              {testimonials.map((testimonial, index) => (
+                <div
+                  key={index}
+                  className={`transition-all duration-500 ${
+                    index === currentTestimonial ? 'opacity-100 transform translate-x-0' : 'opacity-0 absolute inset-0'
+                  }`}
+                >
+                  <div className="bg-white p-12 rounded-2xl text-center border border-gray-200 shadow-card">
+                    <div className="flex justify-center mb-6">
+                      {[...Array(testimonial.rating)].map((_, i) => (
+                        <i key={i} className="ri-star-fill text-gold-400 text-2xl w-6 h-6 flex items-center justify-center"></i>
+                      ))}
+                    </div>
+                    <p className="text-xl text-gray-700 mb-8 italic leading-relaxed font-light">
+                      "{testimonial.text}"
+                    </p>
+                    <div className="flex items-center justify-center">
+                      <img
+                        alt={testimonial.name}
+                        className="w-16 h-16 rounded-full object-cover mr-6 object-top border border-gray-200"
+                        src={testimonial.image}
+                      />
+                      <div className="text-left">
+                        <h4 className="text-xl font-semibold text-navy-900">{testimonial.name}</h4>
+                        <p className="text-gold-500">{testimonial.role}</p>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              ))}
+            </div>
+
+            {/* Testimonial Navigation */}
+            <div className="flex justify-center mt-12 space-x-3">
+              {testimonials.map((_, index) => (
+                <button
+                  key={index}
+                  onClick={() => setCurrentTestimonial(index)}
+                  className={`w-3 h-3 rounded-full transition-all cursor-pointer ${
+                    index === currentTestimonial ? 'bg-gold-400 w-8' : 'bg-gray-300'
+                  }`}
+                />
+              ))}
+            </div>
+          </div>
+        </div>
+      </section>
+
+      
+
       {/* Contact Section with Google Maps */}
       <section id="contact" className="py-32 bg-gray-50">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
@@ -1067,19 +1094,20 @@ const Home = () => {
 
               {/* Google Maps */}
               <div className="mt-12">
-                <h4 className="text-2xl font-semibold text-navy-900 mb-6 font-serif">Visit Our Office</h4>
-                <div className="rounded-2xl overflow-hidden border border-gray-200">
-                  <iframe
-                    src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3508.2682782!2d77.08!3d28.47!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1s0x390ceb67d5a!2sDLF%20City%20Phase%201%2C%20Sector%2026%2C%20Gurugram%2C%20Haryana!5e0!3m2!1sen!2sin!4v1640000000000!5m2!1sen!2sin"
-                    width="100%"
-                    height="300"
-                    style={{ border: 0 }}
-                    allowFullScreen
-                    loading="lazy"
-                    referrerPolicy="no-referrer-when-downgrade"
-                  ></iframe>
-                </div>
+              <h4 className="text-2xl font-semibold text-navy-900 mb-6 font-serif">Visit Our Office</h4>
+              <div className="rounded-2xl overflow-hidden border border-gray-200">
+                <iframe
+                  src="https://www.google.com/maps/embed?pb=!1m14!1m8!1m3!1d1753.7341945745331!2d77.0982918!3d28.4654376!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x390d165555555555%3A0x4b09215c3e11a09!2sRajeev%20Mittal%20Estates%20Private%20Limited!5e0!3m2!1sen!2sin!4v1758846800737!5m2!1sen!2sin"
+                  width="100%"
+                  height="300"
+                  style={{ border: 0 }}
+                  allowFullScreen
+                  loading="lazy"
+                  referrerPolicy="no-referrer-when-downgrade"
+                  title="Google Maps Location"
+                ></iframe>
               </div>
+            </div>
             </div>
 
             <div className="bg-white p-10 rounded-2xl border border-gray-200 shadow-card">
