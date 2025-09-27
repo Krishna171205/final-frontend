@@ -161,7 +161,7 @@ const Home = () => {
       description: 'Expert real estate guidance with personalized service. Let me help you find the perfect property or sell your home for the best price.'
     },
     {
-      image: 'https://propertyepicenter.com/wp-content/uploads/2024/03/www.propertyepicenter.com-9.png',
+      image: '/dlfimage.webp',
       title: 'Premium Properties',
       subtitle: 'In Gurgaon',
       description: "Specialized in luxury real estate with over 30 years of experience in Gurgaon\'s premium market."
@@ -524,27 +524,27 @@ const Home = () => {
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="flex justify-between items-center h-20">
             <div className="flex-shrink-0">
-              <Link to="/" onClick={() => { navigate('/'); }} className="flex items-center">
+              <Link to="/" onClick={() => { scrollToSection('/'); }} className="flex items-center">
                 <img
                   src="/image.png"
                   alt="Rajeev Mittal Logo"
                   className="h-16 w-auto cursor-pointer"
                 />
-                <div>
+                {/* <div>
                   <span className="text-2xl font-serif text-navy-800 font-bold tracking-wide">
                     Rajeev Mittal
                   </span>
                   <span className="text-sm text-gray-500 block ml-1">Estates Pvt. Ltd.</span>
-                </div>
+                </div> */}
               </Link>
             </div>
 
             {/* Desktop Menu */}
             <div className="hidden md:block">
               <div className="ml-10 flex items-baseline space-x-8">
-                <Link to="/" onClick={() => scrollToSection('home')} className={getHomeLinkStyle('home')}>Home</Link>
+                <Link to="/" onClick={() => scrollToSection('home')} className={`${getHomeLinkStyle('home')} hover:text-amber-400`}>Home</Link>
                 <Link to="/" onClick={() => scrollToSection('properties')} className={getHomeLinkStyle('properties')}>Properties</Link>
-                <Link to="/" onClick={() => scrollToSection('about')} className={getHomeLinkStyle('about')}>About</Link>
+                <Link to="/about" onClick={() => navigate('/about')} className={getHomeLinkStyle('about')}>About</Link>
                 <Link to="/" onClick={() => scrollToSection('blog')} className={getHomeLinkStyle('blog')}>Blog</Link>
                 <Link to="/" onClick={() => scrollToSection('testimonials')} className={getHomeLinkStyle('testimonials')}>Testimonials</Link>
                 <Link to="/" onClick={() => scrollToSection('contact')} className={getHomeLinkStyle('contact')}>Contact</Link>
@@ -565,7 +565,7 @@ const Home = () => {
             </div>
 
             {/* Mobile menu toggle button */}
-            <div className="fixed top-4 right-4 z-50">
+            <div className="md:hidden fixed top-4 right-4 z-50">
             <button
             onClick={() => setIsSidebarOpen(!isSidebarOpen)}
             className="text-white cursor-pointer p-4 rounded-full transition-transform duration-300 transform hover:scale-105"
@@ -711,7 +711,7 @@ const Home = () => {
       </section>
 
       {/* Stats Section */}
-      <section id="home" className="py-20 bg-gray-50">
+      <section id="properties" className="py-20 bg-gray-50">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="grid md:grid-cols-3 gap-12 text-center">
             <div className="animate-fadeInUp">

@@ -28,15 +28,11 @@ serve(async (req) => {
     if (req.method === "GET") {
       const url = new URL(req.url)
       const page = parseInt(url.searchParams.get("page") || "1")
-      const limit = parseInt(url.searchParams.get("limit") || "12") // default 12 items
-      const from = (page - 1) * limit
-      const to = from + limit - 1
-
+      
       const { data: properties, error } = await supabase
         .from("properties")
         .select("id, title, location, full_address, type, status, description, bhk, baths, sqft, area, custom_image, custom_image_2, custom_image_3, created_at")
         .order("created_at", { ascending: false })
-        .range(from, to)
 
       if (error) {
         console.error("GET properties error:", error)
@@ -46,7 +42,6 @@ serve(async (req) => {
       return jsonResponse({
         success: true,
         page,
-        limit,
         count: properties?.length ?? 0,
         properties: properties ?? []
       })

@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, useSearchParams } from 'react-router-dom';
 
 interface Blog {
   id: number;
@@ -28,6 +28,15 @@ const BlogsPage = () => {
   const [allTags, setAllTags] = useState<string[]>([]);
   const [featuredBlogs, setFeaturedBlogs] = useState<Blog[]>([]);
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
+      const [filterType, setFilterType] = useState('all');
+      const [searchParams] = useSearchParams();
+        const [filterArea, setFilterArea] = useState(searchParams.get('area') || 'all');
+        const [isSidebarOpen, setIsSidebarOpen] = useState(false);
+        const [isScrolled, setIsScrolled] = useState(false); // To track scroll state
+      const [currentPage, setCurrentPage] = useState('home'); // Track the current page
+      const handleLinkClick = () => {
+        setIsSidebarOpen(false); // Close the sidebar when a link is clicked
+      };
 
   useEffect(() => {
     loadBlogs();
@@ -36,6 +45,46 @@ const BlogsPage = () => {
   useEffect(() => {
     filterBlogs();
   }, [blogs, searchTerm, selectedTag]);
+
+  useEffect(() => {
+    // Update filter when URL params change
+    
+    const areaParam = searchParams.get('area');
+    if (areaParam) {
+      setFilterArea(areaParam);
+    }
+    const handleScroll = () => {
+      setIsScrolled(window.scrollY > 50);
+    };
+    
+    window.addEventListener('scroll', handleScroll);
+    
+    // Setup IntersectionObserver to track section visibility
+    const observerOptions = {
+      root: null, // viewport as the root
+      rootMargin: '0px',
+      threshold: 0.5, // trigger when 50% of the section is in view
+    };
+    
+    const sections = document.querySelectorAll('section');
+    
+    const handleIntersection = (entries: IntersectionObserverEntry[]) => {
+      entries.forEach(entry => {
+        if (entry.isIntersecting) {
+          setCurrentPage(entry.target.id); // Update currentPage when section is visible
+        }
+      });
+    };
+    
+    const observer = new IntersectionObserver(handleIntersection, observerOptions);
+    
+    sections.forEach(section => observer.observe(section));
+    
+    return () => {
+      window.removeEventListener('scroll', handleScroll);
+      observer.disconnect(); // Cleanup observer
+    };
+  }, [searchParams]);
 
   const loadBlogs = async () => {
     try {
@@ -109,55 +158,135 @@ const BlogsPage = () => {
   return (
     <div className="min-h-screen bg-white">
       {/* Navigation */}
-      <nav className="fixed w-full z-50 bg-gray-900/95 backdrop-blur-md border-b border-gray-800 shadow-sm">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="flex justify-between items-center h-20">
-            <div className="flex items-center">
-              <button onClick={() => navigate('/')} className="text-3xl font-bold bg-gradient-to-r from-[#F59E0B] to-[#d97706] bg-clip-text text-transparent font-serif cursor-pointer">
-                Rajeev Mittal
-              </button>
-            </div>
-            
-            {/* Desktop Navigation */}
-            <div className="hidden md:block">
-              <div className="ml-10 flex items-baseline space-x-8">
-                <button onClick={() => navigate('/')} className="text-gray-300 hover:text-[#F59E0B] px-3 py-2 text-sm font-medium cursor-pointer transition-colors">Home</button>
-                <button onClick={() => navigate('/properties')} className="text-gray-300 hover:text-[#F59E0B] px-3 py-2 text-sm font-medium cursor-pointer transition-colors">Properties</button>
-                <a href="/#services" className="text-gray-300 hover:text-[#F59E0B] px-3 py-2 text-sm font-medium cursor-pointer transition-colors">Services</a>
-                <a href="#" className="text-[#F59E0B] px-3 py-2 text-sm font-medium cursor-pointer transition-colors">Blog</a>
-                <a href="/#contact" className="text-gray-300 hover:text-[#F59E0B] px-3 py-2 text-sm font-medium cursor-pointer transition-colors">Contact</a>
+      <nav className={`fixed top-0 w-full z-50 transition-all duration-300 bg-off-white-500/95 backdrop-blur-sm shadow-lg `}>
+              <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+                <div className="flex justify-between items-center h-20">
+                  <div className="flex-shrink-0">
+                    <button  onClick={() => { navigate('/'); }} className="flex items-center">
+                      <img
+                        src="/image.png"
+                        alt="Rajeev Mittal Logo"
+                        className="h-16 w-auto cursor-pointer"
+                      />
+                      {/* <div>
+                        <span className="text-2xl font-serif text-navy-800 font-bold tracking-wide">
+                          Rajeev Mittal
+                        </span>
+                        <span className="text-sm text-gray-500 block ml-1">Estates Pvt. Ltd.</span>
+                      </div> */}
+                    </button>
+                  </div>
+      
+                  {/* Desktop Menu */}
+                  <div className="hidden md:block">
+                    <div className="ml-10 flex items-baseline space-x-8">
+                      <button  onClick={() => navigate('/')} className={('home')}>Home</button>
+                      <button  onClick={() => navigate('/properties')}>Properties</button>
+                      <button  onClick={() => navigate('/about')} className={('')}>About</button>
+                      <button  onClick={() => navigate('/blogs')} className={('blog')}>Blog</button>
+                      <button  onClick={() => navigate('/areas')} className={('px-3 py-2 text-sm font-medium cursor-pointer bg-navy-600 hover:bg-navy-700 text-white rounded-full font-semibold transform hover:scale-105')}>Areas</button>
+                      {/* <button  onClick={() => navigate('/contact')} className={('contact')}>Contact</button> */}
+                    </div>
+                  </div>
+      
+                  {/* Consultation Button */}
+                  <div className="hidden md:block">
+                    <a 
+                      href="https://wa.me/919999999999?text=Hi%2C%20I%27m%20interested%20in%20a%20private%20consultation" 
+                      target="_blank" 
+                      rel="noopener noreferrer"
+                      className="bg-navy-500 hover:bg-off-white-500 text-off-white-300 hover:text-navy-500 px-6 py-2 rounded-full text-sm font-semibold transition-all duration-300 transform hover:scale-105 whitespace-nowrap cursor-pointer"
+                    >
+                      Book Private Consultation
+                    </a>
+                  </div>
+      
+                  {/* Mobile menu toggle button */}
+                  <div className="md:hidden fixed top-4 right-4 z-50">
+                  <button
+                  onClick={() => setIsSidebarOpen(!isSidebarOpen)}
+                  className="text-white cursor-pointer p-4 rounded-full transition-transform duration-300 transform hover:scale-105"
+                  >
+                  {/* Three-line hamburger menu */}
+                  <div className="w-6 h-1 bg-white mb-1"></div>
+                  <div className="w-6 h-1 bg-white mb-1"></div>
+                  <div className="w-6 h-1 bg-white mb-1"></div>
+                   </button>
+                   </div>
+                </div>
+              </div>
+      
+              {/* Mobile Menu */}
+           <div
+              className={`fixed top-0 right-0 bottom-0 w-64 bg-off-white-900  shadow-lg z-40 transition-transform duration-300 ${
+                isSidebarOpen ? 'translate-x-0' : 'translate-x-full'
+              }`}
+            >
+              <div className=" fixed w-64 flex flex-col items-center py-8 space-y-6">
+                <a
+                  href="#home"
+                  className="text-lg text-gray-900 hover:text-indigo-500 opacity-100"
+                  onClick={handleLinkClick}
+                >
+                  Home
+                </a>
+                <a
+                  href="#properties"
+                  className="text-lg text-gray-900 hover:text-indigo-500 opacity-100"
+                  onClick={handleLinkClick}
+                >
+                  Properties
+                </a>
+                <a
+                  href="#about"
+                  className="text-lg text-gray-900 hover:text-indigo-500 opacity-100"
+                  onClick={handleLinkClick}
+                >
+                  About
+                </a>
+                <a
+                  href="#blog"
+                  className="text-lg text-gray-900 hover:text-indigo-500 opacity-100"
+                  onClick={handleLinkClick}
+                >
+                  Blog
+                </a>
+                <a
+                  href="#testimonials"
+                  className="text-lg text-gray-900 hover:text-indigo-500 opacity-100"
+                  onClick={handleLinkClick}
+                >
+                  Testimonials
+                </a>
+                <a
+                  href="#contact"
+                  className="text-lg text-gray-900 hover:text-indigo-500 opacity-100"
+                  onClick={handleLinkClick}
+                >
+                  Contact
+                </a>
+      
+                <div className="px-6 pt-4 opacity-100">
+                  <a
+                    href="https://wa.me/919999999999?text=Hi%2C%20I%27m%20interested%20in%20a%20private%20consultation"
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="bg-indigo-500 hover:bg-indigo-600 text-white px-6 py-2 rounded-full text-sm font-semibold transition-all duration-300 block text-center opacity-100"
+                  >
+                    Book Private Consultation
+                  </a>
+                </div>
               </div>
             </div>
-            
-            <div className="flex items-center space-x-4">
-              <a href="https://wa.me/9811017103" target="_blank" rel="noopener noreferrer" className="w-10 h-10 bg-green-500 hover:bg-green-600 rounded-full flex items-center justify-center cursor-pointer transition-colors">
-                <i className="ri-whatsapp-line text-white w-5 h-5 flex items-center justify-center"></i>
-              </a>
-              
-              {/* Mobile menu button */}
-              <button 
-                onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
-                className="md:hidden w-10 h-10 bg-[#F59E0B] hover:bg-[#d97706] rounded-lg flex items-center justify-center cursor-pointer transition-colors"
-              >
-                <i className={`ri-${mobileMenuOpen ? 'close' : 'menu'}-line text-white w-5 h-5 flex items-center justify-center`}></i>
-              </button>
-            </div>
-          </div>
-          
-          {/* Mobile Navigation */}
-          {mobileMenuOpen && (
-            <div className="md:hidden mobile-menu bg-gray-900 border-t border-gray-800">
-              <div className="px-2 pt-2 pb-3 space-y-1">
-                <button onClick={() => navigate('/')} className="text-gray-300 hover:text-[#F59E0B] block px-3 py-2 text-base font-medium cursor-pointer w-full text-left">Home</button>
-                <button onClick={() => navigate('/properties')} className="text-gray-300 hover:text-[#F59E0B] block px-3 py-2 text-base font-medium cursor-pointer w-full text-left">Properties</button>
-                <a href="/#services" className="text-gray-300 hover:text-[#F59E0B] block px-3 py-2 text-base font-medium cursor-pointer">Services</a>
-                <a href="#" className="text-[#F59E0B] block px-3 py-2 text-base font-medium cursor-pointer">Blog</a>
-                <a href="/#contact" className="text-gray-300 hover:text-[#F59E0B] block px-3 py-2 text-base font-medium cursor-pointer">Contact</a>
-              </div>
-            </div>
-          )}
-        </div>
-      </nav>
+      
+            {/* Overlay that appears when Sidebar is open */}
+            {isSidebarOpen && (
+              <div
+                onClick={() => setIsSidebarOpen(false)}
+                className="fixed top-0 left-0 right-0 bottom-0 bg-black opacity-50 z-30"
+              ></div>
+            )}
+            </nav>
 
       {/* Hero Section */}
       <section className="pt-32 pb-20 bg-gradient-to-br from-gray-900 via-gray-800 to-gray-900">
