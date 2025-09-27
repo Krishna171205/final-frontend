@@ -148,7 +148,7 @@ const AdminDashboard = () => {
       console.log('Loading properties from database...')
       const session = await supabase.auth.getSession();
       
-      const response = await fetch(`${import.meta.env.VITE_PUBLIC_SUPABASE_URL}/functions/v1/manage-properties`, {
+      const response = await fetch(`${import.meta.env.VITE_PUBLIC_SUPABASE_URL}/functions/v1/get-properties`, {
         method: 'GET',
         headers: {
           'Content-Type': 'application/json',

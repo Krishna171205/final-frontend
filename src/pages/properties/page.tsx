@@ -1,5 +1,5 @@
 
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useRef } from 'react';
 import { useNavigate, useSearchParams } from 'react-router-dom';
 
 interface Property {
@@ -33,6 +33,19 @@ const Properties = () => {
   const [sortBy, setSortBy] = useState('newest');
   const [page, setPage] = useState(1);
   const [hasMore, setHasMore] = useState(true);
+
+  const loadMoreRef = useRef<HTMLDivElement | null>(null);
+
+  const handleLoadMore = async () => {
+  const scrollYBefore = window.scrollY;
+  await loadProperties(page + 1);
+
+  // ✅ Restore scroll position after new items render
+  requestAnimationFrame(() => {
+    window.scrollTo({ top: scrollYBefore, behavior: 'instant' as ScrollBehavior });
+  });
+};
+
   // const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
   const [isScrolled, setIsScrolled] = useState(false); // To track scroll state
   const [_currentPage, setCurrentPage] = useState('home'); // Track the current page
@@ -84,35 +97,43 @@ const Properties = () => {
     };
   }, [searchParams]);
 
-  const loadProperties = async (nextPage: number, replace = false) => {
-    try {
-      setLoading(true);
-      const response = await fetch(
-        `${import.meta.env.VITE_PUBLIC_SUPABASE_URL}/functions/v1/get-properties?page=${nextPage}&limit=${LIMIT}`,
-        {
-          method: 'GET',
-          headers: { 'Content-Type': 'application/json' },
-        }
-      );
+            const loadProperties = async (nextPage: number, replace = false) => {
+          setLoading(true);
 
-      if (response.ok) {
-        const data = await response.json();
-        const newProps: Property[] = data.properties || [];
-        // append or replace
-        setProperties(prev => (replace ? newProps : [...prev, ...newProps]));
-        setHasMore(newProps.length === LIMIT); // if fewer than LIMIT, no more pages
-        setPage(nextPage);
-      } else {
-        setProperties([]);
-        setHasMore(false);
-      }
-    } catch (error) {
-      setProperties([]);
-      setHasMore(false);
-    } finally {
-      setLoading(false);
-    }
-  };
+          try {
+            const res = await fetch(
+              `${import.meta.env.VITE_PUBLIC_SUPABASE_URL}/functions/v1/get-properties?page=${nextPage}&limit=${LIMIT}`,
+              { headers: { 'Content-Type': 'application/json' } }
+            );
+
+            if (!res.ok) throw new Error(`HTTP ${res.status}`);
+
+            const data = await res.json();
+            const newProps: Property[] = data.properties ?? [];
+
+            // ✅ Append or replace properties
+            setProperties(prev => (replace ? newProps : [...prev, ...newProps]));
+
+            // ✅ Stop when fewer than LIMIT
+            setHasMore(newProps.length === LIMIT);
+
+            // ✅ Only update page if data came in
+            if (newProps.length > 0) setPage(nextPage);
+          } catch (err) {
+            console.error('Error loading properties:', err);
+            if (replace) setProperties([]); // clear only on replace
+            setHasMore(false);
+          } finally {
+            setLoading(false);
+          }
+        };
+
+  //   const handleLoadMore = async () => {
+  //   await loadProperties(page + 1);
+  //   // ✅ keep “Load More” area in view after new content is added
+  //   loadMoreRef.current?.scrollIntoView({ behavior: "smooth", block: "center" });
+  // };
+
   const getStatusColor = (status: string) => {
     switch (status) {
       case 'ready-to-move':
@@ -453,13 +474,13 @@ const Properties = () => {
 
             {/* ✅ Next Page Button */}
             {hasMore && (
-              <div className="text-center mt-12">
+              <div ref={loadMoreRef} className="text-center mt-12">
                 <button
-                  onClick={() => loadProperties(page + 1)}
+                  onClick={handleLoadMore}
                   disabled={loading}
                   className="px-6 py-3 bg-navy-600 hover:bg-navy-700 text-white rounded-lg font-semibold shadow-md disabled:opacity-50"
                 >
-                  {loading ? 'Loading...' : 'Next Page'}
+                  {loading ? 'Loading...' : 'Load More...'}
                 </button>
               </div>
             )}

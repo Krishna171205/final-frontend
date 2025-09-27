@@ -30,7 +30,7 @@ serve(async (req) => {
     if (req.method === "GET") {
       const url = new URL(req.url)
       const page = parseInt(url.searchParams.get("page") || "1")
-      const limit = parseInt(url.searchParams.get("limit") || "6") // default to 10 items per page
+      const limit = parseInt(url.searchParams.get("limit") || "40") // default to 10 items per page
 
       // Simulate a network delay (latency)
 
@@ -39,7 +39,7 @@ serve(async (req) => {
         .from("properties")
         .select("id, title, location, type, status, custom_image, created_at,full_address,bhk,baths,sqft, description, area ")
         .order("created_at", { ascending: false })
-        .range((page - 1) * limit, page * limit - 1) // Paginate the results
+        // .range((page - 1) * limit, page * limit - 1) // Paginate the results
 
       if (error) {
         console.error("GET properties error:", error)

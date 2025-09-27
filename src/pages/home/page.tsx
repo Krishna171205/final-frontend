@@ -1216,7 +1216,7 @@ const Home = () => {
               <h4 className="text-2xl font-semibold text-navy-900 mb-6 font-serif">Visit Our Office</h4>
               <div className="rounded-2xl overflow-hidden border border-gray-200">
                 <iframe
-                  src="https://www.google.com/maps/embed?pb=!1m14!1m8!1m3!1d1753.7341945745331!2d77.0982918!3d28.4654376!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x390d165555555555%3A0x4b09215c3e11a09!2sRajeev%20Mittal%20Estates%20Private%20Limited!5e0!3m2!1sen!2sin!4v1758846800737!5m2!1sen!2sin"
+                  src="https://www.google.com/maps/embed?pb=!1m17!1m12!1m3!1d3507.2534042461466!2d77.0992774754949!3d28.47191427575285!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m2!1m1!2zMjjCsDI4JzE4LjkiTiA3N8KwMDYnMDYuNyJF!5e0!3m2!1sen!2sin!4v1759010314246!5m2!1sen!2sin"
                   width="100%"
                   height="300"
                   style={{ border: 0 }}
@@ -1503,7 +1503,7 @@ const Home = () => {
                 </li>
                 <li className="flex items-start">
                   <i className="ri-map-pin-line mr-3 text-gold-400 w-4 h-4 flex items-center justify-center mt-1"></i>
-                  <span>123, DLF Qutub Plaza, DLF City-1<br />Gurugram, (Hry) 122002</span>
+                  <span>123, DLF Qutab Plaza, DLF City, Phase-1<br />Gurugram - 122002 ( Haryana)</span>
                 </li>
               </ul>
             </div>
