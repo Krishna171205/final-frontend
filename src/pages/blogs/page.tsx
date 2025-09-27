@@ -27,13 +27,13 @@ const BlogsPage = () => {
   const [filteredBlogs, setFilteredBlogs] = useState<Blog[]>([]);
   const [allTags, setAllTags] = useState<string[]>([]);
   const [featuredBlogs, setFeaturedBlogs] = useState<Blog[]>([]);
-  const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
-      const [filterType, setFilterType] = useState('all');
+  // const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
+  //     const [filterType, setFilterType] = useState('all');
       const [searchParams] = useSearchParams();
-        const [filterArea, setFilterArea] = useState(searchParams.get('area') || 'all');
+        const [_filterArea, setFilterArea] = useState(searchParams.get('area') || 'all');
         const [isSidebarOpen, setIsSidebarOpen] = useState(false);
-        const [isScrolled, setIsScrolled] = useState(false); // To track scroll state
-      const [currentPage, setCurrentPage] = useState('home'); // Track the current page
+        const [_isScrolled, setIsScrolled] = useState(false); // To track scroll state
+      const [_currentPage, setCurrentPage] = useState('home'); // Track the current page
       const handleLinkClick = () => {
         setIsSidebarOpen(false); // Close the sidebar when a link is clicked
       };

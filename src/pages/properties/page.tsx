@@ -29,9 +29,9 @@ const Properties = () => {
   const [filterType, setFilterType] = useState('all');
   const [filterArea, setFilterArea] = useState(searchParams.get('area') || 'all');
   const [sortBy, setSortBy] = useState('newest');
-  const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
+  // const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
   const [isScrolled, setIsScrolled] = useState(false); // To track scroll state
-  const [currentPage, setCurrentPage] = useState('home'); // Track the current page
+  const [_currentPage, setCurrentPage] = useState('home'); // Track the current page
   const handleLinkClick = () => {
     setIsSidebarOpen(false); // Close the sidebar when a link is clicked
   };

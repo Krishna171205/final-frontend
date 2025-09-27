@@ -9,9 +9,9 @@ const About = () => {
   // const [filterArea, setFilterArea] = useState(searchParams.get('area') || 'all');
   const [isVisible, setIsVisible] = useState(false);
   const [isSidebarOpen, setIsSidebarOpen] = useState(false);
-  const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
-  const [isScrolled, setIsScrolled] = useState(false); // To track scroll state
-  const [currentPage, setCurrentPage] = useState('home'); // Track the current page
+  // const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
+  const [_isScrolled, setIsScrolled] = useState(false); // To track scroll state
+  const [_currentPage, setCurrentPage] = useState('home'); // Track the current page
   const handleLinkClick = () => {
     setIsSidebarOpen(false); // Close the sidebar when a link is clicked
   };
