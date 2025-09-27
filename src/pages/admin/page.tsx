@@ -16,9 +16,9 @@ interface Property {
   type: string;
   status: string;
   description: string;
-  bhk: number;
-  baths: number;
-  sqft: number;
+  bhk: string;
+  baths: string;
+  sqft: string;
   area?: string;
   created_at: string;
   custom_image: File | string | null;
@@ -79,9 +79,9 @@ const AdminDashboard = () => {
     type: 'House',
     status: 'ready-to-move',
     description: '',
-    bhk: 1,
-    baths: 1,
-    sqft: 1000,
+    bhk: "1",
+    baths: "1",
+    sqft: "1000",
     area: '',
     custom_image: null as File | null,  // explicitly defining the type as `File | null`
     custom_image_2: null as File | null,
@@ -318,9 +318,9 @@ const AdminDashboard = () => {
   setIsSubmitting(true);
   try {
     console.log('Adding new property:', newProperty);
-    const bhk = isNaN(Number(newProperty.bhk)) ? 1 : Number(newProperty.bhk);
-    const baths = isNaN(Number(newProperty.baths)) ? 1 : Number(newProperty.baths);
-    const sqft = isNaN(Number(newProperty.sqft)) ? 1000 : Number(newProperty.sqft);
+    // const bhk = isNaN(Number(newProperty.bhk)) ? 1 : Number(newProperty.bhk);
+    // const baths = isNaN(Number(newProperty.baths)) ? 1 : Number(newProperty.baths);
+    // const sqft = isNaN(Number(newProperty.sqft)) ? 1000 : Number(newProperty.sqft);
     
     // Convert images to base64 using FileReader and await their results
     const toBase64 = (file?: File | null): Promise<string | null> => {
@@ -355,9 +355,9 @@ const AdminDashboard = () => {
         status: newProperty.status || 'ready-to-move',
         description: newProperty.description,
         area: (newProperty.area) || '',
-        bhk,
-        baths,
-        sqft,
+        bhk:newProperty.bhk,
+        baths:newProperty.baths,
+        sqft:newProperty.sqft,
         custom_image: imageData,   // ✅ match backend
         custom_image_2: imageData2, // ✅ match backend
         custom_image_3: imageData3  // ✅ match backend
@@ -379,9 +379,9 @@ const AdminDashboard = () => {
         type: 'House',
         status: 'ready-to-move',
         description: '',
-        bhk: 1,
-        baths: 1,
-        sqft: 1000,
+        bhk: "1",
+        baths: "1",
+        sqft: "1000",
         area: '',
         custom_image: null,
         custom_image_2: null,
@@ -473,9 +473,9 @@ const handleEditProperty = async () => {
         full_address: selectedProperty.full_address, // ✅ snake_case
         type: selectedProperty.type,
         status: selectedProperty.status,
-        bhk: Number(selectedProperty.bhk) || 1,
-        baths: Number(selectedProperty.baths) || 1,
-        sqft: Number(selectedProperty.sqft) || 1000,
+        bhk: (selectedProperty.bhk) || "1",
+        baths: (selectedProperty.baths) || "1",
+        sqft: (selectedProperty.sqft) || "1000",
         description: selectedProperty.description,
         area: selectedProperty.area,
         custom_image: imageData,   // ✅
@@ -1302,9 +1302,9 @@ const handleDeleteProperty = async (id: number) => {
                     onChange={(e) => setNewProperty({...newProperty, status: e.target.value})}
                     className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-navy-500 focus:border-navy-500 pr-8"
                   >
-                    <option value="For Sale">For Sale</option>
-                    <option value="For Rent">For Rent</option>
-                    <option value="Investment">Investment</option>
+                    <option value="read-to-move">ready-to-move</option>
+                    <option value="under-construction">under-construction</option>
+                    <option value="ongoing">ongoing</option>
                   </select>
                 </div>
               </div>
@@ -1313,10 +1313,8 @@ const handleDeleteProperty = async (id: number) => {
                 <div>
                   <label className="block text-sm font-medium text-gray-700 mb-2">BHK</label>
                   <input
-                    type="number"
-                    min="1"
                     value={newProperty.bhk ?? ""}
-                    onChange={(e) => setNewProperty({...newProperty, bhk: parseInt(e.target.value)})}
+                    onChange={(e) => setNewProperty({...newProperty, bhk: (e.target.value)})}
                     className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-navy-500 focus:border-navy-500"
                     required
                   />
@@ -1324,10 +1322,8 @@ const handleDeleteProperty = async (id: number) => {
                 <div>
                   <label className="block text-sm font-medium text-gray-700 mb-2">Bathrooms</label>
                   <input
-                    type="number"
-                    min="1"
                     value={newProperty.baths ?? ""}
-                    onChange={(e) => setNewProperty({...newProperty, baths: parseInt(e.target.value)})}
+                    onChange={(e) => setNewProperty({...newProperty, baths: (e.target.value)})}
                     className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-navy-500 focus:border-navy-500"
                     required
                   />
@@ -1335,10 +1331,8 @@ const handleDeleteProperty = async (id: number) => {
                 <div>
                   <label className="block text-sm font-medium text-gray-700 mb-2">Square Feet</label>
                   <input
-                    type="number"
-                    min="1"
                     value={newProperty.sqft ?? ""}
-                    onChange={(e) => setNewProperty({...newProperty, sqft: parseInt(e.target.value)})}
+                    onChange={(e) => setNewProperty({...newProperty, sqft: (e.target.value)})}
                     className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-navy-500 focus:border-navy-500"
                     required
                   />
@@ -1536,9 +1530,9 @@ const handleDeleteProperty = async (id: number) => {
                     onChange={(e) => setSelectedProperty({...selectedProperty, status: e.target.value})}
                     className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-navy-500 focus:border-navy-500 pr-8"
                   >
-                    <option value="For Sale">For Sale</option>
-                    <option value="For Rent">For Rent</option>
-                    <option value="Investment">Investment</option>
+                    <option value="ready-to-move">ready-to-move</option>
+                    <option value="under-construction">under-construction</option>
+                    <option value="ongoing">ongoing</option>
                   </select>
                 </div>
               </div>
@@ -1565,19 +1559,16 @@ const handleDeleteProperty = async (id: number) => {
                 <div>
                   <label className="block text-sm font-medium text-gray-700 mb-2">BHK</label>
                   <input 
-                    type="number"
                     value={selectedProperty.bhk ?? ""}
-                    onChange={(e) => setSelectedProperty({...selectedProperty, bhk: parseInt(e.target.value) || 1})}
+                    onChange={(e) => setSelectedProperty({...selectedProperty, bhk:(e.target.value) || "1"})}
                     className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-navy-500 focus:border-navy-500"
-                    min="1"
                   />
                 </div>
                 <div>
                   <label className="block text-sm font-medium text-gray-700 mb-2">Bathrooms</label>
                   <input 
-                    type="number"
                     value={selectedProperty.baths ?? ""}
-                    onChange={(e) => setSelectedProperty({...selectedProperty, baths: parseInt(e.target.value) || 1})}
+                    onChange={(e) => setSelectedProperty({...selectedProperty, baths: (e.target.value) || "1"})}
                     className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-navy-500 focus:border-navy-500"
                     min="1"
                   />
@@ -1585,9 +1576,8 @@ const handleDeleteProperty = async (id: number) => {
                 <div>
                   <label className="block text-sm font-medium text-gray-700 mb-2">Sq.ft Area</label>
                   <input 
-                    type="number"
                     value={selectedProperty.sqft ?? ""}
-                    onChange={(e) => setSelectedProperty({...selectedProperty, sqft: parseInt(e.target.value) || 1000})}
+                    onChange={(e) => setSelectedProperty({...selectedProperty, sqft: (e.target.value) || "1000"})}
                     className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-navy-500 focus:border-navy-500"
                     min="500"
                   />

@@ -26,7 +26,7 @@ const PropertyDetail = () => {
   const [property, setProperty] = useState<Property | null>(null);
   const [loading, setLoading] = useState(true);
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
-  const [selectedImageIndex, setSelectedImageIndex] = useState(0);
+  // const [selectedImageIndex, setSelectedImageIndex] = useState(0);
 
   useEffect(() => {
     loadProperty();
@@ -63,12 +63,12 @@ const PropertyDetail = () => {
     }
   };
 
-  const getPropertyImages = () => {
-    const images = [property?.custom_image];
-    if (property?.custom_image_2) images.push(property.custom_image_2);
-    if (property?.custom_image_3) images.push(property.custom_image_3);
-    return images.filter(Boolean);
-  };
+  // const getPropertyImages = () => {
+  //   const images = [property?.custom_image];
+  //   if (property?.custom_image_2) images.push(property.custom_image_2);
+  //   if (property?.custom_image_3) images.push(property.custom_image_3);
+  //   return images.filter(Boolean);
+  // };
 
   if (loading) {
     return (
@@ -97,7 +97,7 @@ const PropertyDetail = () => {
     );
   }
 
-  const images = getPropertyImages();
+  // const images = getPropertyImages();
 
   return (
     <div className="min-h-screen bg-off-white-50">
@@ -197,10 +197,25 @@ const PropertyDetail = () => {
         </div>
 
         {/* Property Images */}
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+            <div className="relative">
+            <img 
+              alt={property.title}
+              className="w-full max-h-[600px] object-contain rounded-lg bg-gray-50" 
+              src={property.custom_image instanceof File 
+                      ? URL.createObjectURL(property.custom_image) // Create a URL from the file
+                      : property.custom_image || ''}
+            />
+            {/* <div className="absolute top-4 left-4">
+              <span className={`${getStatusColor(property.status)} text-white px-3 py-1 rounded-full text-sm font-semibold`}>
+                {property.status}
+              </span>
+            </div> */}
+          </div>
         <div className="mb-12">
           <div className="grid grid-cols-1 lg:grid-cols-3 gap-4">
             {/* Main Image */}
-            <div className="lg:col-span-2">
+            {/* <div className="lg:col-span-2">
               <img 
                 alt={property.title}
                 className="w-full h-96 lg:h-[500px] object-cover rounded-lg" 
@@ -213,22 +228,11 @@ const PropertyDetail = () => {
                       : property.custom_image || '')  // Use custom_image or fallback to empty string
               }
               />
-            </div>
+            </div> */}
             
             {/* Thumbnail Images */}
-            <div className="lg:col-span-1 grid grid-cols-3 lg:grid-cols-1 gap-4">
-              {images.map((image, index) => (
-                <img 
-                  key={index}
-                  alt={`${property.title} ${index + 1}`}
-                  className={`w-full h-24 lg:h-32 object-cover rounded-lg cursor-pointer transition-all border-2 ${
-                    selectedImageIndex === index ? 'border-navy-500' : 'border-transparent hover:border-gray-300'
-                  }`}
-                  src={image instanceof File ? URL.createObjectURL(image) : image || ''}
-                  onClick={() => setSelectedImageIndex(index)}
-                />
-              ))}
-            </div>
+            
+      </div>
           </div>
         </div>
 
