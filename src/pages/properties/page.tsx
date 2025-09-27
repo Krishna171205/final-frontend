@@ -70,11 +70,11 @@ const Properties = () => {
 
   const getStatusColor = (status: string) => {
     switch (status) {
-      case 'For Sale':
+      case 'ready-to-move':
         return 'bg-blue-600';
-      case 'For Rent':
+      case 'under-construction':
         return 'bg-green-600';
-      case 'Investment':
+      case 'ongoing':
         return 'bg-purple-600';
       default:
         return 'bg-gray-600';

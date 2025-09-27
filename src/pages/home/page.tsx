@@ -25,11 +25,12 @@ interface BlogPost {
 
 const Home = () => {
   const navigate = useNavigate();
+  const [isSidebarOpen, setIsSidebarOpen] = useState(false);
   const [properties, setProperties] = useState<Property[]>([]);
   const [blogPosts, setBlogPosts] = useState<BlogPost[]>([]);
   const [currentSlide, setCurrentSlide] = useState(0);
   const [currentTestimonial, setCurrentTestimonial] = useState(0);
-  const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false); // ✅ unify menu state
+  // const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false); // ✅ unify menu state
   // const [newsletterData, setNewsletterData] = useState({ email: '', name: '' });
   const [consultationData, setConsultationData] = useState({
     name: '',
@@ -60,31 +61,76 @@ const Home = () => {
   const [statsAnimated, setStatsAnimated] = useState(false);
   const [isScrolled, setIsScrolled] = useState(false); // To track scroll state
   const [currentPage, setCurrentPage] = useState('home'); // Track the current page
+  const handleLinkClick = () => {
+    setIsSidebarOpen(false); // Close the sidebar when a link is clicked
+  };
 
+
+//   const SidebarNavbar = () => {
+//   const [isSidebarOpen, setIsSidebarOpen] = useState(false);
+
+//   // Handle clicking on a link
+//   const handleLinkClick = () => {
+//     setIsSidebarOpen(false); // Close the sidebar when a link is clicked
+//   };
+// }
 
   useEffect(() => {
+    // Handle scroll event for the nav bar background
     const handleScroll = () => {
-      // Detect scroll position to toggle styles
       setIsScrolled(window.scrollY > 50);
     };
-
+    
     window.addEventListener('scroll', handleScroll);
-
+    
+    // Setup IntersectionObserver to track section visibility
+    const observerOptions = {
+      root: null, // viewport as the root
+      rootMargin: '0px',
+      threshold: 0.5, // trigger when 50% of the section is in view
+    };
+    
+    const sections = document.querySelectorAll('section');
+    
+    const handleIntersection = (entries: IntersectionObserverEntry[]) => {
+      entries.forEach(entry => {
+        if (entry.isIntersecting) {
+          setCurrentPage(entry.target.id); // Update currentPage when section is visible
+        }
+      });
+    };
+    
+    const observer = new IntersectionObserver(handleIntersection, observerOptions);
+    
+    sections.forEach(section => observer.observe(section));
+    
     return () => {
       window.removeEventListener('scroll', handleScroll);
+      observer.disconnect(); // Cleanup observer
     };
   }, []);
 
   // Dynamically update the header link styling based on scroll position
-  const getHomeLinkStyle = () => {
-    if (currentPage === 'home') {
-      return isScrolled
-        ? 'bg-navy-600 hover:bg-navy-700 text-white px-6 py-2 rounded-full text-sm font-semibold transition-all duration-300 transform hover:scale-105 whitespace-nowrap cursor-pointer'
-        : 'text-navy-800 hover:text-amber-400 px-3 py-2 text-sm font-medium transition-colors'; // Default home link style when on homepage
-    } else {
-      return 'text-navy-800 hover:text-amber-400 px-3 py-2 text-sm font-medium transition-colors';
-    }
-  };
+ const getHomeLinkStyle = (link: string) => {
+  const isActive = currentPage === link;
+  const baseClasses = 'px-3 py-2 text-sm font-medium cursor-pointer';
+
+  // Smooth transitions for color and scaling
+  const transitionClasses = 'transition-colors duration-500 ease-in-out transform transition-transform duration-500 ease-in-out';
+
+  if (isScrolled) {
+    return isActive
+      ? `bg-navy-600 hover:bg-navy-700 text-white ${baseClasses} rounded-full font-semibold transform hover:scale-105 ${transitionClasses}`
+      : `${baseClasses} text-navy-800 hover:text-amber-400 ${transitionClasses}`;
+  } else {
+    return isActive
+      ? `text-gold-400 ${baseClasses} ${transitionClasses}` // Highlight active link in gold when scrolled
+      : `${baseClasses} text-navy-800 hover:text-amber-400 ${transitionClasses}`; // Normal state for non-active links
+  }
+};
+
+
+
 
   // ✅ Moved Navigation as inner component
   // const Navigation = () => {
@@ -109,19 +155,19 @@ const Home = () => {
   // Hero slides data
   const heroSlides = [
     {
-      image: 'https://readdy.ai/api/search-image?query=luxury%20modern%20villa%20exterior%20with%20pool%20and%20landscaped%20garden%20at%20sunset%2C%20premium%20residential%20architecture%2C%20elegant%20contemporary%20design%2C%20warm%20lighting%2C%20sophisticated%20property%20showcase&width=1920&height=1080&seq=hero1&orientation=landscape',
+      image: '/bestone.jpg',
       title: 'Your Dream Home',
       subtitle: 'Awaits',
       description: 'Expert real estate guidance with personalized service. Let me help you find the perfect property or sell your home for the best price.'
     },
     {
-      image: 'https://readdy.ai/api/search-image?query=elegant%20penthouse%20interior%20with%20panoramic%20city%20views%2C%20luxury%20living%20room%20with%20modern%20furniture%2C%20floor%20to%20ceiling%20windows%2C%20sophisticated%20interior%20design%2C%20premium%20residential%20space&width=1920&height=1080&seq=hero2&orientation=landscape',
+      image: 'https://propertyepicenter.com/wp-content/uploads/2024/03/www.propertyepicenter.com-9.png',
       title: 'Premium Properties',
       subtitle: 'In Gurgaon',
       description: "Specialized in luxury real estate with over 30 years of experience in Gurgaon\'s premium market."
     },
     {
-      image: 'https://readdy.ai/api/search-image?query=luxury%20commercial%20building%20exterior%20at%20dusk%2C%20modern%20glass%20architecture%2C%20sophisticated%20business%20district%2C%20investment%20property%20showcase%2C%20premium%20real%20estate%20portfolio&width=1920&height=1080&seq=hero3&orientation=landscape',
+      image: 'https://omegadreamhomes.com/wp-content/uploads/2018/09/dlfcamellias...jpg',
       title: 'Investment Excellence',
       subtitle: 'Trusted Guidance',
       description: 'Helping families, corporates, and investors find dream homes and high-return opportunities since 1990.'
@@ -129,29 +175,69 @@ const Home = () => {
   ];
 
   // Testimonials data
-  const testimonials = [
-    {
-      name: 'Mr. & Mrs. Sharma',
-      role: 'DLF Magnolias',
-      image: 'https://readdy.ai/api/search-image?query=professional%20Indian%20businessman%20in%20elegant%20suit%2C%20confident%20smile%2C%20modern%20office%20background%2C%20executive%20portrait%20style%2C%20sophisticated%20appearance&width=80&height=80&seq=testimonial1&orientation=squarish',
-      rating: 5,
-      text: "Buying our dream home in Gurgaon seemed overwhelming at first, but Rajeev made the entire process seamless. His knowledge of the luxury market, attention to detail, and ability to understand exactly what we wanted stood out. He found us a property that checked every box — location, design, and investment value. We couldn\'t have asked for a better guide."
-    },
-    {
-      name: 'Dr. Mehta',
-      role: 'The Camellias',
-      image: 'https://readdy.ai/api/search-image?query=professional%20Indian%20businesswoman%20in%20elegant%20blazer%2C%20warm%20smile%2C%20modern%20office%20setting%2C%20corporate%20portrait%20photography%2C%20confident%20appearance&width=80&height=80&seq=testimonial2&orientation=squarish',
-      rating: 5,
-      text: "Rajeev is not just a realtor; he\'s a trusted advisor. From the very first meeting, he understood our requirements, respected our time, and showed us only the most relevant properties. His insights into market trends helped us make a smart decision, and today we are proud owners of a home we truly love. Highly recommended for luxury real estate in Gurgaon."
-    },
-    {
-      name: 'Mr. Kapoor',
-      role: 'Ambience Caitriona',
-      image: 'https://readdy.ai/api/search-image?query=distinguished%20Indian%20gentleman%20in%20premium%20suit%2C%20confident%20expression%2C%20upscale%20office%20background%2C%20executive%20portrait%20style%2C%20sophisticated%20businessman&width=80&height=80&seq=testimonial3&orientation=squarish',
-      rating: 5,
-      text: "What impressed us most about Rajeev was his integrity and professionalism. In Gurgaon\'s fast-moving luxury real estate market, he gave us the confidence to make the right choice. He handled every detail — negotiations, paperwork, and coordination — so smoothly that the entire journey felt effortless. We are grateful for his guidance."
-    }
-  ];
+ const testimonials = [
+  {
+    name: 'Mrs. & Mr. Sharma',
+    role: 'DLF Magnolias',
+    rating: 5,
+    text: "Buying our dream home in Gurgaon seemed overwhelming at first, but Rajeev made the entire process seamless. His knowledge of the luxury market, attention to detail, and ability to understand exactly what we wanted stood out. He found us a property that checked every box — location, design, and investment value. We couldn't have asked for a better guide."
+  },
+  {
+    name: 'Dr. Mehta',
+    role: 'The Camellias',
+    rating: 5,
+    text: "Rajeev is not just a realtor; he’s a trusted advisor. From the very first meeting, he understood our requirements, respected our time, and showed us only the most relevant properties. His insights into market trends helped us make a smart decision, and today we are proud owners of a home we truly love. Highly recommended for luxury real estate in Gurgaon."
+  },
+  {
+    name: 'Mrs. Kapoor',
+    role: 'Ambience Caitriona',
+    rating: 5,
+    text: "What impressed us most about Rajeev was his integrity and professionalism. In Gurgaon’s fast-moving luxury real estate market, he gave us the confidence to make the right choice. He handled every detail — negotiations, paperwork, and coordination — so smoothly that the entire journey felt effortless. We are grateful for his guidance."
+  },
+  {
+    name: 'Mrs. Arora',
+    role: 'DLF The Grove',
+    rating: 5,
+    text: "Rajeev’s network and expertise are unmatched. He helped us secure an exclusive property that wasn’t even listed on the market. The way he manages client relationships — with discretion, patience, and genuine care — is rare. Thanks to him, we now have a beautiful home in one of Gurgaon’s most sought-after communities."
+  },
+  {
+    name: 'Mrs. & Mr. Khanna',
+    role: 'The Crest',
+    rating: 5,
+    text: "As NRIs, we were nervous about investing in Gurgaon real estate from abroad. Rajeev gave us complete peace of mind — from virtual tours to legal formalities, he handled everything with precision. His honest advice and constant updates made us feel fully involved despite the distance. Today, we are proud owners of a luxury residence, all thanks to him."
+  },
+  {
+    name: 'Mrs. & Mr. Bansal',
+    role: 'DLF Aralias',
+    rating: 5,
+    text: "Rajeev has a deep understanding of Gurgaon’s luxury market and an incredible ability to match clients with the right home. He showed us options that were perfectly aligned with our taste and lifestyle. His guidance gave us complete confidence, and the property we bought feels like it was meant for us."
+  },
+  {
+    name: 'Mr. Malhotra',
+    role: 'M3M Golf Estate',
+    rating: 5,
+    text: "What sets Rajeev apart is his personal touch. He treats every client’s search as if it were his own. We never felt rushed or pressured — instead, we felt heard and supported throughout. The home we purchased is everything we dreamed of, and Rajeev made that possible."
+  },
+  {
+    name: 'Mrs. Singh',
+    role: 'DLF Magnolias',
+    rating: 5,
+    text: "Professionalism at its best. Rajeev is thorough, transparent, and truly invested in his clients’ happiness. He guided us through every step, from shortlisting to negotiation, and secured us a wonderful property at the right value. We always felt we were in safe hands."
+  },
+  {
+    name: 'Mrs. & Mr. Gupta',
+    role: 'The Camellias',
+    rating: 5,
+    text: "For us, buying a luxury home was not just a financial decision but an emotional one. Rajeev respected that completely. His patience, market expertise, and genuine care ensured we found a place that feels like home the moment we walk in. We couldn’t be more thankful."
+  },
+  {
+    name: 'Mr. Khurana',
+    role: 'Ambience Caitriona',
+    rating: 5,
+    text: "Rajeev’s reputation in the Gurgaon luxury segment is well deserved. His professionalism, discretion, and ability to deliver beyond expectations make him a class apart. He helped us acquire a property that fit our lifestyle perfectly, and the entire process felt effortless because of his expertise."
+  }
+];
+
 
   useEffect(() => {
     loadProperties();
@@ -166,7 +252,7 @@ const Home = () => {
     // Auto-advance testimonials
     const testimonialInterval = setInterval(() => {
       setCurrentTestimonial((prev) => (prev + 1) % testimonials.length);
-    }, 4000);
+    }, 5000);
 
     return () => {
       clearInterval(heroInterval);
@@ -377,9 +463,9 @@ const Home = () => {
 
   const getStatusColor = (status: string) => {
     switch (status) {
-      case 'For Sale': return 'bg-blue-600';
-      case 'For Rent': return 'bg-green-600';
-      case 'Investment': return 'bg-purple-600';
+      case 'ready-to-move': return 'bg-blue-600';
+      case 'under-construction': return 'bg-green-600';
+      case 'ongoing': return 'bg-purple-600';
       default: return 'bg-gray-600';
     }
   };
@@ -423,113 +509,150 @@ const Home = () => {
   //   window.location.href = '/#blog';
   // };
 
+  const scrollToSection = (sectionId: string) => {
+  const element = document.getElementById(sectionId);
+  if (element) {
+    element.scrollIntoView({ behavior: 'smooth' });
+  }
+};
+
+
   return (
-    <div className="min-h-screen bg-white">
+      <div className="min-h-screen bg-white">
       {/* Navigation */}
       <nav className={`fixed top-0 w-full z-50 transition-all duration-300 ${isScrolled ? 'bg-off-white-500/95 backdrop-blur-sm shadow-lg' : 'bg-transparent'}`}>
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        <div className="flex justify-between items-center h-20">
-          <div className="flex-shrink-0">
-            <Link to="/" onClick={() => { setCurrentPage('home'); navigate('/'); }} className="flex items-center">
-              <img
-                src="/image.png"
-                alt="Rajeev Mittal Logo"
-                className="h-16 w-auto cursor-pointer"
-              />
-              <span className="text-2xl font-serif text-navy-800 font-bold tracking-wide">
-                Rajeev Mittal
-              </span>
-            </Link>
-          </div>
-
-          <div className="hidden md:block">
-            <div className="ml-10 flex items-baseline space-x-8">
-              <Link to="/" onClick={() => { setCurrentPage('home'); }} className={getHomeLinkStyle()}>
-                Home
-              </Link>
-              <Link to="/properties" className="text-navy-800 hover:text-amber-400 px-3 py-2 text-sm font-medium transition-colors">
-                Properties
-              </Link>
-              <Link to="/about" className="text-navy-800 hover:text-amber-400 px-3 py-2 text-sm font-medium transition-colors">
-                About
-              </Link>
-              <a href="#blog" onClick={() => navigate('#blog')} className="text-navy-800 hover:text-amber-400 px-3 py-2 text-sm font-medium transition-colors cursor-pointer">
-                Blog
-              </a>
-              <a href="#testimonials" onClick={() => navigate('#testimonials')} className="text-navy-800 hover:text-amber-400 px-3 py-2 text-sm font-medium transition-colors cursor-pointer">
-                Testimonials
-              </a>
-              <Link to="/contact" className="text-navy-800 hover:text-amber-400 px-3 py-2 text-sm font-medium transition-colors">
-                Contact
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+          <div className="flex justify-between items-center h-20">
+            <div className="flex-shrink-0">
+              <Link to="/" onClick={() => { navigate('/'); }} className="flex items-center">
+                <img
+                  src="/image.png"
+                  alt="Rajeev Mittal Logo"
+                  className="h-16 w-auto cursor-pointer"
+                />
+                <div>
+                  <span className="text-2xl font-serif text-navy-800 font-bold tracking-wide">
+                    Rajeev Mittal
+                  </span>
+                  <span className="text-sm text-gray-500 block ml-1">Estates Pvt. Ltd.</span>
+                </div>
               </Link>
             </div>
-          </div>
 
-          {/* Consultation button */}
-          <div className="hidden md:block">
-            <a 
-              href="https://wa.me/919999999999?text=Hi%2C%20I%27m%20interested%20in%20a%20private%20consultation" 
-              target="_blank" 
-              rel="noopener noreferrer"
-              className="bg-navy-500 hover:bg-off-white-500 text-off-white-300 hover:text-navy-500 px-6 py-2 rounded-full text-sm font-semibold transition-all duration-300 transform hover:scale-105 whitespace-nowrap cursor-pointer"
-            >
-              Book Private Consultation
-            </a>
-          </div>
+            {/* Desktop Menu */}
+            <div className="hidden md:block">
+              <div className="ml-10 flex items-baseline space-x-8">
+                <Link to="/" onClick={() => scrollToSection('home')} className={getHomeLinkStyle('home')}>Home</Link>
+                <Link to="/" onClick={() => scrollToSection('properties')} className={getHomeLinkStyle('properties')}>Properties</Link>
+                <Link to="/" onClick={() => scrollToSection('about')} className={getHomeLinkStyle('about')}>About</Link>
+                <Link to="/" onClick={() => scrollToSection('blog')} className={getHomeLinkStyle('blog')}>Blog</Link>
+                <Link to="/" onClick={() => scrollToSection('testimonials')} className={getHomeLinkStyle('testimonials')}>Testimonials</Link>
+                <Link to="/" onClick={() => scrollToSection('contact')} className={getHomeLinkStyle('contact')}>Contact</Link>
 
-          {/* Mobile menu toggle button */}
-          <div className="md:hidden">
-            <button
-              onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
-              className="text-white hover:text-amber-400 cursor-pointer"
-            >
-              <div className="w-6 h-6 flex items-center justify-center">
-                <i className={`ri-${isMobileMenuOpen ? 'close' : 'menu'}-line text-xl`}></i>
               </div>
-            </button>
-          </div>
-        </div>
-      </div>
+            </div>
 
-      {/* Mobile Menu */}
-      {isMobileMenuOpen && (
-        <div className="md:hidden bg-blue-900/95 backdrop-blur-sm">
-          <div className="px-2 pt-2 pb-3 space-y-1 sm:px-3">
-            <Link to="/" onClick={() => setCurrentPage('home')} className="text-white hover:text-amber-400 block px-3 py-2 text-base font-medium">
-              Home
-            </Link>
-            <Link to="/properties" className="text-white hover:text-amber-400 block px-3 py-2 text-base font-medium">
-              Properties
-            </Link>
-            <Link to="/about" className="text-white hover:text-amber-400 block px-3 py-2 text-base font-medium">
-              About
-            </Link>
-            <a href="#blog" onClick={() => navigate('#blog')} className="text-white hover:text-amber-400 block px-3 py-2 text-base font-medium cursor-pointer">
-              Blog
-            </a>
-            <a href="#testimonials" onClick={() => navigate('#testimonials')} className="text-white hover:text-amber-400 block px-3 py-2 text-base font-medium cursor-pointer">
-              Testimonials
-            </a>
-            <Link to="/contact" className="text-white hover:text-amber-400 block px-3 py-2 text-base font-medium">
-              Contact
-            </Link>
-            <div className="px-3 pt-4">
+            {/* Consultation Button */}
+            <div className="hidden md:block">
               <a 
                 href="https://wa.me/919999999999?text=Hi%2C%20I%27m%20interested%20in%20a%20private%20consultation" 
                 target="_blank" 
                 rel="noopener noreferrer"
-                className="bg-amber-500 hover:bg-amber-600 text-blue-900 px-6 py-2 rounded-full text-sm font-semibold transition-all duration-300 block text-center whitespace-nowrap cursor-pointer"
+                className="bg-navy-500 hover:bg-off-white-500 text-off-white-300 hover:text-navy-500 px-6 py-2 rounded-full text-sm font-semibold transition-all duration-300 transform hover:scale-105 whitespace-nowrap cursor-pointer"
               >
                 Book Private Consultation
               </a>
             </div>
+
+            {/* Mobile menu toggle button */}
+            <div className="fixed top-4 right-4 z-50">
+            <button
+            onClick={() => setIsSidebarOpen(!isSidebarOpen)}
+            className="text-white cursor-pointer p-4 rounded-full transition-transform duration-300 transform hover:scale-105"
+            >
+            {/* Three-line hamburger menu */}
+            <div className="w-6 h-1 bg-white mb-1"></div>
+            <div className="w-6 h-1 bg-white mb-1"></div>
+            <div className="w-6 h-1 bg-white mb-1"></div>
+             </button>
+             </div>
           </div>
         </div>
+
+        {/* Mobile Menu */}
+     <div
+        className={`fixed top-0 right-0 bottom-0 w-64 bg-off-white-900  shadow-lg z-40 transition-transform duration-300 ${
+          isSidebarOpen ? 'translate-x-0' : 'translate-x-full'
+        }`}
+      >
+        <div className=" fixed w-64 flex flex-col items-center py-8 space-y-6">
+          <a
+            href="#home"
+            className="text-lg text-gray-900 hover:text-indigo-500 opacity-100"
+            onClick={handleLinkClick}
+          >
+            Home
+          </a>
+          <a
+            href="#properties"
+            className="text-lg text-gray-900 hover:text-indigo-500 opacity-100"
+            onClick={handleLinkClick}
+          >
+            Properties
+          </a>
+          <a
+            href="#about"
+            className="text-lg text-gray-900 hover:text-indigo-500 opacity-100"
+            onClick={handleLinkClick}
+          >
+            About
+          </a>
+          <a
+            href="#blog"
+            className="text-lg text-gray-900 hover:text-indigo-500 opacity-100"
+            onClick={handleLinkClick}
+          >
+            Blog
+          </a>
+          <a
+            href="#testimonials"
+            className="text-lg text-gray-900 hover:text-indigo-500 opacity-100"
+            onClick={handleLinkClick}
+          >
+            Testimonials
+          </a>
+          <a
+            href="#contact"
+            className="text-lg text-gray-900 hover:text-indigo-500 opacity-100"
+            onClick={handleLinkClick}
+          >
+            Contact
+          </a>
+
+          <div className="px-6 pt-4 opacity-100">
+            <a
+              href="https://wa.me/919999999999?text=Hi%2C%20I%27m%20interested%20in%20a%20private%20consultation"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="bg-indigo-500 hover:bg-indigo-600 text-white px-6 py-2 rounded-full text-sm font-semibold transition-all duration-300 block text-center opacity-100"
+            >
+              Book Private Consultation
+            </a>
+          </div>
+        </div>
+      </div>
+
+      {/* Overlay that appears when Sidebar is open */}
+      {isSidebarOpen && (
+        <div
+          onClick={() => setIsSidebarOpen(false)}
+          className="fixed top-0 left-0 right-0 bottom-0 bg-black opacity-50 z-30"
+        ></div>
       )}
-    </nav>
+      </nav>
 
       {/* Hero Section with Slider */}
-      <section id="home" className="relative h-screen flex items-center justify-center overflow-hidden">
+      <section id="home" className={`relative h-screen flex items-center justify-center overflow-hidden ${currentPage === "home" ? 'bg-gray-800' : 'bg-white'}`}>
         {heroSlides.map((slide, index) => (
           <div
             key={index}
@@ -588,7 +711,7 @@ const Home = () => {
       </section>
 
       {/* Stats Section */}
-      <section className="py-20 bg-gray-50">
+      <section id="home" className="py-20 bg-gray-50">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="grid md:grid-cols-3 gap-12 text-center">
             <div className="animate-fadeInUp">
@@ -617,7 +740,7 @@ const Home = () => {
       </section>
 
       {/* Featured Properties Carousel */}
-      <section id="properties" className="py-32 bg-white">
+      <section id="properties" className={`py-32 ${currentPage === "code" ? 'bg-gray-800' : 'bg-white'}`}>
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="text-center mb-20">
             <h2 className="text-5xl font-bold text-navy-900 mb-6 font-serif">Featured Properties</h2>
@@ -703,7 +826,7 @@ const Home = () => {
       </section>
 
       {/* Areas Section */}
-      <section className="py-32 bg-navy-800">
+      <section id="properties" className="py-32 bg-navy-800">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="text-center mb-20">
             <h2 className="text-5xl font-bold text-off-white-500 mb-6 font-serif">Premium Locations</h2>
@@ -724,13 +847,12 @@ const Home = () => {
               >
                 <div className="absolute inset-0 bg-gradient-to-t from-navy-900/80 to-transparent"></div>
                 <div className="absolute bottom-4 left-4 text-white">
-                  <h3 className="text-2xl font-bold font-serif">Gurgaon</h3>
-                  <p className="text-sm">The Millennium City</p>
+                  <h3 className="text-2xl font-bold font-serif">Golf Course Road</h3>
                 </div>
               </div>
               <div className="p-6">
                 <p className="text-gray-600 mb-4 leading-relaxed">
-                  Premium residential and commercial properties in the millennium city, featuring luxury developments in Golf Course Road and DLF phases.
+                  Premium residential and commercial properties in the millennium city, featuring luxury developments in Golf Course Road.
                 </p>
                 <div className="flex items-center text-navy-600 hover:text-navy-800 font-semibold">
                   Explore Properties
@@ -750,13 +872,13 @@ const Home = () => {
               >
                 <div className="absolute inset-0 bg-gradient-to-t from-navy-900/80 to-transparent"></div>
                 <div className="absolute bottom-4 left-4 text-white">
-                  <h3 className="text-2xl font-bold font-serif">Delhi</h3>
-                  <p className="text-sm">Capital City</p>
+                  <h3 className="text-2xl font-bold font-serif">Golf Course Extension Road</h3>
+                  {/* <p className="text-sm">Capital City</p> */}
                 </div>
               </div>
               <div className="p-6">
                 <p className="text-gray-600 mb-4 leading-relaxed">
-                  Exclusive properties in the heart of the capital, including luxury apartments and premium commercial spaces in prime locations.
+                  Premium residential and commercial properties in the millennium city, featuring luxury developments in Golf Course Extension Road.
                 </p>
                 <div className="flex items-center text-navy-600 hover:text-navy-800 font-semibold">
                   Explore Properties
@@ -776,13 +898,13 @@ const Home = () => {
               >
                 <div className="absolute inset-0 bg-gradient-to-t from-navy-900/80 to-transparent"></div>
                 <div className="absolute bottom-4 left-4 text-white">
-                  <h3 className="text-2xl font-bold font-serif">Noida</h3>
-                  <p className="text-sm">Planned City</p>
+                  <h3 className="text-2xl font-bold font-serif">Dwarka Express Way</h3>
+                  {/* <p className="text-sm">Planned City</p> */}
                 </div>
               </div>
               <div className="p-6">
                 <p className="text-gray-600 mb-4 leading-relaxed">
-                  Contemporary living spaces and commercial hubs in the planned city, offering modern amenities and excellent connectivity.
+                 Premium residential and commercial properties in the millennium city, featuring luxury developments in Dwarka Express Way.
                 </p>
                 <div className="flex items-center text-navy-600 hover:text-navy-800 font-semibold">
                   Explore Properties
@@ -802,13 +924,13 @@ const Home = () => {
               >
                 <div className="absolute inset-0 bg-gradient-to-t from-navy-900/80 to-transparent"></div>
                 <div className="absolute bottom-4 left-4 text-white">
-                  <h3 className="text-2xl font-bold font-serif">Greater Noida</h3>
-                  <p className="text-sm">Future City</p>
+                  <h3 className="text-2xl font-bold font-serif">Sohna Road</h3>
+                  {/* <p className="text-sm">Future City</p> */}
                 </div>
               </div>
               <div className="p-6">
                 <p className="text-gray-600 mb-4 leading-relaxed">
-                  Planned infrastructure with luxury residential projects and commercial developments offering excellent growth potential.
+                  Premium residential and commercial properties in the millennium city, featuring luxury developments in Sohna Road.
                 </p>
                 <div className="flex items-center text-navy-600 hover:text-navy-800 font-semibold">
                   Explore Properties
@@ -828,13 +950,13 @@ const Home = () => {
               >
                 <div className="absolute inset-0 bg-gradient-to-t from-navy-900/80 to-transparent"></div>
                 <div className="absolute bottom-4 left-4 text-white">
-                  <h3 className="text-2xl font-bold font-serif">Faridabad</h3>
-                  <p className="text-sm">Industrial Hub</p>
+                  <h3 className="text-2xl font-bold font-serif">Gurgaon Faridabad Road</h3>
+                  {/* <p className="text-sm">Industrial Hub</p> */}
                 </div>
               </div>
               <div className="p-6">
                 <p className="text-gray-600 mb-4 leading-relaxed">
-                  Emerging luxury developments and industrial properties in the growing commercial hub, perfect for investment opportunities.
+                  Premium residential and commercial properties in the millennium city, featuring luxury developments in Gurgaon Faridabad Road.
                 </p>
                 <div className="flex items-center text-navy-600 hover:text-navy-800 font-semibold">
                   Explore Properties
@@ -855,7 +977,7 @@ const Home = () => {
                 <div className="absolute inset-0 bg-gradient-to-t from-navy-900/80 to-transparent"></div>
                 <div className="absolute bottom-4 left-4 text-white">
                   <h3 className="text-2xl font-bold font-serif">Other NCR</h3>
-                  <p className="text-sm">Emerging Areas</p>
+                  {/* <p className="text-sm">Emerging Areas</p> */}
                 </div>
               </div>
               <div className="p-6">
@@ -883,7 +1005,7 @@ const Home = () => {
       </section>
 
       {/* About Section */}
-      <section id="about" className="py-32 bg-gray-50">
+      <section id="about" className={`${currentPage === "about" ? 'text-gray-300' : 'text-navy-900'} py-32 bg-gray-50`}>
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="grid lg:grid-cols-2 gap-20 items-center">
             <div className="animate-slideInLeft">
@@ -916,7 +1038,7 @@ const Home = () => {
               <img
                 alt="Rajeev Mittal"
                 className="rounded-2xl shadow-2xl w-full h-[600px] object-cover object-top border border-gray-200"
-                src="https://image2url.com/images/1758081839443-f1caa703-d629-4030-be4d-15dc4509a6cd.jpg"
+                src="rajeev.jpg"
               />
             </div>
           </div>
@@ -924,7 +1046,7 @@ const Home = () => {
       </section>
 
       {/* Blog Section - Replaced Latest Insights */}
-      <section className="py-32 bg-navy-900">
+      <section className={`${currentPage === "blog" ? 'text-gray-300' : 'text-navy-900'}py-32 bg-navy-900 blog`} id='blog'>
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="text-center mb-20">
             <h2 className="text-5xl font-bold text-white mb-6 font-serif" style={{ background: 'linear-gradient(135deg, #DAA520, #B8860B)', WebkitBackgroundClip: 'text', WebkitTextFillColor: 'transparent' }}>Real Estate Blog</h2>
@@ -992,62 +1114,56 @@ const Home = () => {
       </section>
 
       {/* Testimonials Carousel */}
-      <section className="py-32 bg-gray-50">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="text-center mb-20">
-            <h2 className="text-5xl font-bold text-navy-900 mb-6 font-serif gold-accent">Client Testimonials</h2>
-            <p className="text-xl text-gray-600">What my clients say about working with me</p>
-          </div>
+            <section className="py-32 bg-gray-50 testimonials" id='testimonials'>
+            <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+              <div className="text-center mb-20">
+                <h2 className="text-5xl font-bold text-navy-900 mb-6 font-serif gold-accent">Client Testimonials</h2>
+                <p className="text-xl text-gray-600">What my clients say about working with me</p>
+              </div>
 
-          <div className="relative max-w-4xl mx-auto">
-            <div className="testimonial-slider overflow-hidden">
-              {testimonials.map((testimonial, index) => (
-                <div
-                  key={index}
-                  className={`transition-all duration-500 ${
-                    index === currentTestimonial ? 'opacity-100 transform translate-x-0' : 'opacity-0 absolute inset-0'
-                  }`}
-                >
-                  <div className="bg-white p-12 rounded-2xl text-center border border-gray-200 shadow-card">
-                    <div className="flex justify-center mb-6">
-                      {[...Array(testimonial.rating)].map((_, i) => (
-                        <i key={i} className="ri-star-fill text-gold-400 text-2xl w-6 h-6 flex items-center justify-center"></i>
-                      ))}
-                    </div>
-                    <p className="text-xl text-gray-700 mb-8 italic leading-relaxed font-light">
-                      "{testimonial.text}"
-                    </p>
-                    <div className="flex items-center justify-center">
-                      <img
-                        alt={testimonial.name}
-                        className="w-16 h-16 rounded-full object-cover mr-6 object-top border border-gray-200"
-                        src={testimonial.image}
-                      />
-                      <div className="text-left">
-                        <h4 className="text-xl font-semibold text-navy-900">{testimonial.name}</h4>
-                        <p className="text-gold-500">{testimonial.role}</p>
+              <div className="relative max-w-4xl mx-auto">
+                <div className="testimonial-slider overflow-hidden">
+                  {testimonials.map((testimonial, index) => (
+                    <div
+                      key={index}
+                      className={`transition-all duration-500 ${index === currentTestimonial ? 'opacity-100 transform translate-x-0' : 'opacity-0 absolute inset-0'}`}
+                    >
+                      <div className="bg-white p-12 rounded-2xl text-center border border-gray-200 shadow-card">
+                        <div className="flex justify-center mb-6">
+                          {[...Array(testimonial.rating)].map((_, i) => (
+                            <i
+                              key={i}
+                              className="ri-star-fill text-navy-500  text-2xl w-6 h-6 flex items-center justify-center"
+                            ></i>
+                          ))}
+                        </div>
+                        <p className="text-xl text-gray-700 mb-8 italic leading-relaxed font-light">
+                          "{testimonial.text}"
+                        </p>
+                        <div className="text-left">
+                          <h4 className="text-xl font-semibold text-navy-900">{testimonial.name}</h4>
+                          <p className="text-gold-500">{testimonial.role}</p>
+                        </div>
                       </div>
                     </div>
-                  </div>
+                  ))}
                 </div>
-              ))}
-            </div>
 
-            {/* Testimonial Navigation */}
-            <div className="flex justify-center mt-12 space-x-3">
-              {testimonials.map((_, index) => (
-                <button
-                  key={index}
-                  onClick={() => setCurrentTestimonial(index)}
-                  className={`w-3 h-3 rounded-full transition-all cursor-pointer ${
-                    index === currentTestimonial ? 'bg-gold-400 w-8' : 'bg-gray-300'
-                  }`}
-                />
-              ))}
+                {/* Testimonial Navigation */}
+                <div className="absolute bottom-8 left-1/2 transform -translate-x-1/2 flex space-x-3 z-10">
+                  {testimonials.map((_, index) => (
+                    <button
+                      key={index}
+                      onClick={() => setCurrentTestimonial(index)}
+                      className={`w-3 h-3 rounded-full transition-all cursor-pointer ${
+                        index === currentTestimonial ? 'bg-navy-500 w-8' : 'bg-gray-400/50'
+                      }`}
+                    />
+                  ))}
+                </div>
+              </div>
             </div>
-          </div>
-        </div>
-      </section>
+          </section>
 
       
 

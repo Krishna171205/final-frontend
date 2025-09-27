@@ -244,13 +244,13 @@ const PropertyDetail = () => {
                 <div className="text-2xl font-bold text-navy-900 mb-1">{property.bhk}</div>
                 <div className="text-gray-600 text-sm">BHK</div>
               </div>
-              <div className="text-center">
+              {/* <div className="text-center">
                 <div className="w-16 h-16 bg-navy-100 rounded-full flex items-center justify-center mx-auto mb-4">
                   <i className="ri-drop-line text-navy-600 text-2xl w-8 h-8 flex items-center justify-center"></i>
                 </div>
                 <div className="text-2xl font-bold text-navy-900 mb-1">{property.baths}</div>
                 <div className="text-gray-600 text-sm">Bathrooms</div>
-              </div>
+              </div> */}
               <div className="text-center">
                 <div className="w-16 h-16 bg-navy-100 rounded-full flex items-center justify-center mx-auto mb-4">
                   <i className="ri-ruler-line text-navy-600 text-2xl w-8 h-8 flex items-center justify-center"></i>

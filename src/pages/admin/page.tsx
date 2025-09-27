@@ -77,7 +77,7 @@ const AdminDashboard = () => {
     location: '',
     full_address: '',
     type: 'House',
-    status: 'For Sale',
+    status: 'ready-to-move',
     description: '',
     bhk: 1,
     baths: 1,
@@ -352,7 +352,7 @@ const AdminDashboard = () => {
         location: newProperty.location,
         full_address: newProperty.full_address || newProperty.location, // ✅ snake_case
         type: newProperty.type || 'House',
-        status: newProperty.status || 'For Sale',
+        status: newProperty.status || 'ready-to-move',
         description: newProperty.description,
         area: (newProperty.area) || '',
         bhk,
@@ -377,7 +377,7 @@ const AdminDashboard = () => {
         location: '',
         full_address: '',
         type: 'House',
-        status: 'For Sale',
+        status: 'ready-to-move',
         description: '',
         bhk: 1,
         baths: 1,
@@ -834,9 +834,9 @@ const handleDeleteProperty = async (id: number) => {
 
   const getStatusColor = (status: string) => {
     switch (status) {
-      case 'For Sale': return 'bg-blue-600';
-      case 'For Rent': return 'bg-green-600';
-      case 'Investment': return 'bg-purple-600';
+      case 'read-to-move': return 'bg-blue-600';
+      case 'under-construction': return 'bg-green-600';
+      case 'ongoing': return 'bg-purple-600';
       default: return 'bg-gray-600';
     }
   };
@@ -1351,11 +1351,11 @@ const handleDeleteProperty = async (id: number) => {
                     className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-navy-500 focus:border-navy-500 pr-8"
                   >
                     <option value="">Select Area</option>
-                    <option value="gurgaon">Gurgaon</option>
-                    <option value="delhi">Delhi</option>
-                    <option value="noida">Noida</option>
-                    <option value="faridabad">Faridabad</option>
-                    <option value="greater-noida">Greater Noida</option>
+                    <option value="golf course road">Golf Course Road</option>
+                    <option value="golf course extension road">Golf Course Extension Road</option>
+                    <option value="dwarka express way">Dwarka Express Way</option>
+                    <option value="sohna road">Sohna Road</option>
+                    <option value="gurgaon faridabad road">Gurgaon Faridabad Road</option>
                     <option value="other-ncr">Other NCR</option>
                   </select>
                 </div>
@@ -1552,11 +1552,11 @@ const handleDeleteProperty = async (id: number) => {
                     className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-navy-500 focus:border-navy-500 pr-8"
                   >
                     <option value="">Select Area</option>
-                    <option value="gurgaon">Gurgaon</option>
-                    <option value="delhi">Delhi</option>
-                    <option value="noida">Noida</option>
-                    <option value="faridabad">Faridabad</option>
-                    <option value="greater-noida">Greater Noida</option>
+                    <option value="golf course road">Golf Course Road</option>
+                    <option value="golf course extension road">Golf Course Extension Road</option>
+                    <option value="dwarka express way">Dwarka Express Way</option>
+                    <option value="sohna road">Sohna Road</option>
+                    <option value="gurgaon faridabad road">Gurgaon Faridabad Road</option>
                     <option value="other-ncr">Other NCR</option>
                   </select>
                 </div>

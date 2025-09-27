@@ -9,12 +9,15 @@ interface Property {
   full_address: string;
   type: string;
   status: string;
-  bhk?: number;
-  baths?: number;
-  sqft?: number;
-  image_url: string;
-  area?: string;
   description: string;
+  bhk: number;
+  baths: number;
+  sqft: number;
+  area?: string;
+  created_at: string;
+  custom_image: File | string | null;
+  custom_image_2: File | string | null;
+  custom_image_3: File | string | null;
 }
 
 interface AreaData {
@@ -33,42 +36,42 @@ const Areas = () => {
 
   const predefinedAreas = [
     {
-      name: 'Gurgaon',
-      slug: 'gurgaon',
+      name: 'Golf Course Road',
+      slug: 'golf course road',
       description:
-        'Premium residential and commercial properties in the millennium city, featuring luxury developments in Golf Course Road, Sector 54, and DLF phases.',
+        'Premium residential and commercial properties in the millennium city, featuring luxury developments in Golf Course Road.',
       heroImage:
         'https://readdy.ai/api/search-image?query=Modern%20luxury%20residential%20towers%20and%20commercial%20buildings%20in%20Gurgaon%20millennium%20city%20with%20wide%20roads%2C%20premium%20architecture%2C%20glass%20facades%2C%20landscaped%20gardens%2C%20and%20urban%20skyline%20during%20golden%20hour%2C%20professional%20real%20estate%20photography%20style%2C%20contemporary%20design%20elements&width=1200&height=400&seq=gurgaon-hero-001&orientation=landscape',
     },
     {
-      name: 'Delhi',
-      slug: 'delhi',
+      name: 'Golf Course Extension Road',
+      slug: 'golf course extension road',
       description:
-        'Exclusive properties in the heart of the capital, including luxury apartments, heritage homes, and premium commercial spaces in prime locations.',
+        'Premium residential and commercial properties in the millennium city, featuring luxury developments in Golf Course Extension Road.',
       heroImage:
         'https://readdy.ai/api/search-image?query=Elegant%20luxury%20residential%20buildings%20and%20commercial%20properties%20in%20Delhi%20with%20mix%20of%20modern%20architecture%20and%20heritage%20elements%2C%20tree-lined%20streets%2C%20premium%20facades%2C%20professional%20real%20estate%20photography%20during%20sunset%2C%20sophisticated%20urban%20design&width=1200&height=400&seq=delhi-hero-001&orientation=landscape',
     },
     {
-      name: 'Noida',
-      slug: 'noida',
+      name: 'Sohna Road',
+      slug: 'sohna road',
       description:
-        'Contemporary living spaces and commercial hubs in the planned city, offering modern amenities and excellent connectivity to major business districts.',
+        'Premium residential and commercial properties in the millennium city, featuring luxury developments in Sohna Road.',
       heroImage:
         'https://readdy.ai/api/search-image?query=Contemporary%20luxury%20residential%20and%20commercial%20developments%20in%20Noida%20planned%20city%20with%20modern%20glass%20towers%2C%20wide%20expressways%2C%20green%20landscaping%2C%20premium%20architecture%2C%20professional%20real%20estate%20photography%2C%20urban%20planning%20excellence&width=1200&height=400&seq=noida-hero-001&orientation=landscape',
     },
     {
-      name: 'Faridabad',
-      slug: 'faridabad',
+      name: 'Gurgaon Faridabad Road',
+      slug: 'gurgaon faridabad road',
       description:
-        'Emerging luxury developments and industrial properties in the growing commercial hub, perfect for investment and residential purposes.',
+        'Premium residential and commercial properties in the millennium city, featuring luxury developments in Gurgaon Faridabad Road.',
       heroImage:
         'https://readdy.ai/api/search-image?query=Modern%20luxury%20residential%20complexes%20and%20commercial%20buildings%20in%20Faridabad%20with%20contemporary%20architecture%2C%20landscaped%20compounds%2C%20premium%20facilities%2C%20wide%20roads%2C%20professional%20real%20estate%20photography%20style%2C%20emerging%20urban%20development&width=1200&height=400&seq=faridabad-hero-001&orientation=landscape',
     },
     {
-      name: 'Greater Noida',
-      slug: 'greater-noida',
+      name: 'Dwarka Express Way',
+      slug: 'dwarka express way',
       description:
-        'Planned infrastructure with luxury residential projects, educational institutions, and commercial developments offering excellent growth potential.',
+        'Premium residential and commercial properties in the millennium city, featuring luxury developments in Dwarka Express Way.',
       heroImage:
         'https://readdy.ai/api/search-image?query=Premium%20residential%20and%20commercial%20properties%20in%20Greater%20Noida%20with%20modern%20architecture%2C%20luxury%20developments%2C%20green%20spaces%2C%20contemporary%20design%2C%20professional%20real%20estate%20photography%20during%20golden%20hour%2C%20planned%20city%20infrastructure&width=1200&height=400&seq=greater-noida-hero-001&orientation=landscape',
     },
@@ -145,11 +148,11 @@ const Areas = () => {
 
   const getStatusColor = (status: string) => {
     switch (status) {
-      case 'For Sale':
+      case 'ready-to-move':
         return 'bg-blue-600';
-      case 'For Rent':
+      case 'under-construction':
         return 'bg-green-600';
-      case 'Investment':
+      case 'ongoing':
         return 'bg-purple-600';
       default:
         return 'bg-gray-600';
@@ -344,7 +347,9 @@ const Areas = () => {
                     >
                       <div className="relative">
                         <img
-                          src={property.image_url}
+                          src={property.custom_image instanceof File 
+                      ? URL.createObjectURL(property.custom_image) // Create a URL from the file
+                      : property.custom_image || ''} 
                           alt={property.title}
                           className="w-full h-64 object-cover object-top"
                         />
