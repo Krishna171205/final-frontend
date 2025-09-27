@@ -20,6 +20,8 @@ interface Property {
   custom_image_3?: File | string | null;
 }
 
+const LIMIT = 6; // ✅ number of items per page
+
 const Properties = () => {
   const navigate = useNavigate();
   const [searchParams] = useSearchParams();
@@ -29,6 +31,8 @@ const Properties = () => {
   const [filterType, setFilterType] = useState('all');
   const [filterArea, setFilterArea] = useState(searchParams.get('area') || 'all');
   const [sortBy, setSortBy] = useState('newest');
+  const [page, setPage] = useState(1);
+  const [hasMore, setHasMore] = useState(true);
   // const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
   const [isScrolled, setIsScrolled] = useState(false); // To track scroll state
   const [_currentPage, setCurrentPage] = useState('home'); // Track the current page
@@ -37,7 +41,7 @@ const Properties = () => {
   };
 
   useEffect(() => {
-    loadProperties();
+    loadProperties(1,true);
   }, []);
 
   useEffect(() => {
@@ -80,33 +84,35 @@ const Properties = () => {
     };
   }, [searchParams]);
 
-  const loadProperties = async () => {
+  const loadProperties = async (nextPage: number, replace = false) => {
     try {
       setLoading(true);
       const response = await fetch(
-        `${import.meta.env.VITE_PUBLIC_SUPABASE_URL}/functions/v1/get-properties`,
+        `${import.meta.env.VITE_PUBLIC_SUPABASE_URL}/functions/v1/get-properties?page=${nextPage}&limit=${LIMIT}`,
         {
           method: 'GET',
-          headers: {
-            'Content-Type': 'application/json',
-          },
+          headers: { 'Content-Type': 'application/json' },
         }
       );
 
       if (response.ok) {
         const data = await response.json();
-        console.log(data);
-        setProperties(data.properties || []);
+        const newProps: Property[] = data.properties || [];
+        // append or replace
+        setProperties(prev => (replace ? newProps : [...prev, ...newProps]));
+        setHasMore(newProps.length === LIMIT); // if fewer than LIMIT, no more pages
+        setPage(nextPage);
       } else {
         setProperties([]);
+        setHasMore(false);
       }
     } catch (error) {
       setProperties([]);
+      setHasMore(false);
     } finally {
       setLoading(false);
     }
   };
-
   const getStatusColor = (status: string) => {
     switch (status) {
       case 'ready-to-move':
@@ -393,60 +399,71 @@ const Properties = () => {
       {/* Properties Grid */}
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-16">
         {sortedProperties.length > 0 ? (
-          <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-8">
-            {sortedProperties.map((property) => (
-              <div
-                key={property.id}
-                className="luxury-card bg-white rounded-2xl overflow-hidden border border-gray-200 cursor-pointer shadow-card"
-              >
-                <div className="relative">
-                  <img
-                    alt={property.title}
-                    className="w-full h-64 object-cover object-top"
-                    src={property.custom_image instanceof File 
-                      ? URL.createObjectURL(property.custom_image) // Create a URL from the file
-                      : property.custom_image || ''} // Fallback to an empty string if null or undefined
-                  />
-
-                  <div className="absolute top-4 left-4">
-                    <span className={`${getStatusColor(property.status)} text-white px-4 py-2 rounded-full text-sm font-semibold`}>
-                      {property.status}
-                    </span>
-                  </div>
-                  <div className="absolute top-4 right-4">
-                    <span className="bg-navy-500 text-white px-4 py-2 rounded-full text-sm font-semibold">
-                      {property.type}
-                    </span>
-                  </div>
-                </div>
-                <div className="p-8">
-                  <h3 className="text-2xl font-semibold text-navy-900 mb-3 font-serif">{property.title}</h3>
-                  <p className="text-gray-600 mb-6 flex items-center">
-                    <i className="ri-map-pin-line mr-2 w-5 h-5 flex items-center justify-center text-navy-500"></i>
-                    {property.location}
-                    {property.area && (
-                      <span className="ml-2 text-navy-500 font-medium">• {formatAreaName(property.area)}</span>
-                    )}
-                  </p>
-                  
-                  {/* Price on Call Card */}
-                  <div className="bg-navy-100 border border-navy-300 rounded-lg p-4 mb-6">
-                    <div className="flex items-center justify-center">
-                      <i className="ri-phone-line text-navy-600 text-lg mr-2 w-5 h-5 flex items-center justify-center"></i>
-                      <div className="text-lg font-bold text-navy-800 font-serif">Price on Call</div>
+          <>
+            <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-8">
+              {sortedProperties.map((property) => (
+                <div
+                  key={property.id}
+                  className="luxury-card bg-white rounded-2xl overflow-hidden border border-gray-200 cursor-pointer shadow-card"
+                >
+                  <div className="relative">
+                    <img
+                      alt={property.title}
+                      className="w-full h-64 object-cover object-top"
+                      src={property.custom_image instanceof File
+                        ? URL.createObjectURL(property.custom_image)
+                        : property.custom_image || ''}
+                    />
+                    <div className="absolute top-4 left-4">
+                      <span className={`${getStatusColor(property.status)} text-white px-4 py-2 rounded-full text-sm font-semibold`}>
+                        {property.status}
+                      </span>
+                    </div>
+                    <div className="absolute top-4 right-4">
+                      <span className="bg-navy-500 text-white px-4 py-2 rounded-full text-sm font-semibold">
+                        {property.type}
+                      </span>
                     </div>
                   </div>
-                  
-                  <button
-                    onClick={() => handlePropertyClick(property.id)}
-                    className="w-full bg-navy-600 hover:bg-navy-700 text-white py-3 rounded-lg font-semibold whitespace-nowrap cursor-pointer transition-all shadow-lg"
-                  >
-                    View Details
-                  </button>
+                  <div className="p-8">
+                    <h3 className="text-2xl font-semibold text-navy-900 mb-3 font-serif">{property.title}</h3>
+                    <p className="text-gray-600 mb-6 flex items-center">
+                      <i className="ri-map-pin-line mr-2 w-5 h-5 flex items-center justify-center text-navy-500"></i>
+                      {property.location}
+                      {property.area && (
+                        <span className="ml-2 text-navy-500 font-medium">• {formatAreaName(property.area)}</span>
+                      )}
+                    </p>
+                    <div className="bg-navy-100 border border-navy-300 rounded-lg p-4 mb-6">
+                      <div className="flex items-center justify-center">
+                        <i className="ri-phone-line text-navy-600 text-lg mr-2 w-5 h-5 flex items-center justify-center"></i>
+                        <div className="text-lg font-bold text-navy-800 font-serif">Price on Call</div>
+                      </div>
+                    </div>
+                    <button
+                      onClick={() => handlePropertyClick(property.id)}
+                      className="w-full bg-navy-600 hover:bg-navy-700 text-white py-3 rounded-lg font-semibold whitespace-nowrap cursor-pointer transition-all shadow-lg"
+                    >
+                      View Details
+                    </button>
+                  </div>
                 </div>
+              ))}
+            </div>
+
+            {/* ✅ Next Page Button */}
+            {hasMore && (
+              <div className="text-center mt-12">
+                <button
+                  onClick={() => loadProperties(page + 1)}
+                  disabled={loading}
+                  className="px-6 py-3 bg-navy-600 hover:bg-navy-700 text-white rounded-lg font-semibold shadow-md disabled:opacity-50"
+                >
+                  {loading ? 'Loading...' : 'Next Page'}
+                </button>
               </div>
-            ))}
-          </div>
+            )}
+          </>
         ) : (
           <div className="text-center py-20">
             <div className="w-24 h-24 bg-gray-100 rounded-full flex items-center justify-center mx-auto mb-8 border border-gray-200">

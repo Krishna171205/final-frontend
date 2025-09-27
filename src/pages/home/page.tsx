@@ -272,7 +272,7 @@ const Home = () => {
 
       if (response.ok) {
         const data = await response.json();
-        const featuredProperties = data.properties?.slice(0, 6) || [];
+        const featuredProperties = data.properties?.slice(0, 3) || [];
         setProperties(featuredProperties);
       } else {
         setProperties([]);
@@ -543,8 +543,9 @@ const Home = () => {
             <div className="hidden md:block">
               <div className="ml-10 flex items-baseline space-x-8">
                 <Link to="/" onClick={() => scrollToSection('home')} className={`${getHomeLinkStyle('home')} hover:text-amber-400`}>Home</Link>
-                <Link to="/" onClick={() => scrollToSection('properties')} className={getHomeLinkStyle('properties')}>Properties</Link>
                 <Link to="/about" onClick={() => navigate('/about')} className={getHomeLinkStyle('about')}>About</Link>
+                <Link to="/" onClick={() => scrollToSection('properties')} className={getHomeLinkStyle('properties')}>Properties</Link>
+                
                 <Link to="/" onClick={() => scrollToSection('blog')} className={getHomeLinkStyle('blog')}>Blog</Link>
                 <Link to="/" onClick={() => scrollToSection('testimonials')} className={getHomeLinkStyle('testimonials')}>Testimonials</Link>
                 <Link to="/" onClick={() => scrollToSection('contact')} className={getHomeLinkStyle('contact')}>Contact</Link>
@@ -711,7 +712,7 @@ const Home = () => {
       </section>
 
       {/* Stats Section */}
-      <section id="properties" className="py-20 bg-gray-50">
+      <section id="home" className="py-20 bg-gray-50">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="grid md:grid-cols-3 gap-12 text-center">
             <div className="animate-fadeInUp">
@@ -734,6 +735,47 @@ const Home = () => {
               </div>
               <div className="text-xl text-navy-800 font-semibold mb-2">Years Experience</div>
               <div className="text-gray-600">In Gurgaon real estate market</div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+       {/* About Section */}
+      <section id="about" className={`${currentPage === "about" ? 'text-gray-300' : 'text-navy-900'} py-32 bg-gray-50`}>
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+          <div className="grid lg:grid-cols-2 gap-20 items-center">
+            <div className="animate-slideInLeft">
+              <h2 className="text-5xl font-bold text-navy-900 mb-8 font-serif gold-accent">Meet Rajeev Mittal</h2>
+              <p className="text-xl text-gray-700 mb-8 leading-relaxed">
+                With over 30 years in Gurgaon's real estate, we've helped families, corporates, and investors find dream homes and high-return opportunities since 1990. We're trusted partners of top developers like DLF, EMAAR, TATA, Vatika, Unitech, IREO, Homestead, and more, and proudly serve leading corporates including IBM, Nestlé, Coca-Cola, American Express, Airtel, and Max Life.
+              </p>
+              <p className="text-xl text-gray-700 mb-8 leading-relaxed">
+                Our expertise lies in premium and ultra-luxury properties—from iconic residences like DLF Camellias, Magnolias, Aralias, Central Park, The Crest, and World Spa to exclusive high-end rentals for diplomats and expats. For us, it's not about closing deals—it's about building relationships that last a lifetime.
+              </p>
+              <div className="grid grid-cols-2 gap-8 mb-12">
+                <div className="text-center p-6 bg-white rounded-xl border border-gray-200 shadow-card">
+                  <div className="text-3xl font-bold text-navy-900 mb-2">440+</div>
+                  <div className="text-gray-700 font-medium">Properties Sold</div>
+                </div>
+                <div className="text-center p-6 bg-white rounded-xl border border-gray-200 shadow-card">
+                  <div className="text-3xl font-bold text-navy-900 mb-2">₹489Cr+</div>
+                  <div className="text-gray-700 font-medium">Sales Volume</div>
+                </div>
+              </div>
+              <button
+                onClick={() => setShowConsultationForm(true)}
+                className="text-white px-10 py-4 rounded-lg text-lg font-semibold whitespace-nowrap cursor-pointer transition-colors shadow-lg"
+                style={{ background: 'linear-gradient(135deg, #DAA520, #B8860B)', boxShadow: '0 10px 25px rgba(218, 165, 32, 0.3)' }}
+              >
+                Schedule Consultation
+              </button>
+            </div>
+            <div className="animate-slideInRight">
+              <img
+                alt="Rajeev Mittal"
+                className="rounded-2xl shadow-2xl w-full h-[600px] object-cover object-top border border-gray-200"
+                src="rajeev.jpg"
+              />
             </div>
           </div>
         </div>
@@ -1004,46 +1046,7 @@ const Home = () => {
         </div>
       </section>
 
-      {/* About Section */}
-      <section id="about" className={`${currentPage === "about" ? 'text-gray-300' : 'text-navy-900'} py-32 bg-gray-50`}>
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="grid lg:grid-cols-2 gap-20 items-center">
-            <div className="animate-slideInLeft">
-              <h2 className="text-5xl font-bold text-navy-900 mb-8 font-serif gold-accent">Meet Rajeev Mittal</h2>
-              <p className="text-xl text-gray-700 mb-8 leading-relaxed">
-                With over 30 years in Gurgaon's real estate, we've helped families, corporates, and investors find dream homes and high-return opportunities since 1990. We're trusted partners of top developers like DLF, EMAAR, TATA, Vatika, Unitech, IREO, Homestead, and more, and proudly serve leading corporates including IBM, Nestlé, Coca-Cola, American Express, Airtel, and Max Life.
-              </p>
-              <p className="text-xl text-gray-700 mb-8 leading-relaxed">
-                Our expertise lies in premium and ultra-luxury properties—from iconic residences like DLF Camellias, Magnolias, Aralias, Central Park, The Crest, and World Spa to exclusive high-end rentals for diplomats and expats. For us, it's not about closing deals—it's about building relationships that last a lifetime.
-              </p>
-              <div className="grid grid-cols-2 gap-8 mb-12">
-                <div className="text-center p-6 bg-white rounded-xl border border-gray-200 shadow-card">
-                  <div className="text-3xl font-bold text-navy-900 mb-2">440+</div>
-                  <div className="text-gray-700 font-medium">Properties Sold</div>
-                </div>
-                <div className="text-center p-6 bg-white rounded-xl border border-gray-200 shadow-card">
-                  <div className="text-3xl font-bold text-navy-900 mb-2">₹489Cr+</div>
-                  <div className="text-gray-700 font-medium">Sales Volume</div>
-                </div>
-              </div>
-              <button
-                onClick={() => setShowConsultationForm(true)}
-                className="text-white px-10 py-4 rounded-lg text-lg font-semibold whitespace-nowrap cursor-pointer transition-colors shadow-lg"
-                style={{ background: 'linear-gradient(135deg, #DAA520, #B8860B)', boxShadow: '0 10px 25px rgba(218, 165, 32, 0.3)' }}
-              >
-                Schedule Consultation
-              </button>
-            </div>
-            <div className="animate-slideInRight">
-              <img
-                alt="Rajeev Mittal"
-                className="rounded-2xl shadow-2xl w-full h-[600px] object-cover object-top border border-gray-200"
-                src="rajeev.jpg"
-              />
-            </div>
-          </div>
-        </div>
-      </section>
+     
 
       {/* Blog Section - Replaced Latest Insights */}
       <section className={`${currentPage === "blog" ? 'text-gray-300' : 'text-navy-900'}py-32 bg-navy-900 blog`} id='blog'>

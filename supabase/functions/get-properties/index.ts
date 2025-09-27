@@ -21,6 +21,8 @@ const supabase = createClient(
   Deno.env.get("SUPABASE_ANON_KEY") ?? ""
 )
 
+// Simulate network latency by delaying response
+
 serve(async (req) => {
   if (req.method === "OPTIONS") return new Response("ok", { headers: corsHeaders })
 
@@ -28,11 +30,16 @@ serve(async (req) => {
     if (req.method === "GET") {
       const url = new URL(req.url)
       const page = parseInt(url.searchParams.get("page") || "1")
-      
+      const limit = parseInt(url.searchParams.get("limit") || "6") // default to 10 items per page
+
+      // Simulate a network delay (latency)
+
+      // Fetch paginated properties from the database
       const { data: properties, error } = await supabase
         .from("properties")
-        .select("id, title, location, full_address, type, status, description, bhk, baths, sqft, area, custom_image, custom_image_2, custom_image_3, created_at")
+        .select("id, title, location, type, status, custom_image, created_at,full_address,bhk,baths,sqft, description, area ")
         .order("created_at", { ascending: false })
+        .range((page - 1) * limit, page * limit - 1) // Paginate the results
 
       if (error) {
         console.error("GET properties error:", error)
