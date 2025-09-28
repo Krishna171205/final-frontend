@@ -164,7 +164,7 @@ const Home = () => {
       image: '/dlfimage.webp',
       title: 'Premium Properties',
       subtitle: 'In Gurgaon',
-      description: "Specialized in luxury real estate with over 30 years of experience in Gurgaon\'s premium market."
+      description: "Specialized in luxury real estate with over 35 years of experience in Gurgaon\'s premium market."
     },
     {
       image: 'https://omegadreamhomes.com/wp-content/uploads/2018/09/dlfcamellias...jpg',
@@ -315,7 +315,7 @@ const Home = () => {
       // Animate projects counter
       let projectCount = 0;
       const projectInterval = setInterval(() => {
-        projectCount += 15;
+        projectCount += 10;
         setStats(prev => ({ ...prev, projects: projectCount }));
         if (projectCount >= 440) {
           clearInterval(projectInterval);
@@ -324,7 +324,7 @@ const Home = () => {
       }, 50);
 
       // Animate clients counter to show sales volume
-      let clientCount = 0;
+      let clientCount = 10;
       const clientInterval = setInterval(() => {
         clientCount += 15;
         setStats(prev => ({ ...prev, clients: clientCount }));
@@ -339,9 +339,9 @@ const Home = () => {
       const expInterval = setInterval(() => {
         expCount += 1;
         setStats(prev => ({ ...prev, experience: expCount }));
-        if (expCount >= 30) {
+        if (expCount >= 5) {
           clearInterval(expInterval);
-          setStats(prev => ({ ...prev, experience: 30 }));
+          setStats(prev => ({ ...prev, experience: 35 }));
         }
       }, 200);
     }
@@ -747,7 +747,7 @@ const Home = () => {
             <div className="animate-slideInLeft">
               <h2 className="text-5xl font-bold text-navy-900 mb-8 font-serif gold-accent">Meet Rajeev Mittal</h2>
               <p className="text-xl text-gray-700 mb-8 leading-relaxed">
-                With over 30 years in Gurgaon's real estate, we've helped families, corporates, and investors find dream homes and high-return opportunities since 1990. We're trusted partners of top developers like DLF, EMAAR, TATA, Vatika, Unitech, IREO, Homestead, and more, and proudly serve leading corporates including IBM, Nestlé, Coca-Cola, American Express, Airtel, and Max Life.
+                With over 35 years in Gurgaon's real estate, we've helped families, corporates, and investors find dream homes and high-return opportunities since 1990. We're trusted partners of top developers like DLF, EMAAR, TATA, Vatika, Unitech, IREO, Homestead, and more, and proudly serve leading corporates including IBM, Nestlé, Coca-Cola, American Express, Airtel, and Max Life.
               </p>
               <p className="text-xl text-gray-700 mb-8 leading-relaxed">
                 Our expertise lies in premium and ultra-luxury properties—from iconic residences like DLF Camellias, Magnolias, Aralias, Central Park, The Crest, and World Spa to exclusive high-end rentals for diplomats and expats. For us, it's not about closing deals—it's about building relationships that last a lifetime.
@@ -1007,7 +1007,7 @@ const Home = () => {
               </div>
             </div>
 
-            {/* Other NCR */}
+            {/* Gurgaon */}
             <div 
               className="bg-white rounded-2xl overflow-hidden shadow-lg hover:shadow-xl transition-all duration-300 cursor-pointer transform hover:-translate-y-2"
               onClick={() => navigate('/areas')}
@@ -1018,13 +1018,13 @@ const Home = () => {
               >
                 <div className="absolute inset-0 bg-gradient-to-t from-navy-900/80 to-transparent"></div>
                 <div className="absolute bottom-4 left-4 text-white">
-                  <h3 className="text-2xl font-bold font-serif">Other NCR</h3>
+                  <h3 className="text-2xl font-bold font-serif">Gurgaon</h3>
                   {/* <p className="text-sm">Emerging Areas</p> */}
                 </div>
               </div>
               <div className="p-6">
                 <p className="text-gray-600 mb-4 leading-relaxed">
-                  Premium properties across other NCR locations including Ghaziabad and emerging corridors with high growth potential.
+                  Premium properties across gurgaon locations emerging corridors with high growth potential.
                 </p>
                 <div className="flex items-center text-navy-600 hover:text-navy-800 font-semibold">
                   Explore Properties

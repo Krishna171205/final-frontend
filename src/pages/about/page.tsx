@@ -26,7 +26,7 @@ const About = () => {
   const finalValues = {
     projects: 440,
     clients: 489,
-    experience: 30,
+    experience: 35,
     awards: 25
   };
 

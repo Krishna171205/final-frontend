@@ -1,6 +1,12 @@
 
 import { useState, useEffect } from 'react';
 import { useNavigate, useSearchParams } from 'react-router-dom';
+import { createClient } from '@supabase/supabase-js';
+
+const supabase = createClient(
+  import.meta.env.VITE_PUBLIC_SUPABASE_URL,
+  import.meta.env.VITE_PUBLIC_SUPABASE_ANON_KEY
+);
 
 interface Property {
   id: number;
@@ -85,10 +91,10 @@ const Areas = () => {
         'https://readdy.ai/api/search-image?query=Premium%20residential%20and%20commercial%20properties%20in%20Greater%20Noida%20with%20modern%20architecture%2C%20luxury%20developments%2C%20green%20spaces%2C%20contemporary%20design%2C%20professional%20real%20estate%20photography%20during%20golden%20hour%2C%20planned%20city%20infrastructure&width=1200&height=400&seq=greater-noida-hero-001&orientation=landscape',
     },
     {
-      name: 'Other NCR',
-      slug: 'other-ncr',
+      name: 'gurgaon',
+      slug: 'gurgaon',
       description:
-        'Premium properties across other NCR locations including Ghaziabad and emerging corridors with high growth potential.',
+        'Premium properties across gurgaon locations and emerging corridors with high growth potential.',
       heroImage:
         'https://readdy.ai/api/search-image?query=Premium%20residential%20and%20commercial%20properties%20across%20NCR%20region%20with%20modern%20architecture%2C%20luxury%20developments%2C%20green%20spaces%2C%20contemporary%20design%2C%20professional%20real%20estate%20photography%20during%20golden%20hour%2C%20diverse%20urban%20landscapes&width=1200&height=400&seq=ncr-other-hero-001&orientation=landscape',
     },
@@ -142,13 +148,15 @@ const Areas = () => {
   const fetchPropertiesByArea = async () => {
     try {
       console.log('Fetching properties by area...');
+
+      const session = await supabase.auth.getSession();
       const response = await fetch(
-        `${import.meta.env.VITE_PUBLIC_SUPABASE_URL}/functions/v1/get-properties`,
+        `${import.meta.env.VITE_PUBLIC_SUPABASE_URL}/functions/v1/manage-properties`,
         {
           method: 'GET',
           headers: {
             'Content-Type': 'application/json',
-            Authorization: `Bearer ${import.meta.env.VITE_PUBLIC_SUPABASE_ANON_KEY}`,
+            'Authorization': `Bearer ${session.data.session?.access_token}`,
           },
         }
       );
@@ -160,7 +168,7 @@ const Areas = () => {
         // Group properties by area (fallback to 'other-ncr')
         const propertiesByArea = (data.properties || []).reduce(
           (acc: Record<string, Property[]>, property: Property) => {
-            const areaKey = property.area?.toLowerCase() || 'other-ncr';
+            const areaKey = property.area?.toLowerCase() || 'gurgaon';
             if (!acc[areaKey]) acc[areaKey] = [];
             acc[areaKey].push(property);
             return acc;
@@ -445,7 +453,7 @@ const Areas = () => {
                           </div>
                         </div>
 
-                        {(property.bhk || property.baths || property.sqft) && (
+                        {(property.bhk || property.sqft) && (
                           <div className="flex items-center gap-4 text-sm text-gray-600 mb-4">
                             {property.bhk && (
                               <div className="flex items-center">
@@ -453,12 +461,12 @@ const Areas = () => {
                                 {property.bhk} BHK
                               </div>
                             )}
-                            {property.baths && (
+                            {/* {property.baths && (
                               <div className="flex items-center">
                                 <i className="ri-drop-line mr-1 w-4 h-4 flex items-center justify-center" />
                                 {property.baths} Baths
                               </div>
-                            )}
+                            )} */}
                             {property.sqft && (
                               <div className="flex items-center">
                                 <i className="ri-ruler-line mr-1 w-4 h-4 flex items-center justify-center" />

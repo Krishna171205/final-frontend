@@ -1350,7 +1350,7 @@ const handleDeleteProperty = async (id: number) => {
                     <option value="dwarka express way">Dwarka Express Way</option>
                     <option value="sohna road">Sohna Road</option>
                     <option value="gurgaon faridabad road">Gurgaon Faridabad Road</option>
-                    <option value="other-ncr">Other NCR</option>
+                    <option value="gurgaon">gurgaon</option>
                   </select>
                 </div>
               </div>
@@ -1551,7 +1551,7 @@ const handleDeleteProperty = async (id: number) => {
                     <option value="dwarka express way">Dwarka Express Way</option>
                     <option value="sohna road">Sohna Road</option>
                     <option value="gurgaon faridabad road">Gurgaon Faridabad Road</option>
-                    <option value="other-ncr">Other NCR</option>
+                    <option value="gurgaon">gurgaon</option>
                   </select>
                 </div>
 

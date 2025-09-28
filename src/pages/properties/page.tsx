@@ -157,7 +157,7 @@ const Properties = () => {
   ].sort();
 
   // Add predefined areas to ensure all areas are available
-  const allAreas = ['gurgaon', 'delhi', 'noida', 'faridabad', 'greater-noida', 'other-ncr'];
+  const allAreas = ['gurgaon','Gurgaon Faridabad Road','Dwarka Expressway'];
   const combinedAreas = [...new Set([...availableAreas, ...allAreas])];
 
   const filteredProperties = properties.filter((property) => {
@@ -166,7 +166,7 @@ const Properties = () => {
     }
 
     if (filterArea !== 'all') {
-      const propertyArea = property.area?.toLowerCase() || 'other-ncr';
+      const propertyArea = property.area?.toLowerCase() || 'gurgaon';
       if (propertyArea !== filterArea.toLowerCase()) {
         return false;
       }
