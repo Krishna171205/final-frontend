@@ -516,19 +516,22 @@ const BlogsPage = () => {
       </section>
 
       {/* Footer */}
-      <footer className="bg-gray-900 text-white py-16 border-t border-gray-800">
+     <footer className="bg-navy-900 text-white py-16 border-t border-navy-800">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="grid md:grid-cols-4 gap-12">
             <div>
-              <h3 className="text-2xl font-bold bg-gradient-to-r from-[#F59E0B] to-[#d97706] bg-clip-text text-transparent mb-6 font-serif">Rajeev Mittal</h3>
+              <h3 className="text-2xl font-bold bg-gold-gradient bg-clip-text text-transparent mb-6 font-serif">Rajeev Mittal</h3>
               <p className="text-gray-300 mb-6 leading-relaxed">
                 Expert real estate guidance with personalized service for buyers and sellers in Gurgaon's premium market.
               </p>
               <div className="flex space-x-4">
-                <a href="https://www.instagram.com/rajeev_mittal_6?igsh=ZnFqMTd1aXB0aXo1" target="_blank" rel="noopener noreferrer" className="w-10 h-10 bg-gray-800 hover:bg-[#F59E0B] rounded-full flex items-center justify-center cursor-pointer transition-all group">
+                <a href="https://www.facebook.com/rajeevmittalestates/" target="_blank" rel="noopener noreferrer" className="w-10 h-10 bg-navy-800 hover-bg-gold-500 rounded-full flex items-center justify-center cursor-pointer transition-all group">
+                  <i className="ri-facebook-line text-gray-400 group-hover:text-white w-5 h-5 flex items-center justify-center"></i>
+                </a>
+                <a href="https://www.instagram.com/rajeev_mittal_6?igsh=ZnFqMTd1aXB0aXo1" target="_blank" rel="noopener noreferrer" className="w-10 h-10 bg-navy-800 hover-bg-gold-500 rounded-full flex items-center justify-center cursor-pointer transition-all group">
                   <i className="ri-instagram-line text-gray-400 group-hover:text-white w-5 h-5 flex items-center justify-center"></i>
                 </a>
-                <a href="https://www.linkedin.com/in/rajeev-mittal-47b51a33?utm_source=share&utm_campaign=share_via&utm_content=profile&utm_medium=android_app" target="_blank" rel="noopener noreferrer" className="w-10 h-10 bg-gray-800 hover:bg-[#F59E0B] rounded-full flex items-center justify-center cursor-pointer transition-all group">
+                <a href="https://www.linkedin.com/in/rajeev-mittal-47b51a33?utm_source=share&utm_campaign=share_via&utm_content=profile&utm_medium=android_app" target="_blank" rel="noopener noreferrer" className="w-10 h-10 bg-navy-800 hover-bg-gold-500 rounded-full flex items-center justify-center cursor-pointer transition-all group">
                   <i className="ri-linkedin-fill text-gray-400 group-hover:text-white w-5 h-5 flex items-center justify-center"></i>
                 </a>
                 <a href="https://wa.me/9811017103" target="_blank" rel="noopener noreferrer" className="w-10 h-10 bg-green-500 hover:bg-green-600 rounded-full flex items-center justify-center cursor-pointer transition-all">
@@ -537,17 +540,17 @@ const BlogsPage = () => {
               </div>
             </div>
             <div>
-              <h4 className="text-lg font-semibold mb-6 text-[#F59E0B]">Quick Links</h4>
+              <h4 className="text-lg font-semibold mb-6 text-gold-400">Quick Links</h4>
               <ul className="space-y-3 text-gray-300">
-                <li><button onClick={() => navigate('/')} className="hover:text-[#F59E0B] cursor-pointer transition-colors">Home</button></li>
-                <li><button onClick={() => navigate('/properties')} className="hover:text-[#F59E0B] cursor-pointer transition-colors">Properties</button></li>
-                <li><a href="/#services" className="hover:text-[#F59E0B] cursor-pointer transition-colors">Services</a></li>
-                <li><a href="#" className="hover:text-[#F59E0B] cursor-pointer transition-colors">Blog</a></li>
-                <li><a href="/#contact" className="hover:text-[#F59E0B] cursor-pointer transition-colors">Contact</a></li>
+                <li><button onClick={() => navigate('/about')} className="hover:text-gold-400 cursor-pointer transition-colors">About</button></li>
+                <li><button onClick={() => navigate('/properties')} className="hover:text-gold-400 cursor-pointer transition-colors">Properties</button></li>
+                <li><button onClick={() => navigate('/areas')} className="hover:text-gold-400 cursor-pointer transition-colors">Areas</button></li>
+                <li><a href="#contact" className="hover:text-gold-400 cursor-pointer transition-colors">Contact</a></li>
+                <li><button onClick={() => navigate('/blogs')} className="hover:text-gold-400 cursor-pointer transition-colors">Blog</button></li>
               </ul>
             </div>
             <div>
-              <h4 className="text-lg font-semibold mb-6 text-[#F59E0B]">Services</h4>
+              <h4 className="text-lg font-semibold mb-6 text-gold-400">Services</h4>
               <ul className="space-y-3 text-gray-300">
                 <li>Home Buying</li>
                 <li>Home Selling</li>
@@ -557,28 +560,26 @@ const BlogsPage = () => {
               </ul>
             </div>
             <div>
-              <h4 className="text-lg font-semibold mb-6 text-[#F59E0B]">Contact Info</h4>
+              <h4 className="text-lg font-semibold mb-6 text-gold-400">Contact Info</h4>
               <ul className="space-y-4 text-gray-300">
                 <li className="flex items-center">
-                  <i className="ri-phone-line mr-3 text-[#F59E0B] w-4 h-4 flex items-center justify-center"></i>
+                  <i className="ri-phone-line mr-3 text-gold-400 w-4 h-4 flex items-center justify-center"></i>
                   (+91) 9811017103
                 </li>
                 <li className="flex items-center">
-                  <i className="ri-mail-line mr-3 text-[#F59E0B] w-4 h-4 flex items-center justify-center"></i>
+                  <i className="ri-mail-line mr-3 text-gold-400 w-4 h-4 flex items-center justify-center"></i>
                   rajeevmittal_dlf@hotmail.com
                 </li>
                 <li className="flex items-start">
-                  <i className="ri-map-pin-line mr-3 text-[#F59E0B] w-4 h-4 flex items-center justify-center mt-1"></i>
-                  <span>123, DLF Qutub Plaza, DLF City-1<br />Gurugram, (Hry) 122002</span>
+                  <i className="ri-map-pin-line mr-3 text-gold-400 w-4 h-4 flex items-center justify-center mt-1"></i>
+                  <span>123, DLF Qutab Plaza, DLF City, Phase-1<br />Gurugram - 122002 ( Haryana)</span>
                 </li>
               </ul>
             </div>
           </div>
-          <div className="border-t border-gray-800 mt-12 pt-8 flex flex-col md:flex-row justify-between items-center">
+          <div className="border-t border-navy-800 mt-12 pt-8 flex flex-col md:flex-row justify-between items-center">
             <p className="text-gray-400 mb-4 md:mb-0">RAJEEV MITTAL ESTATES PVT.LTD. All rights reserved.<br />Rera Approved - Registration Number GGM/107/2017/1R/140/Ext1/2022/2021</p>
-            <a href="https://readdy.ai/?origin=logo" className="text-[#F59E0B] hover:text-[#d97706] cursor-pointer transition-colors">
-              Made with Readdy
-            </a>
+      
           </div>
         </div>
       </footer>

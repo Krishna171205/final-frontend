@@ -30,41 +30,41 @@ const About = () => {
     awards: 25
   };
 
-  const milestones = [
-    { year: '1990', title: 'Company Founded', description: 'Started with a vision to redefine real estate excellence in Gurgaon' },
-    { year: '1995', title: 'First Major Project', description: 'Successfully delivered our first luxury residential complex with DLF' },
-    { year: '2000', title: 'Premium Partnerships', description: 'Established trusted partnerships with DLF, EMAAR, TATA, and Vatika' },
-    { year: '2005', title: 'Corporate Expansion', description: 'Started serving leading corporates including IBM, Nestlé, and American Express' },
-    { year: '2010', title: 'Ultra-Luxury Focus', description: 'Specialized in iconic properties like DLF Camellias, Magnolias, and The Crest' },
-    { year: '2024', title: 'Market Leadership', description: 'Established as the trusted name in Gurgaon\'s premium real estate market' }
-  ];
+  // const milestones = [
+  //   { year: '1990', title: 'Company Founded', description: 'Started with a vision to redefine real estate excellence in Gurgaon' },
+  //   { year: '1995', title: 'First Major Project', description: 'Successfully delivered our first luxury residential complex with DLF' },
+  //   { year: '2000', title: 'Premium Partnerships', description: 'Established trusted partnerships with DLF, EMAAR, TATA, and Vatika' },
+  //   { year: '2005', title: 'Corporate Expansion', description: 'Started serving leading corporates including IBM, Nestlé, and American Express' },
+  //   { year: '2010', title: 'Ultra-Luxury Focus', description: 'Specialized in iconic properties like DLF Camellias, Magnolias, and The Crest' },
+  //   { year: '2024', title: 'Market Leadership', description: 'Established as the trusted name in Gurgaon\'s premium real estate market' }
+  // ];
 
-  const team = [
-    {
-      name: 'Rajeev Mittal',
-      role: 'Founder & CEO',
-      image: 'https://check2-flame-two.vercel.app/image2url.com/images/1758081839443-f1caa703-d629-4030-be4d-15dc4509a6cd.jpg',
-      bio: 'With over 30 years of experience in Gurgaon\'s premium real estate market, Rajeev leads with unmatched expertise and vision.'
-    },
-    {
-      name: 'Priya Sharma',
-      role: 'Head of Sales',
-      image: 'https://readdy.ai/api/search-image?query=professional%20indian%20businesswoman%20sales%20director%20confident%20portrait%20corporate%20attire%20office%20environment%20luxury%20real%20estate%20professional&width=300&height=300&seq=team2&orientation=squarish',
-      bio: 'Priya brings exceptional sales expertise and client relationship management to our premium property portfolio.'
-    },
-    {
-      name: 'Amit Kumar',
-      role: 'Project Manager',
-      image: 'https://readdy.ai/api/search-image?query=professional%20indian%20project%20manager%20construction%20real%20estate%20confident%20portrait%20business%20formal%20attire%20luxury%20property%20development&width=300&height=300&seq=team3&orientation=squarish',
-      bio: 'Amit ensures seamless project execution and maintains our high standards of quality across all premium developments.'
-    },
-    {
-      name: 'Dr. Sunita Agarwal',
-      role: 'Legal Advisor',
-      image: 'https://readdy.ai/api/search-image?query=professional%20indian%20female%20lawyer%20legal%20advisor%20confident%20portrait%20formal%20business%20attire%20office%20setting%20real%20estate%20law%20expert&width=300&height=300&seq=team4&orientation=squarish',
-      bio: 'Dr. Agarwal provides expert legal guidance for all premium property transactions and regulatory compliance.'
-    }
-  ];
+  // const team = [
+  //   {
+  //     name: 'Rajeev Mittal',
+  //     role: 'Founder & CEO',
+  //     image: 'https://check2-flame-two.vercel.app/image2url.com/images/1758081839443-f1caa703-d629-4030-be4d-15dc4509a6cd.jpg',
+  //     bio: 'With over 30 years of experience in Gurgaon\'s premium real estate market, Rajeev leads with unmatched expertise and vision.'
+  //   },
+  //   {
+  //     name: 'Priya Sharma',
+  //     role: 'Head of Sales',
+  //     image: 'https://readdy.ai/api/search-image?query=professional%20indian%20businesswoman%20sales%20director%20confident%20portrait%20corporate%20attire%20office%20environment%20luxury%20real%20estate%20professional&width=300&height=300&seq=team2&orientation=squarish',
+  //     bio: 'Priya brings exceptional sales expertise and client relationship management to our premium property portfolio.'
+  //   },
+  //   {
+  //     name: 'Amit Kumar',
+  //     role: 'Project Manager',
+  //     image: 'https://readdy.ai/api/search-image?query=professional%20indian%20project%20manager%20construction%20real%20estate%20confident%20portrait%20business%20formal%20attire%20luxury%20property%20development&width=300&height=300&seq=team3&orientation=squarish',
+  //     bio: 'Amit ensures seamless project execution and maintains our high standards of quality across all premium developments.'
+  //   },
+  //   {
+  //     name: 'Dr. Sunita Agarwal',
+  //     role: 'Legal Advisor',
+  //     image: 'https://readdy.ai/api/search-image?query=professional%20indian%20female%20lawyer%20legal%20advisor%20confident%20portrait%20formal%20business%20attire%20office%20setting%20real%20estate%20law%20expert&width=300&height=300&seq=team4&orientation=squarish',
+  //     bio: 'Dr. Agarwal provides expert legal guidance for all premium property transactions and regulatory compliance.'
+  //   }
+  // ];
 
   useEffect(() => {
     const observer = new IntersectionObserver(
@@ -393,7 +393,7 @@ const About = () => {
       </div>
 
       {/* Timeline */}
-      <div className="py-20 bg-gray-900">
+      {/* <div className="py-20 bg-gray-900">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="text-center mb-16">
             <h2 className="text-4xl font-serif text-white mb-4" style={{ background: 'linear-gradient(135deg, #F59E0B, #d97706)', WebkitBackgroundClip: 'text', WebkitTextFillColor: 'transparent' }}>
@@ -405,7 +405,7 @@ const About = () => {
           </div>
 
           <div className="relative">
-            <div className="absolute left-1/2 transform -translate-x-1/2 h-full w-1 bg-gold-500"></div>
+            <div className="absolute left-1/2 transform -translate-x-1/2 h-full w-1" style={{ background: 'linear-gradient(135deg, #F59E0B, #d97706)' }}></div>
             <div className="space-y-12">
               {milestones.map((milestone, index) => (
                 <div key={index} className={`flex items-center ${index % 2 === 0 ? 'flex-row' : 'flex-row-reverse'}`}>
@@ -429,10 +429,10 @@ const About = () => {
             </div>
           </div>
         </div>
-      </div>
+      </div> */}
 
       {/* Team Section */}
-      <div className="py-20 bg-gray-50">
+      {/* <div className="py-20 bg-gray-50">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="text-center mb-16">
             <h2 className="text-4xl font-serif text-gray-900 mb-4 gold-accent">
@@ -466,7 +466,7 @@ const About = () => {
             ))}
           </div>
         </div>
-      </div>
+      </div> */}
 
       {/* Values Section */}
       <div className="py-20 bg-white">
@@ -557,7 +557,7 @@ const About = () => {
       </div>
 
       {/* Footer */}
-      <footer className="bg-gray-900 text-white py-16 border-t border-gray-800">
+           <footer className="bg-navy-900 text-white py-16 border-t border-navy-800">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="grid md:grid-cols-4 gap-12">
             <div>
@@ -566,10 +566,13 @@ const About = () => {
                 Expert real estate guidance with personalized service for buyers and sellers in Gurgaon's premium market.
               </p>
               <div className="flex space-x-4">
-                <a href="https://www.instagram.com/rajeev_mittal_6?igsh=ZnFqMTd1aXB0aXo1" target="_blank" rel="noopener noreferrer" className="w-10 h-10 bg-gray-800 hover-bg-gold-500 rounded-full flex items-center justify-center cursor-pointer transition-all group">
+                <a href="https://www.facebook.com/rajeevmittalestates/" target="_blank" rel="noopener noreferrer" className="w-10 h-10 bg-navy-800 hover-bg-gold-500 rounded-full flex items-center justify-center cursor-pointer transition-all group">
+                  <i className="ri-facebook-line text-gray-400 group-hover:text-white w-5 h-5 flex items-center justify-center"></i>
+                </a>
+                <a href="https://www.instagram.com/rajeev_mittal_6?igsh=ZnFqMTd1aXB0aXo1" target="_blank" rel="noopener noreferrer" className="w-10 h-10 bg-navy-800 hover-bg-gold-500 rounded-full flex items-center justify-center cursor-pointer transition-all group">
                   <i className="ri-instagram-line text-gray-400 group-hover:text-white w-5 h-5 flex items-center justify-center"></i>
                 </a>
-                <a href="https://www.linkedin.com/in/rajeev-mittal-47b51a33?utm_source=share&utm_campaign=share_via&utm_content=profile&utm_medium=android_app" target="_blank" rel="noopener noreferrer" className="w-10 h-10 bg-gray-800 hover-bg-gold-500 rounded-full flex items-center justify-center cursor-pointer transition-all group">
+                <a href="https://www.linkedin.com/in/rajeev-mittal-47b51a33?utm_source=share&utm_campaign=share_via&utm_content=profile&utm_medium=android_app" target="_blank" rel="noopener noreferrer" className="w-10 h-10 bg-navy-800 hover-bg-gold-500 rounded-full flex items-center justify-center cursor-pointer transition-all group">
                   <i className="ri-linkedin-fill text-gray-400 group-hover:text-white w-5 h-5 flex items-center justify-center"></i>
                 </a>
                 <a href="https://wa.me/9811017103" target="_blank" rel="noopener noreferrer" className="w-10 h-10 bg-green-500 hover:bg-green-600 rounded-full flex items-center justify-center cursor-pointer transition-all">
@@ -578,15 +581,13 @@ const About = () => {
               </div>
             </div>
             <div>
-              <h4 className="text-lg font-semibold mb-6 text-[#F59E0B]">Quick Links</h4>
+              <h4 className="text-lg font-semibold mb-6 text-gold-400">Quick Links</h4>
               <ul className="space-y-3 text-gray-300">
-                <li><button onClick={() => navigate('/')} className="hover:text-[#F59E0B] cursor-pointer transition-colors">Home</button></li>
-                <li><span className="text-[#F59E0B]">About</span></li>
-                <li><button onClick={() => navigate('/properties')} className="hover:text-[#F59E0B] cursor-pointer transition-colors">Properties</button></li>
-                <li><button onClick={() => navigate('/areas')} className="hover:text-[#F59E0B] cursor-pointer transition-colors">Areas</button></li>
-                <li><a href="/#services" className="hover:text-[#F59E0B] cursor-pointer transition-colors">Services</a></li>
-                <li><button onClick={() => navigate('/blogs')} className="hover:text-[#F59E0B] cursor-pointer transition-colors">Blog</button></li>
-                <li><a href="/#contact" className="hover:text-[#F59E0B] cursor-pointer transition-colors">Contact</a></li>
+                <li><button onClick={() => navigate('/about')} className="hover:text-gold-400 cursor-pointer transition-colors">About</button></li>
+                <li><button onClick={() => navigate('/properties')} className="hover:text-gold-400 cursor-pointer transition-colors">Properties</button></li>
+                <li><button onClick={() => navigate('/areas')} className="hover:text-gold-400 cursor-pointer transition-colors">Areas</button></li>
+                <li><a href="#contact" className="hover:text-gold-400 cursor-pointer transition-colors">Contact</a></li>
+                <li><button onClick={() => navigate('/blogs')} className="hover:text-gold-400 cursor-pointer transition-colors">Blog</button></li>
               </ul>
             </div>
             <div>
@@ -595,7 +596,6 @@ const About = () => {
                 <li>Home Buying</li>
                 <li>Home Selling</li>
                 <li>Investment Properties</li>
-                <li>Premium Projects</li>
                 <li>Market Analysis</li>
                 <li>Consultation</li>
               </ul>
@@ -613,16 +613,14 @@ const About = () => {
                 </li>
                 <li className="flex items-start">
                   <i className="ri-map-pin-line mr-3 text-gold-400 w-4 h-4 flex items-center justify-center mt-1"></i>
-                  <span>123, DLF Qutub Plaza, DLF City-1<br />Gurugram, (Hry) 122002</span>
+                  <span>123, DLF Qutab Plaza, DLF City, Phase-1<br />Gurugram - 122002 ( Haryana)</span>
                 </li>
               </ul>
             </div>
           </div>
-          <div className="border-t border-gray-800 mt-12 pt-8 flex flex-col md:flex-row justify-between items-center">
+          <div className="border-t border-navy-800 mt-12 pt-8 flex flex-col md:flex-row justify-between items-center">
             <p className="text-gray-400 mb-4 md:mb-0">RAJEEV MITTAL ESTATES PVT.LTD. All rights reserved.<br />Rera Approved - Registration Number GGM/107/2017/1R/140/Ext1/2022/2021</p>
-            <a href="https://readdy.ai/?origin=logo" className="text-gold-400 hover:text-gold-300 cursor-pointer transition-colors">
-              Made with Readdy
-            </a>
+      
           </div>
         </div>
       </footer>
