@@ -836,7 +836,7 @@ const handleDeleteProperty = async (id: number) => {
     switch (status) {
       case 'read-to-move': return 'bg-blue-600';
       case 'under-construction': return 'bg-green-600';
-      case 'ongoing': return 'bg-purple-600';
+      case 'Fresh Booking': return 'bg-purple-600';
       default: return 'bg-gray-600';
     }
   };
@@ -1304,7 +1304,7 @@ const handleDeleteProperty = async (id: number) => {
                   >
                     <option value="read-to-move">ready-to-move</option>
                     <option value="under-construction">under-construction</option>
-                    <option value="ongoing">ongoing</option>
+                    <option value="Fresh Booking">Fresh Booking</option>
                   </select>
                 </div>
               </div>
@@ -1532,7 +1532,7 @@ const handleDeleteProperty = async (id: number) => {
                   >
                     <option value="ready-to-move">ready-to-move</option>
                     <option value="under-construction">under-construction</option>
-                    <option value="ongoing">ongoing</option>
+                    <option value="Fresh Booking">Fresh Booking</option>
                   </select>
                 </div>
               </div>

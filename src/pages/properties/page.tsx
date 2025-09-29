@@ -503,8 +503,22 @@ const Properties = () => {
               >
                 Go to Admin Dashboard
               </button>
+              
+            )}
+            {hasMore && (
+              <div ref={loadMoreRef} className="text-center mt-12">
+                <button
+                  onClick={handleLoadMore}
+                  disabled={loading}
+                  className="px-6 py-3 bg-navy-600 hover:bg-navy-700 text-white rounded-lg font-semibold shadow-md disabled:opacity-50"
+                >
+                  {loading ? 'Loading...' : 'Load More...'}
+                </button>
+              </div>
             )}
           </div>
+          
+
         )}
       </div>
 

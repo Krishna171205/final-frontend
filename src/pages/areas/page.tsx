@@ -546,12 +546,12 @@ const Areas = () => {
             >
               Chat on WhatsApp
             </a>
-            <button
+            {/* <button
               onClick={() => navigate('/contact')}
               className="bg-navy-600 hover:bg-navy-700 text-white px-8 py-3 rounded-md font-semibold transition-colors"
             >
               Get In Touch
-            </button>
+            </button> */}
           </div>
         </div>
       </div>

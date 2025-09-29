@@ -415,44 +415,25 @@ const Home = () => {
     }
   };
 
-  const handleContactSubmit = async (e: React.FormEvent) => {
-    e.preventDefault();
-    setIsSubmitting(true);
+const handleContactSubmit = (e: React.FormEvent) => {
+  e.preventDefault();
 
-    try {
-      const formDataToSend = new URLSearchParams();
-      formDataToSend.append('firstName', contactFormData.firstName);
-      formDataToSend.append('lastName', contactFormData.lastName);
-      formDataToSend.append('email', contactFormData.email);
-      formDataToSend.append('phone', contactFormData.phone);
-      formDataToSend.append('message', contactFormData.message);
+  const subject = encodeURIComponent("New Contact Form Submission");
+  const body = encodeURIComponent(
+    `First Name: ${contactFormData.firstName}
+Last Name: ${contactFormData.lastName}
+Email: ${contactFormData.email}
+Phone: ${contactFormData.phone}
+Message: ${contactFormData.message}`
+  );
 
-      const response = await fetch('https://readdy.ai/api/form/submit/contact_form_67633e4e4c94b', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/x-www-form-urlencoded',
-        },
-        body: formDataToSend
-      });
+  // Change this to the email you want to receive the form at
+  const mailtoLink = `mailto:your@email.com?subject=${subject}&body=${body}`;
 
-      if (response.ok) {
-        setSubmitStatus('success');
-        setContactFormData({
-          firstName: '',
-          lastName: '',
-          email: '',
-          phone: '',
-          message: ''
-        });
-      } else {
-        setSubmitStatus('error');
-      }
-    } catch (error) {
-      setSubmitStatus('error');
-    } finally {
-      setIsSubmitting(false);
-    }
-  };
+  // Open the user's default email client
+  window.location.href = mailtoLink;
+};
+
 
   // const formatPrice = (price: number, isRental: boolean = false) => {
   //   if (isRental) {
@@ -658,7 +639,7 @@ const Home = () => {
           <div
             key={index}
             className={`absolute inset-0 transition-opacity duration-1000 ${
-              index === currentSlide ? 'opacity-100' : 'opacity-0'
+              index === currentSlide ? 'opacity-60' : 'opacity-0'
             }`}
             style={{
               backgroundImage: `url(${slide.image})`,
@@ -1206,7 +1187,7 @@ const Home = () => {
                   </div>
                   <div>
                     <p className="text-xl font-semibold text-navy-900">Office</p>
-                    <p className="text-gray-600">123, DLF Qutub Plaza, DLF City-1<br />Gurugram, (Hry) 122002</p>
+                    <p className="text-gray-600">123, DLF Qutab Plaza, DLF City, Phase-1<br />Gurugram - 122002 ( Haryana)</p>
                   </div>
                 </div>
               </div>
