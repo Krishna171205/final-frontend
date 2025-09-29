@@ -48,8 +48,8 @@ const Home = () => {
     phone: '',
     message: ''
   });
-  const [isSubmitting, setIsSubmitting] = useState(false);
-  const [submitStatus, setSubmitStatus] = useState<'idle' | 'success' | 'error'>('idle');
+  const [isSubmitting, _setIsSubmitting] = useState(false);
+  const [submitStatus, _setSubmitStatus] = useState<'idle' | 'success' | 'error'>('idle');
   const [showConsultationForm, setShowConsultationForm] = useState(false);
   const [isConsultationSubmitting, setIsConsultationSubmitting] = useState(false);
   const [consultationSubmitStatus, setConsultationSubmitStatus] = useState<'idle' | 'success' | 'error'>('idle');
@@ -537,7 +537,7 @@ Message: ${contactFormData.message}`
             {/* Consultation Button */}
             <div className="hidden md:block">
               <a 
-                href="https://wa.me/919999999999?text=Hi%2C%20I%27m%20interested%20in%20a%20private%20consultation" 
+                href="https://wa.me/9811017103?text=Hi%2C%20I%27m%20interested%20in%20a%20private%20consultation" 
                 target="_blank" 
                 rel="noopener noreferrer"
                 className="bg-navy-500 hover:bg-off-white-500 text-off-white-300 hover:text-navy-500 px-6 py-2 rounded-full text-sm font-semibold transition-all duration-300 transform hover:scale-105 whitespace-nowrap cursor-pointer"
@@ -561,77 +561,104 @@ Message: ${contactFormData.message}`
           </div>
         </div>
 
-        {/* Mobile Menu */}
-     <div
-        className={`fixed top-0 right-0 bottom-0 w-64 bg-off-white-900  shadow-lg z-40 transition-transform duration-300 ${
-          isSidebarOpen ? 'translate-x-0' : 'translate-x-full'
-        }`}
-      >
-        <div className=" fixed w-64 flex flex-col items-center py-8 space-y-6">
-          <a
-            href="#home"
-            className="text-lg text-gray-900 hover:text-indigo-500 opacity-100"
-            onClick={handleLinkClick}
-          >
-            Home
-          </a>
-          <a
-            href="#properties"
-            className="text-lg text-gray-900 hover:text-indigo-500 opacity-100"
-            onClick={handleLinkClick}
-          >
-            Properties
-          </a>
-          <a
-            href="#about"
-            className="text-lg text-gray-900 hover:text-indigo-500 opacity-100"
-            onClick={handleLinkClick}
-          >
-            About
-          </a>
-          <a
-            href="#blog"
-            className="text-lg text-gray-900 hover:text-indigo-500 opacity-100"
-            onClick={handleLinkClick}
-          >
-            Blog
-          </a>
-          <a
-            href="#testimonials"
-            className="text-lg text-gray-900 hover:text-indigo-500 opacity-100"
-            onClick={handleLinkClick}
-          >
-            Testimonials
-          </a>
-          <a
-            href="#contact"
-            className="text-lg text-gray-900 hover:text-indigo-500 opacity-100"
-            onClick={handleLinkClick}
-          >
-            Contact
-          </a>
 
-          <div className="px-6 pt-4 opacity-100">
-            <a
-              href="https://wa.me/919999999999?text=Hi%2C%20I%27m%20interested%20in%20a%20private%20consultation"
-              target="_blank"
-              rel="noopener noreferrer"
-              className="bg-indigo-500 hover:bg-indigo-600 text-white px-6 py-2 rounded-full text-sm font-semibold transition-all duration-300 block text-center opacity-100"
-            >
-              Book Private Consultation
-            </a>
-          </div>
-        </div>
-      </div>
 
-      {/* Overlay that appears when Sidebar is open */}
-      {isSidebarOpen && (
-        <div
-          onClick={() => setIsSidebarOpen(false)}
-          className="fixed top-0 left-0 right-0 bottom-0 bg-black opacity-50 z-30"
-        ></div>
-      )}
+
       </nav>
+
+              {/* Mobile Menu */}
+      <nav className="fixed top-0 left-0 right-0 bg-off-white-500 z-50 shadow-md">
+  {/* Sidebar */}
+  <div
+    className={`fixed top-0 right-0 bottom-0 w-64 bg-off-white-700 shadow-lg z-40 transition-transform duration-300 ${
+      isSidebarOpen ? "translate-x-0" : "translate-x-full"
+    }`}
+  >
+    {/* Cross Button */}
+    <button
+      onClick={() => setIsSidebarOpen(false)}
+      className="absolute top-4 right-4 text-gray-700 hover:text-red-500 transition-colors"
+      aria-label="Close Sidebar"
+    >
+      {/* Simple X Icon (SVG) */}
+      <svg
+        xmlns="http://www.w3.org/2000/svg"
+        className="h-6 w-6"
+        fill="none"
+        viewBox="0 0 24 24"
+        stroke="currentColor"
+        strokeWidth={2}
+      >
+        <path strokeLinecap="round" strokeLinejoin="round" d="M6 18L18 6M6 6l12 12" />
+      </svg>
+    </button>
+
+    <div className="w-64 flex flex-col items-center py-12 space-y-6">
+      <a
+        href="#home"
+        className="text-lg text-gray-900 hover:text-indigo-500"
+        onClick={handleLinkClick}
+      >
+        Home
+      </a>
+      <a
+        href="#properties"
+        className="text-lg text-gray-900 hover:text-indigo-500"
+        onClick={handleLinkClick}
+      >
+        Properties
+      </a>
+      <a
+        href="#about"
+        className="text-lg text-gray-900 hover:text-indigo-500"
+        onClick={handleLinkClick}
+      >
+        About
+      </a>
+      <a
+        href="#blog"
+        className="text-lg text-gray-900 hover:text-indigo-500"
+        onClick={handleLinkClick}
+      >
+        Blog
+      </a>
+      <a
+        href="#testimonials"
+        className="text-lg text-gray-900 hover:text-indigo-500"
+        onClick={handleLinkClick}
+      >
+        Testimonials
+      </a>
+      <a
+        href="#contact"
+        className="text-lg text-gray-900 hover:text-indigo-500"
+        onClick={handleLinkClick}
+      >
+        Contact
+      </a>
+
+      <div className="px-6 pt-4">
+        <a
+          href="https://wa.me/9811017103?text=Hi%2C%20I%27m%20interested%20in%20a%20private%20consultation"
+          target="_blank"
+          rel="noopener noreferrer"
+          className="bg-indigo-500 hover:bg-indigo-600 text-white px-6 py-2 rounded-full text-sm font-semibold transition-all duration-300 block text-center"
+        >
+          Book Private Consultation
+        </a>
+      </div>
+    </div>
+  </div>
+
+  {/* Overlay */}
+  {isSidebarOpen && (
+    <div
+      onClick={() => setIsSidebarOpen(false)}
+      className="fixed top-0 left-0 right-0 bottom-0 bg-black opacity-50 z-30"
+    ></div>
+  )}
+</nav>
+
 
       {/* Hero Section with Slider */}
       <section id="home" className={`relative h-screen flex items-center justify-center overflow-hidden ${currentPage === "home" ? 'bg-gray-800' : 'bg-white'}`}>

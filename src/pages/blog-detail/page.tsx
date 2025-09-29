@@ -221,6 +221,7 @@ const BlogDetailPage = () => {
           )}
         </div>
       </nav>
+      
 
       {/* Breadcrumb */}
       <section className="pt-32 pb-8 bg-gray-50">
