@@ -163,7 +163,7 @@ const Areas = () => {
 
       if (response.ok) {
         const data = await response.json();
-        console.log('Properties loaded:', data.properties?.length || 0);
+        console.log('Properties loaded:', data);
 
         // Group properties by area (fallback to 'other-ncr')
         const propertiesByArea = (data.properties || []).reduce(
@@ -199,22 +199,22 @@ const Areas = () => {
     navigate(`/properties?area=${area}`);
   };
 
-  const handlePropertyClick = (propertyId: number) => {
-    navigate(`/property/${propertyId}`);
-  };
+  // const handlePropertyClick = (propertyId: number) => {
+  //   navigate(`/property/${propertyId}`);
+  // };
 
-  const getStatusColor = (status: string) => {
-    switch (status) {
-      case 'ready-to-move':
-        return 'bg-blue-600';
-      case 'under-construction':
-        return 'bg-green-600';
-      case 'Fresh Booking':
-        return 'bg-purple-600';
-      default:
-        return 'bg-gray-600';
-    }
-  };
+  // const getStatusColor = (status: string) => {
+  //   switch (status) {
+  //     case 'ready-to-move':
+  //       return 'bg-blue-600';
+  //     case 'under-construction':
+  //       return 'bg-green-600';
+  //     case 'Fresh Booking':
+  //       return 'bg-purple-600';
+  //     default:
+  //       return 'bg-gray-600';
+  //   }
+  // };
 
   if (loading) {
     return (
@@ -430,7 +430,7 @@ const Areas = () => {
               </div>
 
               {/* Properties Grid */}
-              {area.properties.length > 0 ? (
+              {/* {area.properties.length > 0 ? (
                 <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-8 mb-12" data-product-shop>
                   {area.properties.slice(0, 6).map((property) => (
                     <div
@@ -465,10 +465,9 @@ const Areas = () => {
                         <p className="text-gray-600 mb-4 flex items-center">
                           <i className="ri-map-pin-line mr-2 w-5 h-5 flex items-center justify-center text-navy-600" />
                           {property.location}
-                        </p>
+                        </p> */}
 
-                        {/* Price on Call Card */}
-                        <div className="bg-gray-50 border border-gray-200 rounded-lg p-4 mb-6">
+                        {/* <div className="bg-gray-50 border border-gray-200 rounded-lg p-4 mb-6">
                           <div className="flex items-center justify-center">
                             <i className="ri-phone-line text-navy-600 text-lg mr-2 w-5 h-5 flex items-center justify-center" />
                             <div className="text-lg font-bold text-navy-800 font-serif">Price on Call</div>
@@ -483,12 +482,12 @@ const Areas = () => {
                                 {property.bhk} BHK
                               </div>
                             )}
-                            {/* {property.baths && (
+                            {property.baths && (
                               <div className="flex items-center">
                                 <i className="ri-drop-line mr-1 w-4 h-4 flex items-center justify-center" />
                                 {property.baths} Baths
                               </div>
-                            )} */}
+                            )}
                             {property.sqft && (
                               <div className="flex items-center">
                                 <i className="ri-ruler-line mr-1 w-4 h-4 flex items-center justify-center" />
@@ -496,10 +495,10 @@ const Areas = () => {
                               </div>
                             )}
                           </div>
-                        )}
+                        )} */}
 
                         {/* View Details Button */}
-                        <button
+                        {/* <button
                           className="w-full bg-navy-600 hover:bg-navy-700 text-white py-3 rounded-md font-semibold transition-colors"
                           onClick={(e) => {
                             e.stopPropagation(); // Prevent the card click bubbling
@@ -524,7 +523,7 @@ const Areas = () => {
                     Premium properties will be showcased here once added to this location through our admin dashboard.
                   </p>
                 </div>
-              )}
+              )} */}
 
               {/* View All CTA */}
               {area.properties.length > 0 && (
