@@ -324,9 +324,9 @@ const Home = () => {
       }, 50);
 
       // Animate clients counter to show sales volume
-      let clientCount = 10;
+      let clientCount = 0;
       const clientInterval = setInterval(() => {
-        clientCount += 15;
+        clientCount += 30;
         setStats(prev => ({ ...prev, clients: clientCount }));
         if (clientCount >= 2500) {
           clearInterval(clientInterval);
@@ -337,9 +337,9 @@ const Home = () => {
       // Animate experience counter
       let expCount = 0;
       const expInterval = setInterval(() => {
-        expCount += 1;
+        expCount += 2;
         setStats(prev => ({ ...prev, experience: expCount }));
-        if (expCount >= 5) {
+        if (expCount >= 35) {
           clearInterval(expInterval);
           setStats(prev => ({ ...prev, experience: 35 }));
         }
