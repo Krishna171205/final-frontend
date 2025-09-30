@@ -1,5 +1,6 @@
 import  { useState, useEffect } from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
+import { HashLink } from 'react-router-hash-link';
 
 interface Blog {
   id: number;
@@ -25,7 +26,11 @@ const BlogDetailPage = () => {
   const [relatedBlogs, setRelatedBlogs] = useState<Blog[]>([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(false);
-  const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
+  // const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
+  const [isSidebarOpen, setIsSidebarOpen] = useState(false);
+  const handleLinkClick = () => {
+      setIsSidebarOpen(false); // Close the sidebar when a link is clicked
+    };
 
   useEffect(() => {
     if (slug) {
@@ -172,55 +177,176 @@ const BlogDetailPage = () => {
   return (
     <div className="min-h-screen bg-white">
       {/* Navigation */}
-      <nav className="fixed w-full z-50 bg-gray-900/95 backdrop-blur-md border-b border-gray-800 shadow-sm">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="flex justify-between items-center h-20">
-            <div className="flex items-center">
-              <button onClick={() => navigate('/')} className="text-3xl font-bold bg-gradient-to-r from-[#F59E0B] to-[#d97706] bg-clip-text text-transparent font-serif cursor-pointer">
-                Rajeev Mittal
-              </button>
-            </div>
+      <nav className={`fixed top-0 w-full z-50 transition-all duration-300 bg-off-white-500/95 backdrop-blur-sm shadow-lg `}>
+                    <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+                      <div className="flex justify-between items-center h-20">
+                        <div className="flex-shrink-0">
+                          <button  onClick={() => { navigate('/'); }} className="flex items-center">
+                            <img
+                              src="/image.png"
+                              alt="Rajeev Mittal Logo"
+                              className="h-16 w-auto cursor-pointer"
+                            />
+                            {/* <div>
+                              <span className="text-2xl font-serif text-navy-800 font-bold tracking-wide">
+                                Rajeev Mittal
+                              </span>
+                              <span className="text-sm text-gray-500 block ml-1">Estates Pvt. Ltd.</span>
+                            </div> */}
+                          </button>
+                        </div>
             
-            {/* Desktop Navigation */}
-            <div className="hidden md:block">
-              <div className="ml-10 flex items-baseline space-x-8">
-                <button onClick={() => navigate('/')} className="text-gray-300 hover:text-[#F59E0B] px-3 py-2 text-sm font-medium cursor-pointer transition-colors">Home</button>
-                <button onClick={() => navigate('/properties')} className="text-gray-300 hover:text-[#F59E0B] px-3 py-2 text-sm font-medium cursor-pointer transition-colors">Properties</button>
-                <a href="/#services" className="text-gray-300 hover:text-[#F59E0B] px-3 py-2 text-sm font-medium cursor-pointer transition-colors">Services</a>
-                <button onClick={() => navigate('/blogs')} className="text-[#F59E0B] px-3 py-2 text-sm font-medium cursor-pointer transition-colors">Blog</button>
-                <a href="/#contact" className="text-gray-300 hover:text-[#F59E0B] px-3 py-2 text-sm font-medium cursor-pointer transition-colors">Contact</a>
-              </div>
-            </div>
+                        {/* Desktop Menu */}
+                        <div className="hidden md:block">
+                          <div className="ml-10 flex items-baseline space-x-8">
+                            <button  onClick={() => navigate('/')} className={('home')}>Home</button>
+                            <button  onClick={() => navigate('/properties')}>Properties</button>
+                            <button  onClick={() => navigate('/about')} className={('')}>About</button>
+                            <button  onClick={() => navigate('/blogs')} className={('blog')}>Blog</button>
+                            <button  onClick={() => navigate('/areas')} className={('px-3 py-2 text-sm font-medium cursor-pointer bg-navy-600 hover:bg-navy-700 text-white rounded-full font-semibold transform hover:scale-105')}>Areas</button>
+                            {/* <button  onClick={() => navigate('/contact')} className={('contact')}>Contact</button> */}
+                          </div>
+                        </div>
             
-            <div className="flex items-center space-x-4">
-              <a href="https://wa.me/9811017103" target="_blank" rel="noopener noreferrer" className="w-10 h-10 bg-green-500 hover:bg-green-600 rounded-full flex items-center justify-center cursor-pointer transition-colors">
-                <i className="ri-whatsapp-line text-white w-5 h-5 flex items-center justify-center"></i>
-              </a>
-              
-              {/* Mobile menu button */}
-              <button 
-                onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
-                className="md:hidden w-10 h-10 bg-[#F59E0B] hover:bg-[#d97706] rounded-lg flex items-center justify-center cursor-pointer transition-colors"
-              >
-                <i className={`ri-${mobileMenuOpen ? 'close' : 'menu'}-line text-white w-5 h-5 flex items-center justify-center`}></i>
-              </button>
-            </div>
-          </div>
-          
-          {/* Mobile Navigation */}
-          {mobileMenuOpen && (
-            <div className="md:hidden mobile-menu bg-gray-900 border-t border-gray-800">
-              <div className="px-2 pt-2 pb-3 space-y-1">
-                <button onClick={() => navigate('/')} className="text-gray-300 hover:text-[#F59E0B] block px-3 py-2 text-base font-medium cursor-pointer w-full text-left">Home</button>
-                <button onClick={() => navigate('/properties')} className="text-gray-300 hover:text-[#F59E0B] block px-3 py-2 text-base font-medium cursor-pointer w-full text-left">Properties</button>
-                <a href="/#services" className="text-gray-300 hover:text-[#F59E0B] block px-3 py-2 text-base font-medium cursor-pointer">Services</a>
-                <button onClick={() => navigate('/blogs')} className="text-[#F59E0B] block px-3 py-2 text-base font-medium cursor-pointer w-full text-left">Blog</button>
-                <a href="/#contact" className="text-gray-300 hover:text-[#F59E0B] block px-3 py-2 text-base font-medium cursor-pointer">Contact</a>
-              </div>
-            </div>
-          )}
-        </div>
-      </nav>
+                        {/* Consultation Button */}
+                        <div className="hidden md:block">
+                          <a 
+                            href="https://wa.me/9811017103?text=Hi%2C%20I%27m%20interested%20in%20premium%20properties%20across%20Gurugram%20locations.%20Please%20share%20more%20details.
+      " 
+                            target="_blank" 
+                            rel="noopener noreferrer"
+                            className="bg-navy-500 hover:bg-off-white-500 text-off-white-300 hover:text-navy-500 px-6 py-2 rounded-full text-sm font-semibold transition-all duration-300 transform hover:scale-105 whitespace-nowrap cursor-pointer"
+                          >
+                            Book Private Consultation
+                          </a>
+                        </div>
+            
+                        {/* Mobile menu toggle button */}
+                        <div className="md:hidden fixed top-4 right-4 z-50">
+                        <button
+                        onClick={() => setIsSidebarOpen(!isSidebarOpen)}
+                        className="text-white cursor-pointer p-4 rounded-full transition-transform duration-300 transform hover:scale-105"
+                        >
+                        {/* Three-line hamburger menu */}
+                        <div className="w-6 h-1 bg-white mb-1"></div>
+                        <div className="w-6 h-1 bg-white mb-1"></div>
+                        <div className="w-6 h-1 bg-white mb-1"></div>
+                         </button>
+                         </div>
+                      </div>
+                    </div>
+                    </nav>
+            
+                    {/* Mobile Menu */}
+      
+      <nav className="fixed top-0 left-0 right-0 bg-off-white-500 z-50 shadow-md">
+                    {/* Sidebar */}
+                    <div
+                      className={`fixed top-0 right-0 bottom-0 w-64 bg-off-white-700 shadow-lg z-40 transition-transform duration-300 ${
+                        isSidebarOpen ? "translate-x-0" : "translate-x-full"
+                      }`}
+                    >
+                      {/* Cross Button */}
+                      <button
+                        onClick={() => setIsSidebarOpen(false)}
+                        className="absolute top-4 right-4 text-gray-700 hover:text-red-500 transition-colors"
+                        aria-label="Close Sidebar"
+                      >
+                        {/* Simple X Icon (SVG) */}
+                        <svg
+                          xmlns="http://www.w3.org/2000/svg"
+                          className="h-6 w-6"
+                          fill="none"
+                          viewBox="0 0 24 24"
+                          stroke="currentColor"
+                          strokeWidth={2}
+                        >
+                          <path strokeLinecap="round" strokeLinejoin="round" d="M6 18L18 6M6 6l12 12" />
+                        </svg>
+                      </button>
+                  
+                      <div className="w-64 flex flex-col items-center py-12 space-y-6">
+                    {/* Home → "/" */}
+                    <HashLink
+                      smooth
+                      to="/#home"
+                      className="text-lg text-gray-900 hover:text-indigo-500"
+                      onClick={handleLinkClick}
+                    >
+                      Home
+                    </HashLink>
+                  
+                    {/* Properties → "/properties" */}
+                    <HashLink
+                      smooth
+                      to="/properties"
+                      className="text-lg text-gray-900 hover:text-indigo-500"
+                      onClick={handleLinkClick}
+                    >
+                      Properties
+                    </HashLink>
+                  
+                    {/* About → "/about" */}
+                    <HashLink
+                      smooth
+                      to="/about"
+                      className="text-lg text-gray-900 hover:text-indigo-500"
+                      onClick={handleLinkClick}
+                    >
+                      About
+                    </HashLink>
+                  
+                    {/* Blog → "/about" (same as About for now) */}
+                    <HashLink
+                      smooth
+                      to="/blogs"
+                      className="text-lg text-gray-900 hover:text-indigo-500"
+                      onClick={handleLinkClick}
+                    >
+                      Blog
+                    </HashLink>
+                  
+                    {/* Testimonials → "#testimonials" on home route */}
+                    <HashLink
+                      smooth
+                      to="/#testimonials"
+                      className="text-lg text-gray-900 hover:text-indigo-500"
+                      onClick={handleLinkClick}
+                    >
+                      Testimonials
+                    </HashLink>
+                  
+                    {/* Contact → "#contact" on home route */}
+                    <HashLink
+                      smooth
+                      to="/#contact"
+                      className="text-lg text-gray-900 hover:text-indigo-500"
+                      onClick={handleLinkClick}
+                    >
+                      Contact
+                    </HashLink>
+                  
+                    <div className="px-6 pt-4">
+                      <a
+                        href="https://wa.me/9811017103?text=Hi%2C%20I%27m%20interested%20in%20premium%20properties%20across%20Gurugram%20locations.%20Please%20share%20more%20details."
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        className="bg-indigo-500 hover:bg-indigo-600 text-white px-6 py-2 rounded-full text-sm font-semibold transition-all duration-300 block text-center"
+                      >
+                        Book Private Consultation
+                      </a>
+                    </div>
+                  </div>
+                    </div>
+                  
+                    {/* Overlay */}
+                    {isSidebarOpen && (
+                      <div
+                        onClick={() => setIsSidebarOpen(false)}
+                        className="fixed top-0 left-0 right-0 bottom-0 bg-black opacity-50 z-30"
+                      ></div>
+                    )}
+                  </nav>
       
 
       {/* Breadcrumb */}

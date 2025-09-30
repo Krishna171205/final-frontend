@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { useNavigate, Link } from 'react-router-dom';
+import { HashLink } from 'react-router-hash-link';
 
 interface Property {
   id: number;
@@ -524,7 +525,7 @@ Message: ${contactFormData.message}`
             <div className="hidden md:block">
               <div className="ml-10 flex items-baseline space-x-8">
                 <Link to="/" onClick={() => scrollToSection('home')} className={`${getHomeLinkStyle('home')} hover:text-amber-400`}>Home</Link>
-                <Link to="/about" onClick={() => navigate('/about')} className={getHomeLinkStyle('about')}>About</Link>
+                <Link to="/" onClick={() => navigate('/about')} className={getHomeLinkStyle('about')}>About</Link>
                 <Link to="/" onClick={() => scrollToSection('properties')} className={getHomeLinkStyle('properties')}>Properties</Link>
                 
                 <Link to="/" onClick={() => scrollToSection('blog')} className={getHomeLinkStyle('blog')}>Blog</Link>
@@ -594,60 +595,77 @@ Message: ${contactFormData.message}`
     </button>
 
     <div className="w-64 flex flex-col items-center py-12 space-y-6">
-      <a
-        href="#home"
-        className="text-lg text-gray-900 hover:text-indigo-500"
-        onClick={handleLinkClick}
-      >
-        Home
-      </a>
-      <a
-        href="#properties"
-        className="text-lg text-gray-900 hover:text-indigo-500"
-        onClick={handleLinkClick}
-      >
-        Properties
-      </a>
-      <a
-        href="#about"
-        className="text-lg text-gray-900 hover:text-indigo-500"
-        onClick={handleLinkClick}
-      >
-        About
-      </a>
-      <a
-        href="#blog"
-        className="text-lg text-gray-900 hover:text-indigo-500"
-        onClick={handleLinkClick}
-      >
-        Blog
-      </a>
-      <a
-        href="#testimonials"
-        className="text-lg text-gray-900 hover:text-indigo-500"
-        onClick={handleLinkClick}
-      >
-        Testimonials
-      </a>
-      <a
-        href="#contact"
-        className="text-lg text-gray-900 hover:text-indigo-500"
-        onClick={handleLinkClick}
-      >
-        Contact
-      </a>
+  {/* Home → "/" */}
+  <HashLink
+    smooth
+    to="/#home"
+    className="text-lg text-gray-900 hover:text-indigo-500"
+    onClick={handleLinkClick}
+  >
+    Home
+  </HashLink>
 
-      <div className="px-6 pt-4">
-        <a
-                                href="https://wa.me/9811017103?text=Hi%2C%20I%27m%20interested%20in%20premium%20properties%20across%20Gurugram%20locations.%20Please%20share%20more%20details." 
-          target="_blank"
-          rel="noopener noreferrer"
-          className="bg-indigo-500 hover:bg-indigo-600 text-white px-6 py-2 rounded-full text-sm font-semibold transition-all duration-300 block text-center"
-        >
-          Book Private Consultation
-        </a>
-      </div>
-    </div>
+  {/* Properties → "/properties" */}
+  <HashLink
+    smooth
+    to="/properties"
+    className="text-lg text-gray-900 hover:text-indigo-500"
+    onClick={handleLinkClick}
+  >
+    Properties
+  </HashLink>
+
+  {/* About → "/about" */}
+  <HashLink
+    smooth
+    to="/about"
+    className="text-lg text-gray-900 hover:text-indigo-500"
+    onClick={handleLinkClick}
+  >
+    About
+  </HashLink>
+
+  {/* Blog → "/about" (same as About for now) */}
+  <HashLink
+    smooth
+    to="/blogs"
+    className="text-lg text-gray-900 hover:text-indigo-500"
+    onClick={handleLinkClick}
+  >
+    Blog
+  </HashLink>
+
+  {/* Testimonials → "#testimonials" on home route */}
+  <HashLink
+    smooth
+    to="/#testimonials"
+    className="text-lg text-gray-900 hover:text-indigo-500"
+    onClick={handleLinkClick}
+  >
+    Testimonials
+  </HashLink>
+
+  {/* Contact → "#contact" on home route */}
+  <HashLink
+    smooth
+    to="/#contact"
+    className="text-lg text-gray-900 hover:text-indigo-500"
+    onClick={handleLinkClick}
+  >
+    Contact
+  </HashLink>
+
+  <div className="px-6 pt-4">
+    <a
+      href="https://wa.me/9811017103?text=Hi%2C%20I%27m%20interested%20in%20premium%20properties%20across%20Gurugram%20locations.%20Please%20share%20more%20details."
+      target="_blank"
+      rel="noopener noreferrer"
+      className="bg-indigo-500 hover:bg-indigo-600 text-white px-6 py-2 rounded-full text-sm font-semibold transition-all duration-300 block text-center"
+    >
+      Book Private Consultation
+    </a>
+  </div>
+</div>
   </div>
 
   {/* Overlay */}
@@ -751,42 +769,73 @@ Message: ${contactFormData.message}`
        {/* About Section */}
       <section id="about" className={`${currentPage === "about" ? 'text-gray-300' : 'text-navy-900'} py-32 bg-gray-50`}>
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="grid lg:grid-cols-2 gap-20 items-center">
-            <div className="animate-slideInLeft">
-              <h2 className="text-5xl font-bold text-navy-900 mb-8 font-serif gold-accent">Meet Rajeev Mittal</h2>
-              <p className="text-xl text-gray-700 mb-8 leading-relaxed">
-                With over 35 years in Gurgaon's real estate, we've helped families, corporates, and investors find dream homes and high-return opportunities since 1990. We're trusted partners of top developers like DLF, ADANI, CENTRAL PARK, GODREJ, EXPERION and more, and proudly serve leading corporates including Nestlé, Coca-Cola, American Express, Airtel, etc.
-              </p>
-              <p className="text-xl text-gray-700 mb-8 leading-relaxed">
-                Our expertise lies in premium and ultra-luxury properties—from iconic residences like DLF Camellias, Magnolias, Aralias, Central Park, The Crest, and World Spa to exclusive high-end rentals for diplomats and expats. For us, it's not about closing deals—it's about building relationships that last a lifetime.
-              </p>
-              <div className="grid grid-cols-2 gap-8 mb-12">
-                <div className="text-center p-6 bg-white rounded-xl border border-gray-200 shadow-card">
-                  <div className="text-3xl font-bold text-navy-900 mb-2">800+</div>
-                  <div className="text-gray-700 font-medium">Properties Sold</div>
+            <div className="grid lg:grid-cols-2 gap-20 items-center">
+              {/* Left Content */}
+              <div className="animate-slideInLeft">
+                <h2 className="text-5xl font-bold text-navy-900 mb-8 font-serif gold-accent">
+                  Meet Rajeev Mittal
+                </h2>
+
+                {/* Replaced with new data */}
+                <p className="text-xl text-gray-700 mb-6 leading-relaxed">
+                  Since 1990, they have guided individuals, families, and corporations in
+                  making smarter real estate decisions—whether it’s securing a dream home
+                  or building a high-return investment portfolio.
+                </p>
+                <p className="text-xl text-gray-700 mb-6 leading-relaxed">
+                  More than just consultants, they position themselves as long-term
+                  partners in every client’s property journey.
+                </p>
+                <p className="text-xl text-gray-700 mb-6 leading-relaxed">
+                  Over the years, they have built strong and lasting relationships as
+                  trusted channel partners with Gurgaon’s most prestigious developers,
+                  including DLF, Adani, Central Park, Godrej, Experion, TARC Ltd.,
+                  Conscient Infrastructure, Tribeca Developers, and many more.
+                </p>
+
+                {/* Small Read More Button */}
+                <HashLink
+                  to="/about#company-story"
+                  className="inline-block mt-2 px-6 py-2 rounded-md text-base font-medium cursor-pointer transition-colors border border-navy-900 text-navy-900 hover:bg-navy-900 hover:text-white"
+                >
+                  Read More
+                </HashLink>
+
+                {/* Stats */}
+                <div className="grid grid-cols-2 gap-8 my-12">
+                  <div className="text-center p-6 bg-white rounded-xl border border-gray-200 shadow-card">
+                    <div className="text-3xl font-bold text-navy-900 mb-2">800+</div>
+                    <div className="text-gray-700 font-medium">Properties Sold</div>
+                  </div>
+                  <div className="text-center p-6 bg-white rounded-xl border border-gray-200 shadow-card">
+                    <div className="text-3xl font-bold text-navy-900 mb-2">2500Cr+</div>
+                    <div className="text-gray-700 font-medium">Sales Volume</div>
+                  </div>
                 </div>
-                <div className="text-center p-6 bg-white rounded-xl border border-gray-200 shadow-card">
-                  <div className="text-3xl font-bold text-navy-900 mb-2">2500Cr+</div>
-                  <div className="text-gray-700 font-medium">Sales Volume</div>
-                </div>
+
+                {/* Schedule Button (unchanged) */}
+                <button
+                  onClick={() => setShowConsultationForm(true)}
+                  className="text-white px-10 py-4 rounded-lg text-lg font-semibold whitespace-nowrap cursor-pointer transition-colors shadow-lg"
+                  style={{
+                    background: "linear-gradient(135deg, #DAA520, #B8860B)",
+                    boxShadow: "0 10px 25px rgba(218, 165, 32, 0.3)",
+                  }}
+                >
+                  Schedule Consultation
+                </button>
               </div>
-              <button
-                onClick={() => setShowConsultationForm(true)}
-                className="text-white px-10 py-4 rounded-lg text-lg font-semibold whitespace-nowrap cursor-pointer transition-colors shadow-lg"
-                style={{ background: 'linear-gradient(135deg, #DAA520, #B8860B)', boxShadow: '0 10px 25px rgba(218, 165, 32, 0.3)' }}
-              >
-                Schedule Consultation
-              </button>
-            </div>
-            <div className="animate-slideInRight">
-              <img
-                alt="Rajeev Mittal"
-                className="rounded-2xl shadow-2xl w-full h-[600px] object-cover object-top border border-gray-200"
-                src="rajeev.jpg"
-              />
+
+              {/* Right Image */}
+              <div className="animate-slideInRight">
+                <img
+                  alt="Rajeev Mittal"
+                  className="rounded-2xl shadow-2xl w-full h-[600px] object-cover object-top border border-gray-200"
+                  src="rajeev.jpg"
+                />
+              </div>
             </div>
           </div>
-        </div>
       </section>
 
       {/* Featured Properties Carousel */}

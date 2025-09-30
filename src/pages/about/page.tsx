@@ -1,6 +1,7 @@
 
 import { useState, useEffect, useRef } from 'react';
 import { useNavigate ,  useSearchParams } from 'react-router-dom';
+import { HashLink } from 'react-router-hash-link';
 
 const About = () => {
   const navigate = useNavigate();
@@ -24,8 +25,8 @@ const About = () => {
   const sectionRef = useRef<HTMLDivElement>(null);
 
   const finalValues = {
-    projects: 440,
-    clients: 489,
+    projects: 800,
+    clients: 2500,
     experience: 35,
     awards: 25
   };
@@ -214,75 +215,115 @@ const About = () => {
               </div>
       
               {/* Mobile Menu */}
-           <div
-              className={`fixed top-0 right-0 bottom-0 w-64 bg-off-white-900  shadow-lg z-40 transition-transform duration-300 ${
-                isSidebarOpen ? 'translate-x-0' : 'translate-x-full'
-              }`}
-            >
-              <div className=" fixed w-64 flex flex-col items-center py-8 space-y-6">
-                <a
-                  href="#home"
-                  className="text-lg text-gray-900 hover:text-indigo-500 opacity-100"
-                  onClick={handleLinkClick}
+           
+            </nav>
+            <nav className="fixed top-0 left-0 right-0 bg-off-white-500 z-50 shadow-md">
+              {/* Sidebar */}
+              <div
+                className={`fixed top-0 right-0 bottom-0 w-64 bg-off-white-700 shadow-lg z-40 transition-transform duration-300 ${
+                  isSidebarOpen ? "translate-x-0" : "translate-x-full"
+                }`}
+              >
+                {/* Cross Button */}
+                <button
+                  onClick={() => setIsSidebarOpen(false)}
+                  className="absolute top-4 right-4 text-gray-700 hover:text-red-500 transition-colors"
+                  aria-label="Close Sidebar"
                 >
-                  Home
-                </a>
-                <a
-                  href="#properties"
-                  className="text-lg text-gray-900 hover:text-indigo-500 opacity-100"
-                  onClick={handleLinkClick}
-                >
-                  Properties
-                </a>
-                <a
-                  href="#about"
-                  className="text-lg text-gray-900 hover:text-indigo-500 opacity-100"
-                  onClick={handleLinkClick}
-                >
-                  About
-                </a>
-                <a
-                  href="#blog"
-                  className="text-lg text-gray-900 hover:text-indigo-500 opacity-100"
-                  onClick={handleLinkClick}
-                >
-                  Blog
-                </a>
-                <a
-                  href="#testimonials"
-                  className="text-lg text-gray-900 hover:text-indigo-500 opacity-100"
-                  onClick={handleLinkClick}
-                >
-                  Testimonials
-                </a>
-                <a
-                  href="#contact"
-                  className="text-lg text-gray-900 hover:text-indigo-500 opacity-100"
-                  onClick={handleLinkClick}
-                >
-                  Contact
-                </a>
-      
-                <div className="px-6 pt-4 opacity-100">
-                  <a
-                                         href="https://wa.me/9811017103?text=Hi%2C%20I%27m%20interested%20in%20premium%20properties%20across%20Gurugram%20locations.%20Please%20share%20more%20details." 
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    className="bg-indigo-500 hover:bg-indigo-600 text-white px-6 py-2 rounded-full text-sm font-semibold transition-all duration-300 block text-center opacity-100"
+                  {/* Simple X Icon (SVG) */}
+                  <svg
+                    xmlns="http://www.w3.org/2000/svg"
+                    className="h-6 w-6"
+                    fill="none"
+                    viewBox="0 0 24 24"
+                    stroke="currentColor"
+                    strokeWidth={2}
                   >
-                    Book Private Consultation
-                  </a>
-                </div>
+                    <path strokeLinecap="round" strokeLinejoin="round" d="M6 18L18 6M6 6l12 12" />
+                  </svg>
+                </button>
+            
+                <div className="w-64 flex flex-col items-center py-12 space-y-6">
+              {/* Home → "/" */}
+              <HashLink
+                smooth
+                to="/#home"
+                className="text-lg text-gray-900 hover:text-indigo-500"
+                onClick={handleLinkClick}
+              >
+                Home
+              </HashLink>
+            
+              {/* Properties → "/properties" */}
+              <HashLink
+                smooth
+                to="/properties"
+                className="text-lg text-gray-900 hover:text-indigo-500"
+                onClick={handleLinkClick}
+              >
+                Properties
+              </HashLink>
+            
+              {/* About → "/about" */}
+              <HashLink
+                smooth
+                to="/about"
+                className="text-lg text-gray-900 hover:text-indigo-500"
+                onClick={handleLinkClick}
+              >
+                About
+              </HashLink>
+            
+              {/* Blog → "/about" (same as About for now) */}
+              <HashLink
+                smooth
+                to="/blogs"
+                className="text-lg text-gray-900 hover:text-indigo-500"
+                onClick={handleLinkClick}
+              >
+                Blog
+              </HashLink>
+            
+              {/* Testimonials → "#testimonials" on home route */}
+              <HashLink
+                smooth
+                to="/#testimonials"
+                className="text-lg text-gray-900 hover:text-indigo-500"
+                onClick={handleLinkClick}
+              >
+                Testimonials
+              </HashLink>
+            
+              {/* Contact → "#contact" on home route */}
+              <HashLink
+                smooth
+                to="/#contact"
+                className="text-lg text-gray-900 hover:text-indigo-500"
+                onClick={handleLinkClick}
+              >
+                Contact
+              </HashLink>
+            
+              <div className="px-6 pt-4">
+                <a
+                  href="https://wa.me/9811017103?text=Hi%2C%20I%27m%20interested%20in%20premium%20properties%20across%20Gurugram%20locations.%20Please%20share%20more%20details."
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="bg-indigo-500 hover:bg-indigo-600 text-white px-6 py-2 rounded-full text-sm font-semibold transition-all duration-300 block text-center"
+                >
+                  Book Private Consultation
+                </a>
               </div>
             </div>
-      
-            {/* Overlay that appears when Sidebar is open */}
-            {isSidebarOpen && (
-              <div
-                onClick={() => setIsSidebarOpen(false)}
-                className="fixed top-0 left-0 right-0 bottom-0 bg-black opacity-50 z-30"
-              ></div>
-            )}
+              </div>
+            
+              {/* Overlay */}
+              {isSidebarOpen && (
+                <div
+                  onClick={() => setIsSidebarOpen(false)}
+                  className="fixed top-0 left-0 right-0 bottom-0 bg-black opacity-50 z-30"
+                ></div>
+              )}
             </nav>
       
       {/* Hero Section */}
@@ -348,27 +389,52 @@ const About = () => {
       </div>
 
       {/* Company Story */}
-      <div className="py-20 bg-white">
+      <div className="py-20 bg-white" id='company-story'>
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="grid lg:grid-cols-2 gap-16 items-center">
             <div>
               <h2 className="text-4xl font-serif text-gray-900 mb-6 gold-accent">
                 Our Journey of Excellence
               </h2>
-              <div className="space-y-6 text-lg text-gray-700 leading-relaxed">
+             <div className="space-y-6 text-lg text-gray-700 leading-relaxed">
                 <p>
-                  Founded in 1990 by Rajeev Mittal, our company began with a simple yet powerful vision: to redefine excellence in Gurgaon's real estate industry through integrity, innovation, and unparalleled client service.
+                  Since 1990, they have guided individuals, families, and corporations in
+                  making smarter real estate decisions—whether it’s securing a dream home or
+                  building a high-return investment portfolio.
                 </p>
                 <p>
-                  With over 30 years in Gurgaon's real estate market, we've helped families, corporates, and investors find dream homes and high-return opportunities. We're trusted partners of top developers like DLF, ADANI, CENTRAL PARK, GODREJ, EXPERION.
+                  More than just consultants, they position themselves as long-term partners
+                  in every client’s property journey.
                 </p>
                 <p>
-                  We proudly serve leading corporates including Nestlé, Coca-Cola, American Express, Airtel, etc. Our expertise lies in premium and ultra-luxury properties—from iconic residences like DLF Camellias, Magnolias, Aralias, Central Park, The Crest, and World Spa to exclusive high-end rentals for diplomats and expats.
+                  Over the years, they have built strong and lasting relationships as trusted
+                  channel partners with Gurgaon’s most prestigious developers, including DLF,
+                  Adani, Central Park, Godrej, Experion, TARC Ltd., Conscient Infrastructure,
+                  Tribeca Developers, and many more.
                 </p>
                 <p>
-                  Today, we stand proud as a trusted partner for hundreds of families and businesses in their real estate journey, having facilitated transactions worth over ₹489 crores. For us, it's not about closing deals—it's about building relationships that last a lifetime.
+                  Their unwavering commitment to integrity, transparency, and professionalism
+                  has also earned them the trust of some of the world’s most respected
+                  corporations, such as Tata Consultancy Services (TCS), Infosys, HCL
+                  Technologies, Cognizant, Accenture, Microsoft, Genpact, Deloitte, Coca-Cola,
+                  Nestlé, American Express etc.
+                </p>
+                <p>
+                  Specializing in premium and ultra-luxury residences, they offer a curated
+                  portfolio of Gurgaon’s most exclusive addresses, including DLF The
+                  Camellias, Dahlias, Magnolias, Aralias, Central Park, Ambience Caitriona to
+                  name a few!
+                </p>
+                <p>
+                  In addition, they provide bespoke rental solutions tailored for foreign
+                  nationals, diplomats, and ambassadors, ensuring properties that meet the
+                  highest international standards.
+                </p>
+                <p className="italic font-semibold text-navy-900">
+                  “They don’t just close deals—they build relationships that last a lifetime.”
                 </p>
               </div>
+
               <div className="mt-8">
                 <a 
                   href="https://wa.me/9811017103?text=Hi%2C%20I%27d%20like%20to%20know%20more%20about%20your%20company" 
