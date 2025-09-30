@@ -360,10 +360,10 @@ const About = () => {
                   Founded in 1990 by Rajeev Mittal, our company began with a simple yet powerful vision: to redefine excellence in Gurgaon's real estate industry through integrity, innovation, and unparalleled client service.
                 </p>
                 <p>
-                  With over 30 years in Gurgaon's real estate market, we've helped families, corporates, and investors find dream homes and high-return opportunities. We're trusted partners of top developers like DLF, EMAAR, TATA, Vatika, Unitech, IREO, and Homestead.
+                  With over 30 years in Gurgaon's real estate market, we've helped families, corporates, and investors find dream homes and high-return opportunities. We're trusted partners of top developers like DLF, ADANI, CENTRAL PARK, GODREJ, EXPERION.
                 </p>
                 <p>
-                  We proudly serve leading corporates including IBM, Nestlé, Coca-Cola, American Express, Airtel, and Max Life. Our expertise lies in premium and ultra-luxury properties—from iconic residences like DLF Camellias, Magnolias, Aralias, Central Park, The Crest, and World Spa to exclusive high-end rentals for diplomats and expats.
+                  We proudly serve leading corporates including Nestlé, Coca-Cola, American Express, Airtel, etc. Our expertise lies in premium and ultra-luxury properties—from iconic residences like DLF Camellias, Magnolias, Aralias, Central Park, The Crest, and World Spa to exclusive high-end rentals for diplomats and expats.
                 </p>
                 <p>
                   Today, we stand proud as a trusted partner for hundreds of families and businesses in their real estate journey, having facilitated transactions worth over ₹489 crores. For us, it's not about closing deals—it's about building relationships that last a lifetime.
