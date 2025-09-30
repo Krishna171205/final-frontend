@@ -30,7 +30,7 @@ const Properties = () => {
   const [loading, setLoading] = useState(true);
   const [filterType, setFilterType] = useState('all');
   const [filterArea, setFilterArea] = useState(searchParams.get('area') || 'all');
-  const [sortBy, setSortBy] = useState('newest');
+  const [sortBy, _setSortBy] = useState('newest');
   const [page, setPage] = useState(1);
   const [hasMore, setHasMore] = useState(true);
 
@@ -394,7 +394,7 @@ const Properties = () => {
                   ))}
                 </select>
               </div>
-              <div>
+              {/* <div>
                 <label className="block text-sm font-medium text-gray-700 mb-2">
                   Sort By
                 </label>
@@ -408,7 +408,7 @@ const Properties = () => {
                   <option value="name_asc">Name: A to Z</option>
                   <option value="name_desc">Name: Z to A</option>
                 </select>
-              </div>
+              </div> */}
             </div>
             <div className="flex items-end">
               <span className="text-gray-600 font-semibold">{sortedProperties.length} luxury properties found</span>

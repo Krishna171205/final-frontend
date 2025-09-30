@@ -91,8 +91,8 @@ const Areas = () => {
         'https://readdy.ai/api/search-image?query=Premium%20residential%20and%20commercial%20properties%20in%20Greater%20Noida%20with%20modern%20architecture%2C%20luxury%20developments%2C%20green%20spaces%2C%20contemporary%20design%2C%20professional%20real%20estate%20photography%20during%20golden%20hour%2C%20planned%20city%20infrastructure&width=1200&height=400&seq=greater-noida-hero-001&orientation=landscape',
     },
     {
-      name: 'gurgaon',
-      slug: 'gurgaon',
+      name: 'More Projects in Gurgaon',
+      slug: 'More Projects in Gurgaon',
       description:
         'Premium properties across gurgaon locations and emerging corridors with high growth potential.',
       heroImage:
@@ -168,7 +168,7 @@ const Areas = () => {
         // Group properties by area (fallback to 'other-ncr')
         const propertiesByArea = (data.properties || []).reduce(
           (acc: Record<string, Property[]>, property: Property) => {
-            const areaKey = property.area?.toLowerCase() || 'gurgaon';
+            const areaKey = property.area?.toLowerCase() || 'More Properties in Gurgaon';
             if (!acc[areaKey]) acc[areaKey] = [];
             acc[areaKey].push(property);
             return acc;

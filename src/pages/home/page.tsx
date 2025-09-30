@@ -755,7 +755,7 @@ Message: ${contactFormData.message}`
             <div className="animate-slideInLeft">
               <h2 className="text-5xl font-bold text-navy-900 mb-8 font-serif gold-accent">Meet Rajeev Mittal</h2>
               <p className="text-xl text-gray-700 mb-8 leading-relaxed">
-                With over 35 years in Gurgaon's real estate, we've helped families, corporates, and investors find dream homes and high-return opportunities since 1990. We're trusted partners of top developers like DLF, EMAAR, TATA, Vatika, Unitech, IREO, Homestead, and more, and proudly serve leading corporates including IBM, Nestlé, Coca-Cola, American Express, Airtel, and Max Life.
+                With over 35 years in Gurgaon's real estate, we've helped families, corporates, and investors find dream homes and high-return opportunities since 1990. We're trusted partners of top developers like DLF, ADANI, CENTRAL PARK, GODREJ, EXPERION and more, and proudly serve leading corporates including Nestlé, Coca-Cola, American Express, Airtel, etc.
               </p>
               <p className="text-xl text-gray-700 mb-8 leading-relaxed">
                 Our expertise lies in premium and ultra-luxury properties—from iconic residences like DLF Camellias, Magnolias, Aralias, Central Park, The Crest, and World Spa to exclusive high-end rentals for diplomats and expats. For us, it's not about closing deals—it's about building relationships that last a lifetime.
@@ -1026,7 +1026,7 @@ Message: ${contactFormData.message}`
               >
                 <div className="absolute inset-0 bg-gradient-to-t from-navy-900/80 to-transparent"></div>
                 <div className="absolute bottom-4 left-4 text-white">
-                  <h3 className="text-2xl font-bold font-serif">Gurgaon</h3>
+                  <h3 className="text-2xl font-bold font-serif">More Properties in Gurgaon</h3>
                   {/* <p className="text-sm">Emerging Areas</p> */}
                 </div>
               </div>
