@@ -317,9 +317,9 @@ const Home = () => {
       const projectInterval = setInterval(() => {
         projectCount += 10;
         setStats(prev => ({ ...prev, projects: projectCount }));
-        if (projectCount >= 440) {
+        if (projectCount >= 800) {
           clearInterval(projectInterval);
-          setStats(prev => ({ ...prev, projects: 440 }));
+          setStats(prev => ({ ...prev, projects: 800 }));
         }
       }, 50);
 
@@ -328,9 +328,9 @@ const Home = () => {
       const clientInterval = setInterval(() => {
         clientCount += 15;
         setStats(prev => ({ ...prev, clients: clientCount }));
-        if (clientCount >= 489) {
+        if (clientCount >= 2500) {
           clearInterval(clientInterval);
-          setStats(prev => ({ ...prev, clients: 489 }));
+          setStats(prev => ({ ...prev, clients: 2500 }));
         }
       }, 50);
 
@@ -762,11 +762,11 @@ Message: ${contactFormData.message}`
               </p>
               <div className="grid grid-cols-2 gap-8 mb-12">
                 <div className="text-center p-6 bg-white rounded-xl border border-gray-200 shadow-card">
-                  <div className="text-3xl font-bold text-navy-900 mb-2">440+</div>
+                  <div className="text-3xl font-bold text-navy-900 mb-2">800+</div>
                   <div className="text-gray-700 font-medium">Properties Sold</div>
                 </div>
                 <div className="text-center p-6 bg-white rounded-xl border border-gray-200 shadow-card">
-                  <div className="text-3xl font-bold text-navy-900 mb-2">₹489Cr+</div>
+                  <div className="text-3xl font-bold text-navy-900 mb-2">2500Cr+</div>
                   <div className="text-gray-700 font-medium">Sales Volume</div>
                 </div>
               </div>
