@@ -47,7 +47,8 @@ const Home = () => {
     lastName: '',
     email: '',
     phone: '',
-    message: ''
+    message: '',
+    budget:""
   });
   const [isSubmitting, _setIsSubmitting] = useState(false);
   const [submitStatus, _setSubmitStatus] = useState<'idle' | 'success' | 'error'>('idle');
@@ -58,7 +59,7 @@ const Home = () => {
   // const [_newsletterSubmitStatus, setNewsletterSubmitStatus] = useState<'idle' | 'success' | 'error'>('idle');
   const [loadingProperties, setLoadingProperties] = useState(true);
   const [loadingBlogs, setLoadingBlogs] = useState(true);
-  const [stats, setStats] = useState({ projects: 0, clients: 0, experience: 0 });
+  const [_stats, setStats] = useState({ projects: 0, clients: 0, experience: 0 });
   const [statsAnimated, setStatsAnimated] = useState(false);
   const [isScrolled, setIsScrolled] = useState(false); // To track scroll state
   const [currentPage, setCurrentPage] = useState('home'); // Track the current page
@@ -422,10 +423,11 @@ const handleContactSubmit = (e: React.FormEvent) => {
   const subject = encodeURIComponent("New Contact Form Submission");
   const body = encodeURIComponent(
     `First Name: ${contactFormData.firstName}
-Last Name: ${contactFormData.lastName}
-Email: ${contactFormData.email}
-Phone: ${contactFormData.phone}
-Message: ${contactFormData.message}`
+      Last Name: ${contactFormData.lastName}
+      Email: ${contactFormData.email}
+      Phone: ${contactFormData.phone}
+      Budget: ${contactFormData.budget}
+      Message: ${contactFormData.message}`
   );
 
   // Change this to the email you want to receive the form at
@@ -434,6 +436,7 @@ Message: ${contactFormData.message}`
   // Open the user's default email client
   window.location.href = mailtoLink;
 };
+
 
 
   // const formatPrice = (price: number, isRental: boolean = false) => {
@@ -738,7 +741,7 @@ Message: ${contactFormData.message}`
       </section>
 
       {/* Stats Section */}
-      <section id="home" className="py-20 bg-gray-50">
+      {/* <section id="home" className="py-20 bg-gray-50">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="grid md:grid-cols-3 gap-12 text-center">
             <div className="animate-fadeInUp">
@@ -764,7 +767,7 @@ Message: ${contactFormData.message}`
             </div>
           </div>
         </div>
-      </section>
+      </section> */}
 
        {/* About Section */}
       <section id="about" className={`${currentPage === "about" ? 'text-gray-300' : 'text-navy-900'} py-32 bg-gray-50`}>
@@ -1287,92 +1290,108 @@ Message: ${contactFormData.message}`
             </div>
 
             <div className="bg-white p-10 rounded-2xl border border-gray-200 shadow-card">
-              <h3 className="text-3xl font-semibold text-navy-900 mb-8 font-serif">Send me a message</h3>
+  <h3 className="text-3xl font-semibold text-navy-900 mb-8 font-serif">Send me a message</h3>
 
-              {submitStatus === 'success' && (
-                <div className="mb-6 p-4 bg-green-50 border border-green-200 text-green-700 rounded-lg">
-                  Thank you for your message! We'll get back to you soon.
-                </div>
-              )}
-              {submitStatus === 'error' && (
-                <div className="mb-6 p-4 bg-red-50 border border-red-200 text-red-700 rounded-lg">
-                  Sorry, there was an error sending your message. Please try again.
-                </div>
-              )}
+  {submitStatus === 'success' && (
+    <div className="mb-6 p-4 bg-green-50 border border-green-200 text-green-700 rounded-lg">
+      Thank you for your message! We'll get back to you soon.
+    </div>
+  )}
+  {submitStatus === 'error' && (
+    <div className="mb-6 p-4 bg-red-50 border border-red-200 text-red-700 rounded-lg">
+      Sorry, there was an error sending your message. Please try again.
+    </div>
+  )}
 
-              <form className="space-y-6" onSubmit={handleContactSubmit} id="contact_form" data-readdy-form>
-                <div className="grid grid-cols-2 gap-6">
-                  <div>
-                    <label className="block text-sm font-medium text-gray-700 mb-2">First Name</label>
-                    <input
-                      type="text"
-                      name="firstName"
-                      value={contactFormData.firstName}
-                      onChange={(e) => setContactFormData(prev => ({ ...prev, firstName: e.target.value }))}
-                      className="w-full px-4 py-3 bg-white border border-gray-300 rounded-lg text-navy-900 placeholder-gray-500 focus:ring-2 focus:ring-gold-500 focus:border-gold-500"
-                      placeholder="John"
-                      required
-                    />
-                  </div>
-                  <div>
-                    <label className="block text-sm font-medium text-gray-700 mb-2">Last Name</label>
-                    <input
-                      type="text"
-                      name="lastName"
-                      value={contactFormData.lastName}
-                      onChange={(e) => setContactFormData(prev => ({ ...prev, lastName: e.target.value }))}
-                      className="w-full px-4 py-3 bg-white border border-gray-300 rounded-lg text-navy-900 placeholder-gray-500 focus:ring-2 focus:ring-gold-500 focus:border-gold-500"
-                      placeholder="Doe"
-                      required
-                    />
-                  </div>
-                </div>
-                <div>
-                  <label className="block text-sm font-medium text-gray-700 mb-2">Email</label>
-                  <input
-                    type="email"
-                    name="email"
-                    value={contactFormData.email}
-                    onChange={(e) => setContactFormData(prev => ({ ...prev, email: e.target.value }))}
-                    className="w-full px-4 py-3 bg-white border border-gray-300 rounded-lg text-navy-900 placeholder-gray-500 focus:ring-2 focus:ring-gold-500 focus:border-gold-500"
-                    placeholder="john@example.com"
-                    required
-                  />
-                </div>
-                <div>
-                  <label className="block text-sm font-medium text-gray-700 mb-2">Phone</label>
-                  <input
-                    type="tel"
-                    name="phone"
-                    value={contactFormData.phone}
-                    onChange={(e) => setContactFormData(prev => ({ ...prev, phone: e.target.value }))}
-                    className="w-full px-4 py-3 bg-white border border-gray-300 rounded-lg text-navy-900 placeholder-gray-500 focus:ring-2 focus:ring-gold-500 focus:border-gold-500"
-                    placeholder="(555) 123-4567"
-                    required
-                  />
-                </div>
-                <div>
-                  <label className="block text-sm font-medium text-gray-700 mb-2">Message</label>
-                  <textarea
-                    name="message"
-                    value={contactFormData.message}
-                    onChange={(e) => setContactFormData(prev => ({ ...prev, message: e.target.value }))}
-                    rows={5}
-                    className="w-full px-4 py-3 bg-white border border-gray-300 rounded-lg text-navy-900 placeholder-gray-500 focus:ring-2 focus:ring-gold-500 focus:border-gold-500"
-                    placeholder="I'm interested in buying a home in the Gurgaon area..."
-                    maxLength={500}
-                    required
-                  ></textarea>
-                </div>
-                <button
-                  type="submit"
-                  disabled={isSubmitting}
-                  className={`w-full btn-luxury text-white py-4 rounded-lg text-lg font-semibold whitespace-nowrap cursor-pointer transition-all ${isSubmitting ? 'opacity-50' : ''}`}
-                >
-                  {isSubmitting ? 'Sending...' : 'Send Message'}
-                </button>
-              </form>
-            </div>
+  <form className="space-y-6" onSubmit={handleContactSubmit} id="contact_form" data-readdy-form>
+    <div className="grid grid-cols-2 gap-6">
+      <div>
+        <label className="block text-sm font-medium text-gray-700 mb-2">First Name</label>
+        <input
+          type="text"
+          name="firstName"
+          value={contactFormData.firstName}
+          onChange={(e) => setContactFormData(prev => ({ ...prev, firstName: e.target.value }))}
+          className="w-full px-4 py-3 bg-white border border-gray-300 rounded-lg text-navy-900 placeholder-gray-500 focus:ring-2 focus:ring-gold-500 focus:border-gold-500"
+          placeholder="John"
+          required
+        />
+      </div>
+      <div>
+        <label className="block text-sm font-medium text-gray-700 mb-2">Last Name</label>
+        <input
+          type="text"
+          name="lastName"
+          value={contactFormData.lastName}
+          onChange={(e) => setContactFormData(prev => ({ ...prev, lastName: e.target.value }))}
+          className="w-full px-4 py-3 bg-white border border-gray-300 rounded-lg text-navy-900 placeholder-gray-500 focus:ring-2 focus:ring-gold-500 focus:border-gold-500"
+          placeholder="Doe"
+          required
+        />
+      </div>
+    </div>
+    <div>
+      <label className="block text-sm font-medium text-gray-700 mb-2">Email</label>
+      <input
+        type="email"
+        name="email"
+        value={contactFormData.email}
+        onChange={(e) => setContactFormData(prev => ({ ...prev, email: e.target.value }))}
+        className="w-full px-4 py-3 bg-white border border-gray-300 rounded-lg text-navy-900 placeholder-gray-500 focus:ring-2 focus:ring-gold-500 focus:border-gold-500"
+        placeholder="john@example.com"
+        required
+      />
+    </div>
+    <div>
+      <label className="block text-sm font-medium text-gray-700 mb-2">Phone</label>
+      <input
+        type="tel"
+        name="phone"
+        value={contactFormData.phone}
+        onChange={(e) => setContactFormData(prev => ({ ...prev, phone: e.target.value }))}
+        className="w-full px-4 py-3 bg-white border border-gray-300 rounded-lg text-navy-900 placeholder-gray-500 focus:ring-2 focus:ring-gold-500 focus:border-gold-500"
+        placeholder="(555) 123-4567"
+        required
+      />
+    </div>
+
+    {/* Budget Field */}
+    <div>
+      <label className="block text-sm font-medium text-gray-700 mb-2">Budget</label>
+      <input
+        type="text"
+        name="budget"
+        value={contactFormData.budget}
+        onChange={(e) => setContactFormData(prev => ({ ...prev, budget: e.target.value }))}
+        className="w-full px-4 py-3 bg-white border border-gray-300 rounded-lg text-navy-900 placeholder-gray-500 focus:ring-2 focus:ring-gold-500 focus:border-gold-500"
+        placeholder="10-15 crores"
+        required
+      />
+    </div>
+
+    <div>
+      <label className="block text-sm font-medium text-gray-700 mb-2">Message</label>
+      <textarea
+        name="message"
+        value={contactFormData.message}
+        onChange={(e) => setContactFormData(prev => ({ ...prev, message: e.target.value }))}
+        rows={5}
+        className="w-full px-4 py-3 bg-white border border-gray-300 rounded-lg text-navy-900 placeholder-gray-500 focus:ring-2 focus:ring-gold-500 focus:border-gold-500"
+        placeholder="I'm interested in buying a home in the Gurgaon area..."
+        maxLength={500}
+        required
+      ></textarea>
+    </div>
+    <button
+      type="submit"
+      disabled={isSubmitting}
+      className={`w-full btn-luxury text-white py-4 rounded-lg text-lg font-semibold whitespace-nowrap cursor-pointer transition-all ${isSubmitting ? 'opacity-50' : ''}`}
+    >
+      {isSubmitting ? 'Sending...' : 'Send Message'}
+    </button>
+  </form>
+</div>
+
           </div>
         </div>
       </section>
