@@ -796,31 +796,19 @@ const handleContactSubmit = (e: React.FormEvent) => {
                   Conscient Infrastructure, Tribeca Developers, and many more.
                 </p>
 
+              <div className="flex flex-wrap gap-4 mt-4">
                 {/* Small Read More Button */}
                 <HashLink
                   to="/about#company-story"
-                  className="inline-block mt-2 px-6 py-2 rounded-md text-base font-medium cursor-pointer transition-colors border border-navy-900 text-navy-900 hover:bg-navy-900 hover:text-white"
+                  className="flex items-center justify-center px-6 py-2 rounded-md text-base font-medium cursor-pointer transition-colors border border-navy-900 text-navy-900 hover:bg-navy-900 hover:text-white"
                 >
                   Read More
                 </HashLink>
 
-                {/* Stats */}
-                {/* <div className="grid grid-cols-2 gap-8 my-12">
-                  <div className="text-center p-6 bg-white rounded-xl border border-gray-200 shadow-card">
-                    <div className="text-3xl font-bold text-navy-900 mb-2">800+</div>
-                    <div className="text-gray-700 font-medium">Properties Sold</div>
-                  </div>
-                  <div className="text-center p-6 bg-white rounded-xl border border-gray-200 shadow-card">
-                    <div className="text-3xl font-bold text-navy-900 mb-2">2500Cr+</div>
-                    <div className="text-gray-700 font-medium">Sales Volume</div>
-                  </div>
-                </div> */}
-              
-
-                {/* Schedule Button (unchanged) */}
+                {/* Schedule Button */}
                 <button
                   onClick={() => setShowConsultationForm(true)}
-                  className="text-white px-10 py-4 rounded-lg text-lg font-semibold whitespace-nowrap cursor-pointer transition-colors shadow-lg"
+                  className="flex items-center justify-center text-white px-10 py-4 rounded-lg text-lg font-semibold whitespace-nowrap cursor-pointer transition-colors shadow-lg"
                   style={{
                     background: "linear-gradient(135deg, #DAA520, #B8860B)",
                     boxShadow: "0 10px 25px rgba(218, 165, 32, 0.3)",
@@ -828,6 +816,10 @@ const handleContactSubmit = (e: React.FormEvent) => {
                 >
                   Schedule Consultation
                 </button>
+              </div>
+
+
+
               </div>
 
               {/* Right Image */}
