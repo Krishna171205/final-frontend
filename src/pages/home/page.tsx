@@ -805,7 +805,7 @@ const handleContactSubmit = (e: React.FormEvent) => {
                 </HashLink>
 
                 {/* Stats */}
-                <div className="grid grid-cols-2 gap-8 my-12">
+                {/* <div className="grid grid-cols-2 gap-8 my-12">
                   <div className="text-center p-6 bg-white rounded-xl border border-gray-200 shadow-card">
                     <div className="text-3xl font-bold text-navy-900 mb-2">800+</div>
                     <div className="text-gray-700 font-medium">Properties Sold</div>
@@ -814,7 +814,7 @@ const handleContactSubmit = (e: React.FormEvent) => {
                     <div className="text-3xl font-bold text-navy-900 mb-2">2500Cr+</div>
                     <div className="text-gray-700 font-medium">Sales Volume</div>
                   </div>
-                </div>
+                </div> */}
 
                 {/* Schedule Button (unchanged) */}
                 <button

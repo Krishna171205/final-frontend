@@ -1,13 +1,13 @@
 
 import { useState, useEffect } from 'react';
 import { useNavigate, useSearchParams } from 'react-router-dom';
-import { createClient } from '@supabase/supabase-js';
+// import { createClient } from '@supabase/supabase-js';
 import { HashLink } from 'react-router-hash-link';
 
-const supabase = createClient(
-  import.meta.env.VITE_PUBLIC_SUPABASE_URL,
-  import.meta.env.VITE_PUBLIC_SUPABASE_ANON_KEY
-);
+// const supabase = createClient(
+//   import.meta.env.VITE_PUBLIC_SUPABASE_URL,
+//   import.meta.env.VITE_PUBLIC_SUPABASE_ANON_KEY
+// );
 
 interface Property {
   id: number;
@@ -38,7 +38,7 @@ interface AreaData {
 const Areas = () => {
   const navigate = useNavigate();
   const [areasData, setAreasData] = useState<AreaData[]>([]);
-  const [loading, setLoading] = useState(true);
+  const [_loading, _setLoading] = useState(true);
   // const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
     // const [filterType, setFilterType] = useState('all');
     const [searchParams] = useSearchParams();
@@ -147,53 +147,55 @@ const Areas = () => {
   }, [searchParams]);
 
   const fetchPropertiesByArea = async () => {
-    try {
-      console.log('Fetching properties by area...');
+    // console.error('Failed to load properties:', response.status, response.statusText);
+    setAreasData(predefinedAreas.map((area) => ({ ...area, properties: [] })));
+    // try {
+    //   console.log('Fetching properties by area...');
 
-      const session = await supabase.auth.getSession();
-      const response = await fetch(
-        `${import.meta.env.VITE_PUBLIC_SUPABASE_URL}/functions/v1/manage-properties`,
-        {
-          method: 'GET',
-          headers: {
-            'Content-Type': 'application/json',
-            'Authorization': `Bearer ${session.data.session?.access_token}`,
-          },
-        }
-      );
+    //   const session = await supabase.auth.getSession();
+    //   const response = await fetch(
+    //     `${import.meta.env.VITE_PUBLIC_SUPABASE_URL}/functions/v1/manage-properties`,
+    //     {
+    //       method: 'GET',
+    //       headers: {
+    //         'Content-Type': 'application/json',
+    //         'Authorization': `Bearer ${session.data.session?.access_token}`,
+    //       },
+    //     }
+    //   );
 
-      if (response.ok) {
-        const data = await response.json();
-        console.log('Properties loaded:', data);
+    //   if (response.ok) {
+    //     const data = await response.json();
+    //     console.log('Properties loaded:', data);
 
-        // Group properties by area (fallback to 'other-ncr')
-        const propertiesByArea = (data.properties || []).reduce(
-          (acc: Record<string, Property[]>, property: Property) => {
-            const areaKey = property.area?.toLowerCase() || 'More Properties in Gurgaon';
-            if (!acc[areaKey]) acc[areaKey] = [];
-            acc[areaKey].push(property);
-            return acc;
-          },
-          {}
-        );
+    //     // Group properties by area (fallback to 'other-ncr')
+    //     const propertiesByArea = (data.properties || []).reduce(
+    //       (acc: Record<string, Property[]>, property: Property) => {
+    //         const areaKey = property.area?.toLowerCase() || 'More Properties in Gurgaon';
+    //         if (!acc[areaKey]) acc[areaKey] = [];
+    //         acc[areaKey].push(property);
+    //         return acc;
+    //       },
+    //       {}
+    //     );
 
-        // Merge predefined areas with their properties
-        const areasWithProperties = predefinedAreas.map((area) => ({
-          ...area,
-          properties: propertiesByArea[area.slug] || [],
-        }));
+    //     // Merge predefined areas with their properties
+    //     const areasWithProperties = predefinedAreas.map((area) => ({
+    //       ...area,
+    //       properties: propertiesByArea[area.slug] || [],
+    //     }));
 
-        setAreasData(areasWithProperties);
-      } else {
-        console.error('Failed to load properties:', response.status, response.statusText);
-        setAreasData(predefinedAreas.map((area) => ({ ...area, properties: [] })));
-      }
-    } catch (error) {
-      console.error('Error fetching properties:', error);
-      setAreasData(predefinedAreas.map((area) => ({ ...area, properties: [] })));
-    } finally {
-      setLoading(false);
-    }
+    //     setAreasData(areasWithProperties);
+    //   } else {
+    //     console.error('Failed to load properties:', response.status, response.statusText);
+    //     setAreasData(predefinedAreas.map((area) => ({ ...area, properties: [] })));
+    //   }
+    // } catch (error) {
+    //   console.error('Error fetching properties:', error);
+    //   setAreasData(predefinedAreas.map((area) => ({ ...area, properties: [] })));
+    // } finally {
+    //   setLoading(false);
+    // }
   };
 
   const handleViewAllProperties = (area: string) => {
@@ -217,16 +219,16 @@ const Areas = () => {
   //   }
   // };
 
-  if (loading) {
-    return (
-      <div className="min-h-screen bg-gray-50 flex items-center justify-center">
-        <div className="text-center">
-          <div className="animate-spin rounded-full h-32 w-32 border-b-2 border-navy-600 mx-auto" />
-          <p className="mt-4 text-gray-600">Loading premium locations...</p>
-        </div>
-      </div>
-    );
-  }
+  // if (loading) {
+  //   return (
+  //     <div className="min-h-screen bg-gray-50 flex items-center justify-center">
+  //       <div className="text-center">
+  //         <div className="animate-spin rounded-full h-32 w-32 border-b-2 border-navy-600 mx-auto" />
+  //         <p className="mt-4 text-gray-600">Loading premium locations...</p>
+  //       </div>
+  //     </div>
+  //   );
+  // }
 
   return (
     <div className="min-h-screen bg-gray-50">
@@ -654,7 +656,7 @@ const Areas = () => {
                 </li>
                 <li className="flex items-start">
                   <i className="ri-map-pin-line mr-3 text-gold-400 w-4 h-4 flex items-center justify-center mt-1"></i>
-                  <span>123, DLF Qutab Plaza, DLF City, Phase-1<br />Gurugram - 122002 ( Haryana)</span>
+                  <span>123, DLF Qutab Plaza, DLF City, Phase-1<br />Gurugram - 122002 ( Haryana) </span>
                 </li>
               </ul>
             </div>
