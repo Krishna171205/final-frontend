@@ -16,7 +16,7 @@ const About = () => {
   const handleLinkClick = () => {
     setIsSidebarOpen(false); // Close the sidebar when a link is clicked
   };
-  const [counters, setCounters] = useState({
+  const [_counters, setCounters] = useState({
     projects: 0,
     clients: 0,
     experience: 0,
@@ -349,7 +349,7 @@ const About = () => {
       </div>
 
       {/* Stats Section */}
-      <div ref={sectionRef} className="py-20 bg-gray-50">
+      {/* <div ref={sectionRef} className="py-20 bg-gray-50">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="grid grid-cols-2 lg:grid-cols-4 gap-8">
             <div className="text-center">
@@ -386,7 +386,7 @@ const About = () => {
             </div>
           </div>
         </div>
-      </div>
+      </div> */}
 
       {/* Company Story */}
       <div className="py-20 bg-white" id='company-story'>

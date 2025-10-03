@@ -175,7 +175,7 @@ const PropertyDetail = () => {
                              <div className="hidden md:block">
                                <div className="ml-10 flex items-baseline space-x-8">
                                  <button  onClick={() => navigate('/')} className={('home')}>Home</button>
-                                 <button  onClick={() => navigate('/properties')}>Properties</button>
+                                 <button  onClick={() => navigate('/properties')} className={('px-3 py-2 text-sm font-medium cursor-pointer bg-navy-600 hover:bg-navy-700 text-white rounded-full font-semibold transform hover:scale-105')}>Properties</button>
                                  <button  onClick={() => navigate('/about')} className={('')}>About</button>
                                  <button  onClick={() => navigate('/blogs')} className={('blog')}>Blog</button>
                                  <button  onClick={() => navigate('/areas')} className={('px-3 py-2 text-sm font-medium cursor-pointer bg-navy-600 hover:bg-navy-700 text-white rounded-full font-semibold transform hover:scale-105')}>Areas</button>

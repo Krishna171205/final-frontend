@@ -184,8 +184,8 @@ const BlogsPage = () => {
                             <button  onClick={() => navigate('/')} className={('home')}>Home</button>
                             <button  onClick={() => navigate('/properties')}>Properties</button>
                             <button  onClick={() => navigate('/about')} className={('')}>About</button>
-                            <button  onClick={() => navigate('/blogs')} className={('blog')}>Blog</button>
-                            <button  onClick={() => navigate('/areas')} className={('px-3 py-2 text-sm font-medium cursor-pointer bg-navy-600 hover:bg-navy-700 text-white rounded-full font-semibold transform hover:scale-105')}>Areas</button>
+                            <button  onClick={() => navigate('/blogs')} className={('px-3 py-2 text-sm font-medium cursor-pointer bg-navy-600 hover:bg-navy-700 text-white rounded-full font-semibold transform hover:scale-105')}>Blog</button>
+                            <button  onClick={() => navigate('/areas')} className={('')}>Areas</button>
                             {/* <button  onClick={() => navigate('/contact')} className={('contact')}>Contact</button> */}
                           </div>
                         </div>

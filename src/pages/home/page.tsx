@@ -528,7 +528,7 @@ const handleContactSubmit = (e: React.FormEvent) => {
             <div className="hidden md:block">
               <div className="ml-10 flex items-baseline space-x-8">
                 <Link to="/" onClick={() => scrollToSection('home')} className={`${getHomeLinkStyle('home')} hover:text-amber-400`}>Home</Link>
-                <Link to="/" onClick={() => navigate('/about')} className={getHomeLinkStyle('about')}>About</Link>
+                <Link to="/" onClick={() => scrollToSection('about')} className={getHomeLinkStyle('about')}>About</Link>
                 <Link to="/" onClick={() => scrollToSection('properties')} className={getHomeLinkStyle('properties')}>Properties</Link>
                 
                 <Link to="/" onClick={() => scrollToSection('blog')} className={getHomeLinkStyle('blog')}>Blog</Link>
