@@ -21,9 +21,9 @@ interface Property {
   sqft: string;
   area?: string;
   created_at: string;
-  custom_image: File | string | null;
-  custom_image_2: File | string | null;
-  custom_image_3: File | string | null;
+  custom_image: string;
+  custom_image_2: string;
+  custom_image_3: string;
 }
 
 interface Consultation {
@@ -83,9 +83,9 @@ const AdminDashboard = () => {
     baths: "1",
     sqft: "1000",
     area: '',
-    custom_image: null as File | null,  // explicitly defining the type as `File | null`
-    custom_image_2: null as File | null,
-    custom_image_3: null as File | null,
+    custom_image: "",  // explicitly defining the type as `File | null`
+    custom_image_2: "",
+    custom_image_3: "",
   });
 
   const [_editingProperty, _setEditingProperty] = useState<Property | null>(null);
@@ -225,54 +225,35 @@ const AdminDashboard = () => {
   imageIndex: number,
   isEdit: boolean = false
 ) => {
-  const file = e.target.files?.[0];  // Ensure we're getting the first file
-  if (!file) {
-    alert("No file selected");
-    return;
-  }
-  if (!file.type.startsWith('image/')) {
-    alert('Please select a valid image file');
-    return;
-  }
-  if (file.size > 5 * 1024 * 1024) { // 5MB size limit
-    alert('Image size must be less than 5MB');
-    return;
-  }
+  const url = e.target.value;  // Get the URL from the input field
 
-  const reader = new FileReader();
-  reader.onload = (event) => {
-    const result = event.target?.result as string;
-    
-    if (isEdit && selectedProperty) {
-      // Handle editing of images for existing property
-      if (imageIndex === 1) {
-        setEditImagePreview(result);
-        setSelectedProperty({ ...selectedProperty, custom_image: file });
-      } else if (imageIndex === 2) {
-        setEditImagePreview2(result);
-        setSelectedProperty({ ...selectedProperty, custom_image_2: file });
-      } else if (imageIndex === 3) {
-        setEditImagePreview3(result);
-        setSelectedProperty({ ...selectedProperty, custom_image_3: file });
-      }
-    } else {
-      // Handle adding images for new property
-      if (imageIndex === 1) {
-        setImagePreview(result);
-        {setNewProperty({ ...newProperty, custom_image: file});}
-      } else if (imageIndex === 2) {
-        setImagePreview2(result);
-        setNewProperty({ ...newProperty, custom_image_2: file });
-      } else if (imageIndex === 3) {
-        setImagePreview3(result);
-        setNewProperty({ ...newProperty, custom_image_3: file });
-      }
+  // Basic validation for URL
+  // if (!url.match(/^https?:\/\/[^\s/$.?#].[^\s]*$/)) {
+  //   alert('Please enter a valid URL');
+  //   return;
+  // }
+
+  if (isEdit && selectedProperty) {
+    // Update the image URL for the selected property
+    if (imageIndex === 1) {
+      setSelectedProperty({ ...selectedProperty, custom_image: url });
+    } else if (imageIndex === 2) {
+      setSelectedProperty({ ...selectedProperty, custom_image_2: url });
+    } else if (imageIndex === 3) {
+      setSelectedProperty({ ...selectedProperty, custom_image_3: url });
     }
-  };
-
-  // Ensure we are reading a valid Blob type
-  reader.readAsDataURL(file);
+  } else {
+    // Update the new property state with the entered URL
+    if (imageIndex === 1) {
+      setNewProperty({ ...newProperty, custom_image: url });
+    } else if (imageIndex === 2) {
+      setNewProperty({ ...newProperty, custom_image_2: url });
+    } else if (imageIndex === 3) {
+      setNewProperty({ ...newProperty, custom_image_3: url });
+    }
+  }
 };
+
 
 
   const handleBlogImageUpload = (e: React.ChangeEvent<HTMLInputElement>, isEdit: boolean = false) => {
@@ -323,21 +304,21 @@ const AdminDashboard = () => {
     // const sqft = isNaN(Number(newProperty.sqft)) ? 1000 : Number(newProperty.sqft);
     
     // Convert images to base64 using FileReader and await their results
-    const toBase64 = (file?: File | null): Promise<string | null> => {
-      return new Promise((resolve) => {
-        if (!file) return resolve(null);
+    // const toBase64 = (file?: File | null): Promise<string | null> => {
+    //   return new Promise((resolve) => {
+    //     if (!file) return resolve(null);
         
-        const reader = new FileReader();
-        reader.onload = (e) => resolve(e.target?.result as string);
-        reader.readAsDataURL(file);
-      });
-    };
+    //     const reader = new FileReader();
+    //     reader.onload = (e) => resolve(e.target?.result as string);
+    //     reader.readAsDataURL(file);
+    //   });
+    // };
 
     // Wait for all images to be converted to Base64
     const [imageData, imageData2, imageData3] = await Promise.all([
-      toBase64(newProperty.custom_image),
-      toBase64(newProperty.custom_image_2),
-      toBase64(newProperty.custom_image_3),
+      (newProperty.custom_image),
+      (newProperty.custom_image_2),
+      (newProperty.custom_image_3),
     ]);
     
     const session = await supabase.auth.getSession();
@@ -383,9 +364,9 @@ const AdminDashboard = () => {
         baths: "1",
         sqft: "1000",
         area: '',
-        custom_image: null,
-        custom_image_2: null,
-        custom_image_3: null,
+        custom_image: "",
+        custom_image_2: "",
+        custom_image_3: "",
       });
       
       setImagePreview(null);
@@ -439,19 +420,19 @@ const handleEditProperty = async () => {
     //     });
     //   }
 
-    const toBase64 = (file: File | null | undefined) =>
-      file
-        ? new Promise((resolve) => {
-            const reader = new FileReader();
-            reader.onload = (e) => resolve(e.target?.result);
-            reader.readAsDataURL(file);
-          })
-        : null;
+    // const toBase64 = (file: File | null | undefined) =>
+    //   file
+    //     ? new Promise((resolve) => {
+    //         const reader = new FileReader();
+    //         reader.onload = (e) => resolve(e.target?.result);
+    //         reader.readAsDataURL(file);
+    //       })
+    //     : null;
 
     const [imageData, imageData2, imageData3] = await Promise.all([
-      toBase64(selectedProperty.custom_image as File),
-      toBase64(selectedProperty.custom_image_2 as File),
-      toBase64(selectedProperty.custom_image_3 as File),
+      (selectedProperty.custom_image),
+      (selectedProperty.custom_image_2),
+      (selectedProperty.custom_image_3),
     ]);
 
     // const { data: session } = await supabase.auth.getSession();
@@ -1366,64 +1347,73 @@ const handleDeleteProperty = async (id: number) => {
               </div>
 
               <div className="col-span-2">
-                <label className="block text-sm font-medium text-gray-700 mb-2">Property Images (up to 3)</label>
-                <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-                  {/* Image 1 */}
-                  <div>
-                    <label className="block text-xs text-gray-500 mb-1">Main Image</label>
-                    <input 
-                      type="file"
-                      accept="image/*"
-                      onChange={(e) => handleImageUpload(e, 1, false)}
-                      className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 text-sm mb-2"
-                    />
-                    {imagePreview && (
-                      <img 
-                        src={imagePreview} 
-                        alt="Preview 1" 
-                        className="w-full h-24 object-cover object-top rounded border"
-                      />
-                    )}
-                  </div>
-                  
-                  {/* Image 2 */}
-                  <div>
-                    <label className="block text-xs text-gray-500 mb-1">Image 2 (Optional)</label>
-                    <input 
-                      type="file"
-                      accept="image/*"
-                      onChange={(e) => handleImageUpload(e, 2, false)}
-                      className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 text-sm mb-2"
-                    />
-                    {imagePreview2 && (
-                      <img 
-                        src={imagePreview2} 
-                        alt="Preview 2" 
-                        className="w-full h-24 object-cover object-top rounded border"
-                      />
-                    )}
-                  </div>
-                  
-                  {/* Image 3 */}
-                  <div>
-                    <label className="block text-xs text-gray-500 mb-1">Image 3 (Optional)</label>
-                    <input 
-                      type="file"
-                      accept="image/*"
-                      onChange={(e) => handleImageUpload(e, 3, false)}
-                      className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 text-sm mb-2"
-                    />
-                    {imagePreview3 && (
-                      <img 
-                        src={imagePreview3} 
-                        alt="Preview 3" 
-                        className="w-full h-24 object-cover object-top rounded border"
-                      />
-                    )}
-                  </div>
-                </div>
-                <p className="text-xs text-gray-500 mt-2">Upload images (max 5MB each). First image will be the main display image.</p>
-              </div>
+  <label className="block text-sm font-medium text-gray-700 mb-2">Property Images (up to 3)</label>
+  <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+    {/* Image 1 */}
+    <div>
+      <label className="block text-xs text-gray-500 mb-1">Main Image</label>
+      <input 
+        type="text"
+        value={newProperty?.custom_image || ''}
+        onChange={(e) => handleImageUpload(e, 1, true)}
+        className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-5 text-sm mb-2"
+        placeholder="Enter image URL"
+      />
+      {(imagePreview || newProperty.custom_image) && (
+        <img
+          src={imagePreview 
+            ? imagePreview 
+            : newProperty.custom_image || ''}  // Use the URL entered manually
+          alt="Current 1"
+          className="w-full h-24 object-cover object-top rounded border"
+        />
+      )}
+    </div>
+    
+    {/* Image 2 */}
+    <div>
+      <label className="block text-xs text-gray-500 mb-1">Image 2</label>
+      <input 
+        type="text"
+        value={newProperty?.custom_image_2 || ''}
+        onChange={(e) => handleImageUpload(e, 2, true)}
+        className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-5 text-sm mb-2"
+        placeholder="Enter image URL"
+      />
+      {(imagePreview2 || newProperty.custom_image_2) && (
+        <img 
+          src={imagePreview2
+            ? imagePreview2
+            : newProperty.custom_image_2 || ''} // Use the URL entered manually
+          alt="Current 2" 
+          className="w-full h-24 object-cover object-top rounded border"
+        />
+      )}
+    </div>
+    
+    {/* Image 3 */}
+    <div>
+      <label className="block text-xs text-gray-500 mb-1">Image 3</label>
+      <input 
+        type="text"
+        value={newProperty?.custom_image_3 || ''}
+        onChange={(e) => handleImageUpload(e, 3, true)}
+        className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-5 text-sm mb-2"
+        placeholder="Enter image URL"
+      />
+      {(imagePreview3 || newProperty.custom_image_3) && (
+        <img 
+          src={imagePreview3 
+            ? imagePreview3
+            : newProperty.custom_image_3 || ''} // Use the URL entered manually
+          alt="Current 3" 
+          className="w-full h-24 object-cover object-top rounded border"
+        />
+      )}
+    </div>
+  </div>
+  <p className="text-xs text-gray-500 mt-2">Enter image URLs or leave empty to keep current ones.</p>
+</div>
 
               <div className="flex justify-end space-x-4 mt-6">
                 <button 
@@ -1596,77 +1586,74 @@ const handleDeleteProperty = async (id: number) => {
 
               {/* Images */}
               <div className="col-span-2">
-                <label className="block text-sm font-medium text-gray-700 mb-2">Property Images (up to 3)</label>
-                <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-                  {/* Image 1 */}
-                  <div>
-                    <label className="block text-xs text-gray-500 mb-1">Main Image</label>
-                    <input 
-                      type="file"
-                      accept="image/*"
-                      onChange={(e) => handleImageUpload(e, 1, true)}
-                      className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-5 text-sm mb-2"
-                    />
-                    {(editImagePreview || selectedProperty.custom_image) && (
-                      <img
-                        // Ensure both are strings (or create a URL from the file if it's a File)
-                        src={editImagePreview 
-                          ? editImagePreview 
-                          : selectedProperty.custom_image instanceof File 
-                          ? URL.createObjectURL(selectedProperty.custom_image) 
-                          : selectedProperty.custom_image || ''} // Fallback to an empty string if null
-                        alt="Current 1"
-                        className="w-full h-24 object-cover object-top rounded border"
-                      />
-                    )}
-                  </div>
-                  
-                  {/* Image 2 */}
-                  <div>
-                    <label className="block text-xs text-gray-500 mb-1">Image 2</label>
-                    <input 
-                      type="file"
-                      accept="image/*"
-                      onChange={(e) => handleImageUpload(e, 2, true)}
-                      className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-5 text-sm mb-2"
-                    />
-                    {(editImagePreview2 || selectedProperty.custom_image_2) && (
-                      <img 
-                        src={editImagePreview2
-                          ? editImagePreview2
-                          : selectedProperty.custom_image_2 instanceof File 
-                          ? URL.createObjectURL(selectedProperty.custom_image_2) 
-                          : selectedProperty.custom_image_2 || ''} // Fallback to an empty string if null
-                        alt="Current 2" 
-                        className="w-full h-24 object-cover object-top rounded border"
-                      />
-                    )}
-                  </div>
-                  
-                  {/* Image 3 */}
-                  <div>
-                    <label className="block text-xs text-gray-500 mb-1">Image 3</label>
-                    <input 
-                      type="file"
-                      accept="image/*"
-                      onChange={(e) => handleImageUpload(e, 3, true)}
-                      className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-5 text-sm mb-2"
-                    />
-                    {(editImagePreview3 || selectedProperty.custom_image_3) && (
-                      <img 
-                        src={editImagePreview3 
-                          ? editImagePreview3
-                          : selectedProperty.custom_image_3 instanceof File 
-                          ? URL.createObjectURL(selectedProperty.custom_image_3) 
-                          : selectedProperty.custom_image_3 || ''} // Fallback to an empty string if null
-                        alt="Current 3" 
-                        className="w-full h-24 object-cover object-top rounded border"
-                      />
-                    )}
-                  </div>
-                </div>
-                <p className="text-xs text-gray-500 mt-2">Upload new images or leave empty to keep current ones.</p>
-              </div>
+  <label className="block text-sm font-medium text-gray-700 mb-2">Property Images (up to 3)</label>
+  <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+    {/* Image 1 */}
+    <div>
+      <label className="block text-xs text-gray-500 mb-1">Main Image</label>
+      <input 
+        type="text"
+        value={selectedProperty?.custom_image || ''}
+        onChange={(e) => handleImageUpload(e, 1, true)}
+        className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-5 text-sm mb-2"
+        placeholder="Enter image URL"
+      />
+      {(editImagePreview || selectedProperty.custom_image) && (
+        <img
+          src={editImagePreview 
+            ? editImagePreview 
+            : selectedProperty.custom_image || ''}  // Use the URL entered manually
+          alt="Current 1"
+          className="w-full h-24 object-cover object-top rounded border"
+        />
+      )}
+    </div>
+    
+    {/* Image 2 */}
+    <div>
+      <label className="block text-xs text-gray-500 mb-1">Image 2</label>
+      <input 
+        type="text"
+        value={selectedProperty?.custom_image_2 || ''}
+        onChange={(e) => handleImageUpload(e, 2, true)}
+        className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-5 text-sm mb-2"
+        placeholder="Enter image URL"
+      />
+      {(editImagePreview2 || selectedProperty.custom_image_2) && (
+        <img 
+          src={editImagePreview2
+            ? editImagePreview2
+            : selectedProperty.custom_image_2 || ''} // Use the URL entered manually
+          alt="Current 2" 
+          className="w-full h-24 object-cover object-top rounded border"
+        />
+      )}
+    </div>
+    
+    {/* Image 3 */}
+    <div>
+      <label className="block text-xs text-gray-500 mb-1">Image 3</label>
+      <input 
+        type="text"
+        value={selectedProperty?.custom_image_3 || ''}
+        onChange={(e) => handleImageUpload(e, 3, true)}
+        className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-5 text-sm mb-2"
+        placeholder="Enter image URL"
+      />
+      {(editImagePreview3 || selectedProperty.custom_image_3) && (
+        <img 
+          src={editImagePreview3 
+            ? editImagePreview3
+            : selectedProperty.custom_image_3 || ''} // Use the URL entered manually
+          alt="Current 3" 
+          className="w-full h-24 object-cover object-top rounded border"
+        />
+      )}
+    </div>
+  </div>
+  <p className="text-xs text-gray-500 mt-2">Enter image URLs or leave empty to keep current ones.</p>
+</div>
+
 
               <div className="flex justify-end space-x-4 mt-6">
                 <button 
