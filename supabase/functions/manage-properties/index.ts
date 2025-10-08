@@ -215,18 +215,18 @@ Deno.serve(async (req) => {
 
 
       // Handle images
-      // if (body.custom_image) {
-      //   // const img = processUploadedImage(body.custom_image);
-      //   if (img) updateData["custom_image"] = img;
-      // }
-      // if (body.custom_image_2) {
-      //   // const img = processUploadedImage(body.custom_image_2);
-      //   if (img2) updateData["custom_image_2"] = img2;
-      // }
-      // if (body.custom_image_3) {
-      //   // const img = processUploadedImage(body.custom_image_3);
-      //   if (img) updateData["custom_image_3"] = img;
-      // }
+      if (body.custom_image) {
+        const img = (body.custom_image);
+        if (img) updateData["custom_image"] = img;
+      }
+      if (body.custom_image_2) {
+        const img2 = (body.custom_image_2);
+        if (img2) updateData["custom_image_2"] = img2;
+      }
+      if (body.custom_image_3) {
+        const img3 = (body.custom_image_3);
+        if (img3) updateData["custom_image_3"] = img3;
+      }
 
       const { data, error } = await supabaseClient
         .from("properties")
