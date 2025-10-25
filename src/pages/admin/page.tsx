@@ -391,53 +391,28 @@ const AdminDashboard = () => {
 const handleEditProperty = async () => {
   if (!selectedProperty) return;
 
+  // Check required fields
+  if (!selectedProperty.title || !selectedProperty.location || !selectedProperty.description) {
+    alert('Please fill in all required fields');
+    return;
+  }
+  if (!selectedProperty.bhk || !selectedProperty.baths || !selectedProperty.sqft) {
+    alert('Please fill in all property specifications');
+    return;
+  }
+
   setIsSubmitting(true);
   try {
     console.log('Updating property:', selectedProperty);
 
-    // let imageData = null;
-    //   if (selectedProperty.custom_image instanceof File) {
-    //     const reader = new FileReader();
-    //     imageData = await new Promise((resolve) => {
-    //       reader.onload = (e) => resolve(e.target?.result);
-    //       reader.readAsDataURL(selectedProperty.custom_image as File);
-    //     });
-    //   }
-    // let imageData2 = null;
-    //   if (selectedProperty.custom_image instanceof File) {
-    //     const reader = new FileReader();
-    //     imageData = await new Promise((resolve) => {
-    //       reader.onload = (e) => resolve(e.target?.result);
-    //       reader.readAsDataURL(selectedProperty.custom_image_2 as File);
-    //     });
-    //   }
-    // let imageData3 = null;
-    //   if (selectedProperty.custom_image instanceof File) {
-    //     const reader = new FileReader();
-    //     imageData = await new Promise((resolve) => {
-    //       reader.onload = (e) => resolve(e.target?.result);
-    //       reader.readAsDataURL(selectedProperty.custom_image_3 as File);
-    //     });
-    //   }
-
-    // const toBase64 = (file: File | null | undefined) =>
-    //   file
-    //     ? new Promise((resolve) => {
-    //         const reader = new FileReader();
-    //         reader.onload = (e) => resolve(e.target?.result);
-    //         reader.readAsDataURL(file);
-    //       })
-    //     : null;
-
+    // Wait for all images (already base64 or string)
     const [imageData, imageData2, imageData3] = await Promise.all([
-      (selectedProperty.custom_image),
-      (selectedProperty.custom_image_2),
-      (selectedProperty.custom_image_3),
+      selectedProperty.custom_image,
+      selectedProperty.custom_image_2,
+      selectedProperty.custom_image_3,
     ]);
 
-    // const { data: session } = await supabase.auth.getSession();
     const session = await supabase.auth.getSession();
-    
 
     const response = await fetch(
       `${import.meta.env.VITE_PUBLIC_SUPABASE_URL}/functions/v1/manage-properties`,
@@ -447,41 +422,49 @@ const handleEditProperty = async () => {
           'Content-Type': 'application/json',
           'Authorization': `Bearer ${session.data.session?.access_token}`,
         },
-            body: JSON.stringify({
-        id: selectedProperty.id,
-        title: selectedProperty.title,
-        location: selectedProperty.location,
-        full_address: selectedProperty.full_address, // ✅ snake_case
-        type: selectedProperty.type,
-        status: selectedProperty.status,
-        bhk: (selectedProperty.bhk) || "1",
-        baths: (selectedProperty.baths) || "1",
-        sqft: (selectedProperty.sqft) || "1000",
-        description: selectedProperty.description,
-        area: selectedProperty.area,
-        custom_image: imageData,   // ✅
-        custom_image_2: imageData2, // ✅
-        custom_image_3: imageData3  // ✅
-      }),
-
+        body: JSON.stringify({
+          id: selectedProperty.id, // ✅ Required for update
+          title: selectedProperty.title,
+          location: selectedProperty.location,
+          full_address: selectedProperty.full_address || selectedProperty.location,
+          type: selectedProperty.type || 'House',
+          status: selectedProperty.status || 'ready-to-move',
+          description: selectedProperty.description,
+          area: selectedProperty.area || '',
+          bhk: selectedProperty.bhk,
+          baths: selectedProperty.baths,
+          sqft: selectedProperty.sqft,
+          custom_image: imageData,
+          custom_image_2: imageData2,
+          custom_image_3: imageData3,
+        }),
       }
     );
-    if (!response.ok) {
-      const errorData = await response.json();
-        console.error('Error updating property:', errorData);
-        alert(`Error updating property: ${errorData.error || 'Please try again'}`);
-    }
 
-    const result = await response.json();
-    console.log('Property updated successfully:', result);
-    } catch (error: any) {
-      console.error('Error updating property:', error);
-      alert('Error updating property. Please check your connection and try again.');
-      
-    } finally {
+    if (response.ok) {
+      const result = await response.json();
+      console.log('Property updated successfully:', result);
+
+      // Refresh properties
+      await loadProperties();
+
+      // Reset and close form
+      setSelectedProperty(null);
+      setShowEditProperty(false);
+      alert('Property updated successfully!');
+    } else {
+      const errorData = await response.json();
+      console.error('Error updating property:', errorData);
+      alert(`Error updating property: ${errorData.error || 'Please try again'}`);
+    }
+  } catch (error) {
+    console.error('Error updating property:', error);
+    alert('Error updating property. Please check your connection and try again.');
+  } finally {
     setIsSubmitting(false);
-  } 
-  };
+  }
+};
+
 
 // ✅ Delete Property
 const handleDeleteProperty = async (id: number) => {

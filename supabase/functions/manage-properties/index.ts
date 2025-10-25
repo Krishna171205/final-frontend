@@ -170,86 +170,96 @@ Deno.serve(async (req) => {
 
     // Update property (PUT)
     if (req.method === "PUT") {
-      const body = await req.json();
+  const body = await req.json();
 
-      if (!body.id) {
-        return new Response(
-          JSON.stringify({ error: "Property ID is required for update" }),
-          {
-            status: 400,
-            headers: { ...corsHeaders, "Content-Type": "application/json" },
-          },
-        );
-      }
+  // ✅ Validate required field: ID
+  if (!body.id) {
+    return new Response(
+      JSON.stringify({ error: "Property ID is required for update" }),
+      {
+        status: 400,
+        headers: { ...corsHeaders, "Content-Type": "application/json" },
+      },
+    );
+  }
 
-      // Fetch the existing property
-      const { data: existing, error: fetchError } = await supabaseClient
-        .from("properties")
-        .select("*")
-        .eq("id", body.id)
-        .single();
+  // ✅ Fetch the existing property
+  const { data: existing, error: fetchError } = await supabaseClient
+    .from("properties")
+    .select("*")
+    .eq("id", body.id)
+    .single();
 
-      if (fetchError || !existing) {
-        return new Response(JSON.stringify({ error: "Property not found" }), {
-          status: 404,
-          headers: { ...corsHeaders, "Content-Type": "application/json" },
-        });
-      }
+  if (fetchError || !existing) {
+    return new Response(
+      JSON.stringify({ error: "Property not found" }),
+      {
+        status: 404,
+        headers: { ...corsHeaders, "Content-Type": "application/json" },
+      },
+    );
+  }
 
-      // Prepare data for update
-      const updateData = {
-      title: String(body.title || existing.title).trim(),
-      location: String(body.location || existing.location).trim(),
-      full_address: String(body.full_address || existing.full_address).trim(),
-      type: String(body.type || existing.type).trim(),
-      status: String(body.status || existing.status).trim(),
-      bhk: String(body.bhk || existing.bhk).trim(),
-      baths: String(body.baths || existing.baths).trim(),
-      sqft: String(body.sqft || existing.sqft).trim(),
-      description: String(body.description || existing.description).trim(),
-      area: String(body.area !== undefined ? body.area : existing.area || '').trim(),
-      custom_image: body.custom_image || existing.custom_image,
-      custom_image_2: body.custom_image_2 || existing.custom_image_2,
-      custom_image_3: body.custom_image_3 || existing.custom_image_3,
-    };
+  // ✅ Set fallback generated images if none are provided
+  let image1 = existing.custom_image || generateImageUrl(body.title || existing.title, body.type || existing.type);
+  let image2 = existing.custom_image_2 || generateImageUrl(body.title || existing.title, body.type || existing.type);
+  let image3 = existing.custom_image_3 || generateImageUrl(body.title || existing.title, body.type || existing.type);
 
+  // ✅ Handle uploaded custom images
+  if (body.custom_image) {
+    console.log("Admin: Processing uploaded image (1) for update");
+    image1 = body.custom_image;
+  }
+  if (body.custom_image_2) {
+    console.log("Admin: Processing uploaded image (2) for update");
+    image2 = body.custom_image_2;
+  }
+  if (body.custom_image_3) {
+    console.log("Admin: Processing uploaded image (3) for update");
+    image3 = body.custom_image_3;
+  }
 
-      // Handle images
-      if (body.custom_image) {
-        const img = (body.custom_image);
-        if (img) updateData["custom_image"] = img;
-      }
-      if (body.custom_image_2) {
-        const img2 = (body.custom_image_2);
-        if (img2) updateData["custom_image_2"] = img2;
-      }
-      if (body.custom_image_3) {
-        const img3 = (body.custom_image_3);
-        if (img3) updateData["custom_image_3"] = img3;
-      }
+  // ✅ Prepare clean updated data (replica of POST structure)
+  const updateData = {
+    title: String(body.title || existing.title).trim(),
+    location: String(body.location || existing.location).trim(),
+    full_address: String(body.full_address || existing.full_address || body.location || existing.location).trim(),
+    type: String(body.type || existing.type || "House").trim(),
+    status: String(body.status || existing.status || "ready-to-move").trim(),
+    bhk: String(body.bhk || existing.bhk || "1").trim(),
+    baths: String(body.baths || existing.baths || "1").trim(),
+    sqft: String(body.sqft || existing.sqft || "1000").trim(),
+    description: String(body.description || existing.description || "").trim(),
+    area: String(body.area || existing.area || "").trim(),
+    custom_image: image1,
+    custom_image_2: image2,
+    custom_image_3: image3,
+  };
 
-      const { data, error } = await supabaseClient
-        .from("properties")
-        .update(updateData)
-        .eq("id", body.id)
-        .select()
-        .single();
+  // ✅ Update the property in database
+  const { data, error } = await supabaseClient
+    .from("properties")
+    .update(updateData)
+    .eq("id", body.id)
+    .select()
+    .single();
 
-      if (error) {
-        return new Response(
-          JSON.stringify({ error: "Failed to update property", details: error.message }),
-          {
-            status: 500,
-            headers: { ...corsHeaders, "Content-Type": "application/json" },
-          },
-        );
-      }
+  if (error) {
+    return new Response(
+      JSON.stringify({ error: "Failed to update property", details: error.message }),
+      {
+        status: 500,
+        headers: { ...corsHeaders, "Content-Type": "application/json" },
+      },
+    );
+  }
 
-      return new Response(
-        JSON.stringify({ success: true, message: "Property updated successfully", property: data }),
-        { headers: { ...corsHeaders, "Content-Type": "application/json" } },
-      );
-    }
+  return new Response(
+    JSON.stringify({ success: true, message: "Property updated successfully", property: data }),
+    { headers: { ...corsHeaders, "Content-Type": "application/json" } },
+  );
+}
+
 
     // Delete property (DELETE)
     if (req.method === "DELETE") {
