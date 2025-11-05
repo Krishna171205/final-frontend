@@ -158,8 +158,7 @@ const Properties = () => {
   ].sort();
 
   // Add predefined areas to ensure all areas are available
-  const allAreas = ['gurgaon','Gurgaon Faridabad Road','Dwarka Expressway'];
-  const combinedAreas = [...new Set([...availableAreas, ...allAreas])];
+  const combinedAreas = availableAreas;
 
   const filteredProperties = properties.filter((property) => {
     if (filterType !== 'all' && property.type.toLowerCase() !== filterType.toLowerCase()) {

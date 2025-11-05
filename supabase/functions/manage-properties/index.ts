@@ -168,97 +168,104 @@ Deno.serve(async (req) => {
       );
     }
 
-    // Update property (PUT)
-    if (req.method === "PUT") {
+// Update property (PUT)
+// Update property (PUT)
+if (req.method === "PUT") {
   const body = await req.json();
 
-  // ✅ Validate required field: ID
-  if (!body.id) {
+  // Validate required fields
+  if (!body.id || !body.title || !body.location || !body.description) {
     return new Response(
-      JSON.stringify({ error: "Property ID is required for update" }),
+      JSON.stringify({
+        error:
+          "Missing required fields: id, title, location, description",
+      }),
       {
         status: 400,
         headers: { ...corsHeaders, "Content-Type": "application/json" },
-      },
+      }
     );
   }
 
-  // ✅ Fetch the existing property
-  const { data: existing, error: fetchError } = await supabaseClient
-    .from("properties")
-    .select("*")
-    .eq("id", body.id)
-    .single();
+  // Handle image values (custom images override generated)
+  let image1 = generateImageUrl(body.title, body.type || "House");
+  let image2 = generateImageUrl(body.title, body.type || "House");
+  let image3 = generateImageUrl(body.title, body.type || "House");
 
-  if (fetchError || !existing) {
-    return new Response(
-      JSON.stringify({ error: "Property not found" }),
-      {
-        status: 404,
-        headers: { ...corsHeaders, "Content-Type": "application/json" },
-      },
-    );
-  }
-
-  // ✅ Set fallback generated images if none are provided
-  let image1 = existing.custom_image || generateImageUrl(body.title || existing.title, body.type || existing.type);
-  let image2 = existing.custom_image_2 || generateImageUrl(body.title || existing.title, body.type || existing.type);
-  let image3 = existing.custom_image_3 || generateImageUrl(body.title || existing.title, body.type || existing.type);
-
-  // ✅ Handle uploaded custom images
   if (body.custom_image) {
-    console.log("Admin: Processing uploaded image (1) for update");
+    console.log("Admin: Updating uploaded image (1)");
     image1 = body.custom_image;
   }
   if (body.custom_image_2) {
-    console.log("Admin: Processing uploaded image (2) for update");
+    console.log("Admin: Updating uploaded image (2)");
     image2 = body.custom_image_2;
   }
   if (body.custom_image_3) {
-    console.log("Admin: Processing uploaded image (3) for update");
+    console.log("Admin: Updating uploaded image (3)");
     image3 = body.custom_image_3;
   }
 
-  // ✅ Prepare clean updated data (replica of POST structure)
-  const updateData = {
-    title: String(body.title || existing.title).trim(),
-    location: String(body.location || existing.location).trim(),
-    full_address: String(body.full_address || existing.full_address || body.location || existing.location).trim(),
-    type: String(body.type || existing.type || "House").trim(),
-    status: String(body.status || existing.status || "ready-to-move").trim(),
-    bhk: String(body.bhk || existing.bhk || "1").trim(),
-    baths: String(body.baths || existing.baths || "1").trim(),
-    sqft: String(body.sqft || existing.sqft || "1000").trim(),
-    description: String(body.description || existing.description || "").trim(),
-    area: String(body.area || existing.area || "").trim(),
+  // Accept either camelCase fullAddress or snake_case full_address, fallback to location
+  const fullAddr = (body.fullAddress || body.full_address || body.location || "").toString().trim();
+
+  const propertyData = {
+    title: String(body.title).trim(),
+    location: String(body.location).trim(),
+    full_address: fullAddr,
+    type: String(body.type || "House").trim(),
+    status: String(body.status || "ready-to-move").trim(),
+    bhk: String(body.bhk || "1").trim(),
+    baths: String(body.baths || "1").trim(),
+    sqft: String(body.sqft || "1000").trim(),
+    description: String(body.description).trim(),
+    area: String(body.area || "").trim(),
     custom_image: image1,
     custom_image_2: image2,
     custom_image_3: image3,
   };
 
-  // ✅ Update the property in database
-  const { data, error } = await supabaseClient
-    .from("properties")
-    .update(updateData)
-    .eq("id", body.id)
-    .select()
-    .single();
+  try {
+    const { data, error } = await supabaseClient
+      .from("properties")
+      .update(propertyData)
+      .eq("id", body.id)
+      .select()
+      .single();
 
-  if (error) {
+    if (error) {
+      return new Response(
+        JSON.stringify({
+          error: "Failed to update property",
+          details: error.message,
+        }),
+        {
+          status: 500,
+          headers: { ...corsHeaders, "Content-Type": "application/json" },
+        }
+      );
+    }
+
     return new Response(
-      JSON.stringify({ error: "Failed to update property", details: error.message }),
+      JSON.stringify({
+        success: true,
+        message: "Property updated successfully",
+        property: data,
+      }),
+      { headers: { ...corsHeaders, "Content-Type": "application/json" } }
+    );
+  } catch (err) {
+    console.error("Error updating property:", err);
+    return new Response(
+      JSON.stringify({ error: "Failed to update property" }),
       {
         status: 500,
         headers: { ...corsHeaders, "Content-Type": "application/json" },
-      },
+      }
     );
   }
-
-  return new Response(
-    JSON.stringify({ success: true, message: "Property updated successfully", property: data }),
-    { headers: { ...corsHeaders, "Content-Type": "application/json" } },
-  );
 }
+
+
 
 
     // Delete property (DELETE)

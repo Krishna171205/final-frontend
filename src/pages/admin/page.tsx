@@ -1,5 +1,5 @@
 
-import { useState, useEffect } from 'react';
+import { useState, useEffect ,useRef} from 'react';
 import { useNavigate } from 'react-router-dom';
 import { createClient } from '@supabase/supabase-js';
 
@@ -61,10 +61,22 @@ const AdminDashboard = () => {
   const navigate = useNavigate();
   const [_user, setUser] = useState<any>(null);
   const [loading, setLoading] = useState(true);
+  const [page, setPage] = useState(1);
   const [activeTab, setActiveTab] = useState('properties');
   const [showAddProperty, setShowAddProperty] = useState(false);
   const [showEditProperty, setShowEditProperty] = useState(false);
   const [selectedProperty, setSelectedProperty] = useState<Property | null>(null);
+  const [hasMore, setHasMore] = useState(true);
+  const loadMoreRef = useRef<HTMLDivElement | null>(null);
+   const handleLoadMore = async () => {
+  const scrollYBefore = window.scrollY;
+  await loadProperties(page + 1);
+
+  // ✅ Restore scroll position after new items render
+  requestAnimationFrame(() => {
+    window.scrollTo({ top: scrollYBefore, behavior: 'instant' as ScrollBehavior });
+  });
+};
   
   const [isSubmitting, setIsSubmitting] = useState(false);
 
@@ -109,11 +121,11 @@ const AdminDashboard = () => {
   const [editBlogImagePreview, setEditBlogImagePreview] = useState<string | null>(null);
 
   const [imagePreview, setImagePreview] = useState<string | null>(null);
-  const [imagePreview2, setImagePreview2] = useState<string | null>(null);
-  const [imagePreview3, setImagePreview3] = useState<string | null>(null);
+  const [_imagePreview2, setImagePreview2] = useState<string | null>(null);
+  const [_imagePreview3, setImagePreview3] = useState<string | null>(null);
   const [editImagePreview, setEditImagePreview] = useState<string | null>(null);
-  const [editImagePreview2, setEditImagePreview2] = useState<string | null>(null);
-  const [editImagePreview3, setEditImagePreview3] = useState<string | null>(null);
+  const [_editImagePreview2, setEditImagePreview2] = useState<string | null>(null);
+  const [_editImagePreview3, setEditImagePreview3] = useState<string | null>(null);
 
   useEffect(() => {
     checkUser();
@@ -140,38 +152,40 @@ const AdminDashboard = () => {
   };
 
   const loadData = async () => {
-    await Promise.all([loadProperties(), loadConsultations(), loadBlogs()]);
+    await Promise.all([loadProperties(1,true), loadConsultations(), loadBlogs()]);
   };
 
-  const loadProperties = async () => {
-    try {
-      console.log('Loading properties from database...')
-      const session = await supabase.auth.getSession();
-      
-      const response = await fetch(`${import.meta.env.VITE_PUBLIC_SUPABASE_URL}/functions/v1/manage-properties`, {
-        method: 'GET',
-        headers: {
-          'Content-Type': 'application/json',
-          'Authorization': `Bearer ${session.data.session?.access_token}`,
-        },
-      });
-      
-      if (response.ok) {
-        const data = await response.json();
-        console.log('Properties loaded:', data);
-        setProperties(data.properties || []);
-      } else {
-        console.error('Failed to load properties:', response.status, response.statusText);
-        const errorData = await response.text();
-        console.error('Error details:', errorData);
-        setProperties([]);
-      }
-    } catch (error) {
-      console.error('Error loading properties:', error);
-      setProperties([]);
-    }
-  };
+  const loadProperties = async (nextPage: number, replace = false) => {
+          setLoading(true);
+          const LIMIT = 6;
 
+          try {
+            const res = await fetch(
+              `${import.meta.env.VITE_PUBLIC_SUPABASE_URL}/functions/v1/get-properties?page=${nextPage}&limit=${LIMIT}`,
+              { headers: { 'Content-Type': 'application/json' } }
+            );
+
+            if (!res.ok) throw new Error(`HTTP ${res.status}`);
+
+            const data = await res.json();
+            const newProps: Property[] = data.properties ?? [];
+
+            // ✅ Append or replace properties
+            setProperties(prev => (replace ? newProps : [...prev, ...newProps]));
+
+            // ✅ Stop when fewer than LIMIT
+            setHasMore(newProps.length === LIMIT);
+
+            // ✅ Only update page if data came in
+            if (newProps.length > 0) setPage(nextPage);
+          } catch (err) {
+            console.error('Error loading properties:', err);
+            if (replace) setProperties([]); // clear only on replace
+            setHasMore(false);
+          } finally {
+            setLoading(false);
+          }
+        };
   const loadConsultations = async () => {
     try {
       console.log('Loading consultations from database...')
@@ -350,7 +364,7 @@ const AdminDashboard = () => {
       console.log('Property added successfully:', result);
       
       // Reload properties to get fresh data
-      await loadProperties();
+      await loadProperties(1,true);
       
       // Reset form
       setNewProperty({
@@ -391,21 +405,13 @@ const AdminDashboard = () => {
 const handleEditProperty = async () => {
   if (!selectedProperty) return;
 
-  // Check required fields
-  if (!selectedProperty.title || !selectedProperty.location || !selectedProperty.description) {
-    alert('Please fill in all required fields');
-    return;
-  }
-  if (!selectedProperty.bhk || !selectedProperty.baths || !selectedProperty.sqft) {
-    alert('Please fill in all property specifications');
-    return;
-  }
+  // ✅ Validation (same as add property
 
   setIsSubmitting(true);
   try {
     console.log('Updating property:', selectedProperty);
 
-    // Wait for all images (already base64 or string)
+    // ✅ Directly use images (no base64 conversion)
     const [imageData, imageData2, imageData3] = await Promise.all([
       selectedProperty.custom_image,
       selectedProperty.custom_image_2,
@@ -414,44 +420,48 @@ const handleEditProperty = async () => {
 
     const session = await supabase.auth.getSession();
 
-    const response = await fetch(
-      `${import.meta.env.VITE_PUBLIC_SUPABASE_URL}/functions/v1/manage-properties`,
-      {
-        method: 'PUT',
-        headers: {
-          'Content-Type': 'application/json',
-          'Authorization': `Bearer ${session.data.session?.access_token}`,
-        },
-        body: JSON.stringify({
-          id: selectedProperty.id, // ✅ Required for update
-          title: selectedProperty.title,
-          location: selectedProperty.location,
-          full_address: selectedProperty.full_address || selectedProperty.location,
-          type: selectedProperty.type || 'House',
-          status: selectedProperty.status || 'ready-to-move',
-          description: selectedProperty.description,
-          area: selectedProperty.area || '',
-          bhk: selectedProperty.bhk,
-          baths: selectedProperty.baths,
-          sqft: selectedProperty.sqft,
-          custom_image: imageData,
-          custom_image_2: imageData2,
-          custom_image_3: imageData3,
-        }),
-      }
-    );
+    // ✅ Safe numeric parsing (same as add handler)
+    const bhk = isNaN(Number(selectedProperty.bhk)) ? 1 : Number(selectedProperty.bhk);
+    const baths = isNaN(Number(selectedProperty.baths)) ? 1 : Number(selectedProperty.baths);
+    const sqft = isNaN(Number(selectedProperty.sqft)) ? 1000 : Number(selectedProperty.sqft);
+
+    const response = await fetch(`${import.meta.env.VITE_PUBLIC_SUPABASE_URL}/functions/v1/manage-properties`, {
+      method: 'PUT',
+      headers: {
+        'Content-Type': 'application/json',
+        'Authorization': `Bearer ${session.data.session?.access_token}`,
+      },
+      body: JSON.stringify({
+        id: selectedProperty.id,
+        title: selectedProperty.title,
+        location: selectedProperty.location,
+        full_address: selectedProperty.full_address,// ✅ snake_case
+        type: selectedProperty.type || 'House',
+        status: selectedProperty.status || 'ready-to-move',
+        description: selectedProperty.description,
+        area: selectedProperty.area || '',
+        bhk: bhk,
+        baths: baths,
+        sqft: sqft,
+        custom_image: imageData,     // ✅ match backend
+        custom_image_2: imageData2,
+        custom_image_3: imageData3,
+      }),
+    });
 
     if (response.ok) {
       const result = await response.json();
       console.log('Property updated successfully:', result);
 
-      // Refresh properties
-      await loadProperties();
+      // ✅ Reload properties after update
+      await loadProperties(1, true);
 
-      // Reset and close form
-      setSelectedProperty(null);
+      // ✅ Reset edit state and previews (same flow as add handler)
+      setEditImagePreview(null);
+      setEditImagePreview2(null);
+      setEditImagePreview3(null);
       setShowEditProperty(false);
-      alert('Property updated successfully!');
+      alert('Property updated successfulsly!');
     } else {
       const errorData = await response.json();
       console.error('Error updating property:', errorData);
@@ -464,6 +474,8 @@ const handleEditProperty = async () => {
     setIsSubmitting(false);
   }
 };
+
+
 
 
 // ✅ Delete Property
@@ -968,8 +980,21 @@ const handleDeleteProperty = async (id: number) => {
                   </tbody>
                 </table>
               </div>
+              {/* ✅ Next Page Button */}
+            {hasMore && (
+              <div ref={loadMoreRef} className="text-center mt-12">
+                <button
+                  onClick={handleLoadMore}
+                  disabled={loading}
+                  className="px-6 py-3 bg-navy-600 hover:bg-navy-700 text-white rounded-lg font-semibold shadow-md disabled:opacity-50"
+                >
+                  {loading ? 'Loading...' : 'Load More...'}
+                </button>
+              </div>
+            )}
             </div>
           </div>
+          
         )}
 
         {/* Consultations Tab */}
@@ -1283,7 +1308,7 @@ const handleDeleteProperty = async (id: number) => {
                     required
                   />
                 </div>
-                <div>
+                {/* <div>
                   <label className="block text-sm font-medium text-gray-700 mb-2">Bathrooms</label>
                   <input
                     value={newProperty.baths ?? ""}
@@ -1291,8 +1316,8 @@ const handleDeleteProperty = async (id: number) => {
                     className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-navy-500 focus:border-navy-500"
                     required
                   />
-                </div>
-                <div>
+                </div> */}
+                {/* <div>
                   <label className="block text-sm font-medium text-gray-700 mb-2">Square Feet</label>
                   <input
                     value={newProperty.sqft ?? ""}
@@ -1300,7 +1325,7 @@ const handleDeleteProperty = async (id: number) => {
                     className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-navy-500 focus:border-navy-500"
                     required
                   />
-                </div>
+                </div> */}
                 <div>
                   <label className="block text-sm font-medium text-gray-700 mb-2">Area</label>
                   <select
@@ -1354,7 +1379,7 @@ const handleDeleteProperty = async (id: number) => {
     </div>
     
     {/* Image 2 */}
-    <div>
+    {/* <div>
       <label className="block text-xs text-gray-500 mb-1">Image 2</label>
       <input 
         type="text"
@@ -1367,15 +1392,15 @@ const handleDeleteProperty = async (id: number) => {
         <img 
           src={imagePreview2
             ? imagePreview2
-            : newProperty.custom_image_2 || ''} // Use the URL entered manually
+            : newProperty.custom_image_2 || ''} 
           alt="Current 2" 
           className="w-full h-24 object-cover object-top rounded border"
         />
       )}
-    </div>
+    </div> */}
     
     {/* Image 3 */}
-    <div>
+    {/* <div>
       <label className="block text-xs text-gray-500 mb-1">Image 3</label>
       <input 
         type="text"
@@ -1393,7 +1418,7 @@ const handleDeleteProperty = async (id: number) => {
           className="w-full h-24 object-cover object-top rounded border"
         />
       )}
-    </div>
+    </div> */}
   </div>
   <p className="text-xs text-gray-500 mt-2">Enter image URLs or leave empty to keep current ones.</p>
 </div>
@@ -1444,7 +1469,7 @@ const handleDeleteProperty = async (id: number) => {
               </button>
             </div>
             
-            <form onSubmit={handleEditProperty} className="space-y-6">
+            <form onSubmit={(e) => { e.preventDefault(); handleEditProperty(); }} className="space-y-6">
               <div className="grid grid-cols-2 gap-6">
                 <div>
                   <label className="block text-sm font-medium text-gray-700 mb-2">Property Title</label>
@@ -1537,7 +1562,7 @@ const handleDeleteProperty = async (id: number) => {
                     className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-navy-500 focus:border-navy-500"
                   />
                 </div>
-                <div>
+                {/* <div>
                   <label className="block text-sm font-medium text-gray-700 mb-2">Bathrooms</label>
                   <input 
                     value={selectedProperty.baths ?? ""}
@@ -1554,7 +1579,7 @@ const handleDeleteProperty = async (id: number) => {
                     className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-navy-500 focus:border-navy-500"
                     min="500"
                   />
-                </div>
+                </div> */}
               </div>
 
               <div className="col-span-2">
@@ -1577,7 +1602,7 @@ const handleDeleteProperty = async (id: number) => {
       <input 
         type="text"
         value={selectedProperty?.custom_image || ''}
-        onChange={(e) => handleImageUpload(e, 1, true)}
+        onChange={(e) => handleImageUpload(e, 1, false)}
         className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-5 text-sm mb-2"
         placeholder="Enter image URL"
       />
@@ -1593,7 +1618,7 @@ const handleDeleteProperty = async (id: number) => {
     </div>
     
     {/* Image 2 */}
-    <div>
+    {/* <div>
       <label className="block text-xs text-gray-500 mb-1">Image 2</label>
       <input 
         type="text"
@@ -1611,10 +1636,10 @@ const handleDeleteProperty = async (id: number) => {
           className="w-full h-24 object-cover object-top rounded border"
         />
       )}
-    </div>
+    </div> */}
     
     {/* Image 3 */}
-    <div>
+    {/* <div>
       <label className="block text-xs text-gray-500 mb-1">Image 3</label>
       <input 
         type="text"
@@ -1632,34 +1657,34 @@ const handleDeleteProperty = async (id: number) => {
           className="w-full h-24 object-cover object-top rounded border"
         />
       )}
-    </div>
+    </div> */}
   </div>
   <p className="text-xs text-gray-500 mt-2">Enter image URLs or leave empty to keep current ones.</p>
 </div>
 
 
-              <div className="flex justify-end space-x-4 mt-6">
-                <button 
-                  type="button"
-                  onClick={() => {
-                    setShowEditProperty(false);
-                    setEditImagePreview(null);
-                    setEditImagePreview2(null);
-                    setEditImagePreview3(null);
-                  }}
-                  disabled={isSubmitting}
-                  className="px-4 py-2 border border-gray-300 rounded-lg text-gray-700 hover:bg-gray-50 cursor-pointer whitespace-nowrap disabled:opacity-50 disabled:cursor-not-allowed"
-                >
-                  Cancel
-                </button>
-                <button 
-                  type="submit"
-                  disabled={isSubmitting}
-                  className="px-4 py-2 bg-blue-600 hover:bg-blue-700 text-white rounded-lg cursor-pointer whitespace-nowrap disabled:opacity-50 disabled:cursor-not-allowed"
-                >
-                  {isSubmitting ? 'Saving...' : 'Save Changes'}
-                </button>
-              </div>
+                        <div className="flex justify-end space-x-4 mt-6">
+              <button 
+                type="button"
+                onClick={() => {
+                  setShowEditProperty(false);
+                  setEditImagePreview(null);
+                  setEditImagePreview2(null);
+                  setEditImagePreview3(null);
+                }}
+                disabled={isSubmitting}
+                className="px-4 py-2 border border-gray-300 rounded-lg text-gray-700 hover:bg-gray-50 cursor-pointer whitespace-nowrap disabled:opacity-50 disabled:cursor-not-allowed"
+              >
+                Cancel
+              </button>
+              <button 
+                type="submit"  // <-- ensure submit type
+                disabled={isSubmitting}
+                className="px-4 py-2 bg-blue-600 hover:bg-blue-700 text-white rounded-lg cursor-pointer whitespace-nowrap disabled:opacity-50 disabled:cursor-not-allowed"
+              >
+                {isSubmitting ? 'Saving...' : 'Save Changes'}
+              </button>
+            </div>
             </form>
           </div>
         </div>
