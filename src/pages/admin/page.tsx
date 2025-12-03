@@ -1558,7 +1558,7 @@ const handleDeleteProperty = async (id: number) => {
                   <label className="block text-sm font-medium text-gray-700 mb-2">BHK</label>
                   <input 
                     value={selectedProperty.bhk ?? ""}
-                    onChange={(e) => setSelectedProperty({...selectedProperty, bhk:(e.target.value) || "1"})}
+                    onChange={(e) => setSelectedProperty({...selectedProperty, bhk:(e.target.value) || "0"})}
                     className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-navy-500 focus:border-navy-500"
                   />
                 </div>
@@ -1575,7 +1575,7 @@ const handleDeleteProperty = async (id: number) => {
                   <label className="block text-sm font-medium text-gray-700 mb-2">Sq.ft Area</label>
                   <input 
                     value={selectedProperty.sqft ?? ""}
-                    onChange={(e) => setSelectedProperty({...selectedProperty, sqft: (e.target.value) || "1000"})}
+                    onChange={(e) => setSelectedProperty({...selectedProperty, sqft: (e.target.value) || "0"})}
                     className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-navy-500 focus:border-navy-500"
                     min="500"
                   />
