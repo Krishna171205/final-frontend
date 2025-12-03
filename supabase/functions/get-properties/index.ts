@@ -37,9 +37,8 @@ serve(async (req) => {
       // Fetch paginated properties from the database
       const { data: properties, error } = await supabase
         .from("properties")
-        .select("id, title, location, type, status, custom_image, created_at,full_address,bhk,baths,sqft, description, area ")
+        .select("id, title, location, type, status, custom_image, custom_image_2, custom_image_3, created_at,full_address,bhk,baths,sqft, description, area ")
         .order("created_at", { ascending: false })
-        .range((page - 1) * limit, page * limit - 1) // Paginate the results
 
       if (error) {
         console.error("GET properties error:", error)

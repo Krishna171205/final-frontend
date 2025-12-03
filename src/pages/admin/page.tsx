@@ -1570,7 +1570,7 @@ const handleDeleteProperty = async (id: number) => {
                     className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-navy-500 focus:border-navy-500"
                     min="1"
                   />
-                </div>
+                </div> */}
                 <div>
                   <label className="block text-sm font-medium text-gray-700 mb-2">Sq.ft Area</label>
                   <input 
@@ -1579,7 +1579,7 @@ const handleDeleteProperty = async (id: number) => {
                     className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-navy-500 focus:border-navy-500"
                     min="500"
                   />
-                </div> */}
+                </div> 
               </div>
 
               <div className="col-span-2">

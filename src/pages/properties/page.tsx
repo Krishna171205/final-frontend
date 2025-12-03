@@ -141,7 +141,7 @@ const Properties = () => {
         return 'bg-blue-600';
       case 'under-construction':
         return 'bg-green-600';
-      case 'ongoing':
+      case 'Fresh Booking':
         return 'bg-purple-600';
       default:
         return 'bg-gray-600';

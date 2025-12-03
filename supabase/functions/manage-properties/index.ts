@@ -24,6 +24,12 @@ const generateImageUrl = (title: string, type: string) => {
   return `https://readdy.ai/api/search-image?query=${encodeURIComponent(prompt)}&width=600&height=400&seq=prop${Date.now()}&orientation=landscape`;
 };
 
+const jsonResponse = (obj: any, status = 200) =>
+  new Response(JSON.stringify(obj), {
+    status,
+    headers: { ...corsHeaders, "Content-Type": "application/json" },
+  });
+
 // Validate and process base64 image
 // const processUploadedImage = (imageData: string) => {
 //   try{ if (!imageData.startsWith('data:image/')) {
@@ -60,26 +66,31 @@ Deno.serve(async (req) => {
 
     // Fetch properties (GET)
     if (req.method === "GET") {
+      const url = new URL(req.url)
+      const page = parseInt(url.searchParams.get("page") || "1")
+      const limit = parseInt(url.searchParams.get("limit") || "6") // default to 10 items per page
+
+      // Simulate a network delay (latency)
+
+      // Fetch paginated properties from the database
       const { data: properties, error } = await supabaseClient
         .from("properties")
-        .select("*")
-        .order("created_at", { ascending: false });
+        .select("id, title, location, type, status, custom_image, custom_image_2, custom_image_3, created_at,full_address,bhk,baths,sqft, description, area ")
+        .order("created_at", { ascending: false })
 
       if (error) {
-        return new Response(
-          JSON.stringify({ error: "Failed to fetch properties", details: error.message }),
-          {
-            status: 500,
-            headers: { ...corsHeaders, "Content-Type": "application/json" },
-          },
-        );
+        console.error("GET properties error:", error)
+        return jsonResponse({ error: "Failed to fetch properties" }, 500)
       }
 
-      return new Response(
-        JSON.stringify({ success: true, properties: properties || [] }),
-        { headers: { ...corsHeaders, "Content-Type": "application/json" } },
-      );
+      return jsonResponse({
+        success: true,
+        page,
+        count: properties?.length ?? 0,
+        properties: properties ?? []
+      })
     }
+
 
     // Add property (POST)
     if (req.method === "POST") {
