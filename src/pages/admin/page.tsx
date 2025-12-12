@@ -421,9 +421,9 @@ const handleEditProperty = async () => {
     const session = await supabase.auth.getSession();
 
     // ✅ Safe numeric parsing (same as add handler)
-    const bhk = isNaN(Number(selectedProperty.bhk)) ? 1 : Number(selectedProperty.bhk);
-    const baths = isNaN(Number(selectedProperty.baths)) ? 1 : Number(selectedProperty.baths);
-    const sqft = isNaN(Number(selectedProperty.sqft)) ? 1000 : Number(selectedProperty.sqft);
+    // const bhk = isNaN(Number(selectedProperty.bhk)) ? 1 : Number(selectedProperty.bhk);
+    // const baths = isNaN(Number(selectedProperty.baths)) ? 1 : Number(selectedProperty.baths);
+    // const sqft = isNaN(Number(selectedProperty.sqft)) ? 1000 : Number(selectedProperty.sqft);
 
     const response = await fetch(`${import.meta.env.VITE_PUBLIC_SUPABASE_URL}/functions/v1/manage-properties`, {
       method: 'PUT',
@@ -440,9 +440,9 @@ const handleEditProperty = async () => {
         status: selectedProperty.status || 'ready-to-move',
         description: selectedProperty.description,
         area: selectedProperty.area || '',
-        bhk: bhk,
-        baths: baths,
-        sqft: sqft,
+        bhk: selectedProperty.bhk,
+        baths: selectedProperty.baths,
+        sqft: selectedProperty.sqft,
         custom_image: imageData,     // ✅ match backend
         custom_image_2: imageData2,
         custom_image_3: imageData3,
