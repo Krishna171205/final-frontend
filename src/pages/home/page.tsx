@@ -800,7 +800,7 @@ const handleContactSubmit = (e: React.FormEvent) => {
                 {/* Small Read More Button */}
                 <HashLink
                   to="/about#company-story"
-                  className="flex items-center justify-center px-6 py-2 rounded-md text-base font-medium cursor-pointer transition-colors border border-navy-900 text-navy-900 hover:bg-navy-900 hover:text-white"
+                  className="flex items-center justify-center px-6 py-2 rounded-md text-white font-medium cursor-pointer transition-colors border border-navy-900 text-navy-900 hover:bg-navy-600 hover:text-white"
                 >
                   Read More
                 </HashLink>
@@ -808,11 +808,11 @@ const handleContactSubmit = (e: React.FormEvent) => {
                 {/* Schedule Button */}
                 <button
                   onClick={() => setShowConsultationForm(true)}
-                  className="flex items-center justify-center text-white px-10 py-4 rounded-lg text-lg font-semibold whitespace-nowrap cursor-pointer transition-colors shadow-lg"
-                  style={{
-                    background: "linear-gradient(135deg, #DAA520, #B8860B)",
-                    boxShadow: "0 10px 25px rgba(218, 165, 32, 0.3)",
-                  }}
+                  className="bg-navy-600 hover:bg-navy-700 text-white px-10 py-4 rounded-lg text-lg font-semibold whitespace-nowrap cursor-pointer transition-all shadow-lg"
+                  // style={{
+                  //   background: "linear-gradient(135deg, #DAA520, #B8860B)",
+                  //   boxShadow: "0 10px 25px rgba(218, 165, 32, 0.3)",
+                  // }}
                 >
                   Schedule Consultation
                 </button>
